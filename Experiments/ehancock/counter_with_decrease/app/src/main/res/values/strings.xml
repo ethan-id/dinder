@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">AS1</string>
+    <string name="dinder">Dinder</string>
+    <string name="to_counter">To Counter</string>
+    <string name="increase">Increase</string>
+    <string name="decrease">Decrease</string>
+    <string name="back_to_main">Back to Main</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+</resources>

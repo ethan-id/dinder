@@ -1,0 +1,16 @@
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/hobian/Desktop/309/checkpoints/AS1/app/src/main/res/layout/activity_counter.xml" value="0.5213541666666667" />
+        <entry key="..\:/Users/hobian/Desktop/309/checkpoints/AS1/app/src/main/res/layout/activity_main.xml" value="0.5213541666666667" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
