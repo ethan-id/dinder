@@ -8,24 +8,23 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException{
         String n;
         Scanner s = new Scanner(System.in);
-        System.out.println("\nWhere would you like to eat?\nOr type \"all\" to see all the restaurants above a 4.5 rating");
+        System.out.println("\nWhere would you like to eat?\nOr type \"all\" to see all the restaurants above a 3.0 rating");
         String response = s.nextLine();
         s.close();
-        n = RetrieveFromFile(response, 4.5);
-        if (n.equals("Restaurant not in radius")) {
-            System.out.println("\n"+"Restaurant not in radius");
-        }
-        else {
-            System.out.println("\n" + "The rating of " + response + " is: " + n);
-        }
+        RetrieveFromFile(response, 3.0);
     }
 
-    public static String RetrieveFromFile(String input, double RATING_INDEX) throws FileNotFoundException {
+    public static void RetrieveFromFile(String input, double RATING_INDEX) throws FileNotFoundException {
         String rating = "Restaurant not in radius";
+        String phoneNumber = "";
+        String address = "";
+        String price = "";
+        String url = "";
         int i = 0;
 
         String response = "\"name\": \"" + input + "\"";
         ArrayList<String> a = new ArrayList<String>();
+        ArrayList<String> b = new ArrayList<String>();
 
         File file = new File("C:/Dinder/Dinder/sd_322/Experiments/Jwills22/Experiment2/response.json");
         Scanner reader = new Scanner(new FileReader(file));
@@ -36,10 +35,26 @@ public class Main {
         }
         for (i = 0; i < a.size(); i++) {
             if (a.get(i).substring(1).equals(response)) {
-                for (int j = i; j < a.size(); j++) {
-                    if (a.get(j).contains("rating")) {
+                for (int j = i; j < (i+26); j++) {
+                    if (a.get(j).contains("url") && !b.contains("url")) {
+                        url = a.get(j).substring(8);
+                        b.add("\n" + input + "'s url: " + url);
+                    }
+                    else if (a.get(j).contains("rating")&& !b.contains("rating")) {
                         rating = a.get(j).substring(11);
-                        return rating;
+                        b.add(input + "'s rating: " + rating);
+                    }
+                    else if (a.get(j).contains("price")&& !b.contains("price")) {
+                        price = a.get(j).substring(11, 12);
+                        b.add(input + "'s price: " + price);
+                    }
+                    else if (a.get(j).contains("location") && (!b.contains("location") || !b.contains("address"))) {
+                        address = a.get(j).substring(27, 38);
+                        b.add(input + "'s address: " + address);
+                    }
+                    else if (a.get(j).contains("phone")&& !b.contains("phone")) {
+                        phoneNumber = a.get(j).substring(10);
+                        b.add(input + "'s phone number: " + phoneNumber);
                     }
                 }
             }
@@ -58,6 +73,8 @@ public class Main {
                 }
             }
         }
-        return rating;
+        for (i = 0; i < b.size(); i++) {
+            System.out.println(b.get(i));
+        }
     }
 }

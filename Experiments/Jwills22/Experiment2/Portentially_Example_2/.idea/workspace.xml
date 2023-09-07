@@ -5,7 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="028fb3c0-3b12-4a81-ac1d-273027a2bb66" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +29,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Dinder/Dinder/sd_322/Experiments/Jwills22/Experiment2/Portentially_Example_2",
     "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
