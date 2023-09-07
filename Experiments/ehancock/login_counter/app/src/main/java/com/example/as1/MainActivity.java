@@ -7,23 +7,26 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.text.TextWatcher;
 
 public class MainActivity extends AppCompatActivity {
     Button button;
-
     EditText email;
     EditText password;
-
+    ImageView logo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        button = findViewById(R.id.toCounterBtn);
+        button = findViewById(R.id.loginBtn);
         email = findViewById(R.id.editTextEmail);
         password = findViewById(R.id.editTextPassword);
+        logo = findViewById(R.id.appLogo);
+        logo.setImageResource(R.drawable.temporary_logo);
+
 
         button.setEnabled(false);
 
