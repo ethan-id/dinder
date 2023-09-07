@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, CounterActivity.class);
             startActivity(intent);
+            email.setText("");
+            password.setText("");
         });
     }
 }
