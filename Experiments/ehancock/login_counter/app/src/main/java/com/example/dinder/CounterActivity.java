@@ -1,4 +1,4 @@
-package com.example.as1;
+package com.example.dinder;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

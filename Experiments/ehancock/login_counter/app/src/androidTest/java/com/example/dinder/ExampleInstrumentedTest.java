@@ -1,4 +1,4 @@
-package com.example.as1;
+package com.example.dinder;
 
 import android.content.Context;
 

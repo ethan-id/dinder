@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AS1</string>
+    <string name="app_name">Dinder</string>
     <string name="dinder">Dinder</string>
     <string name="login">Login</string>
     <string name="to_counter">To Counter</string>
