@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException{
         String n;
         Scanner s = new Scanner(System.in);
-        System.out.println("\nWhere would you like to eat?\nOr type \"all\" to see all the restaurants above a 3.0 rating");
+        System.out.println("\nWhat restaurant would you like more information on?\nOr type \"all\" to see all the restaurants above a 3.0 rating");
         String response = s.nextLine();
         s.close();
         RetrieveFromFile(response, 3.0);
@@ -33,7 +33,38 @@ public class Main {
         while (reader.hasNextLine()) {
             a.add(reader.next());
         }
+        reader.close();
+
+        File file2 = new File("C:/Dinder/Dinder/sd_322/Experiments/Jwills22/Experiment2/response2.json");
+        Scanner reader2 = new Scanner(new FileReader(file2));
+        reader2.useDelimiter(",");
+
+        while (reader2.hasNextLine()) {
+            a.add(reader2.next());
+        }
+        reader2.close();
+
+        File file3 = new File("C:/Dinder/Dinder/sd_322/Experiments/Jwills22/Experiment2/response3.json");
+        Scanner reader3 = new Scanner(new FileReader(file3));
+        reader3.useDelimiter(",");
+
+        while (reader3.hasNextLine()) {
+            a.add(reader3.next());
+        }
+        reader3.close();
+
+        File file4 = new File("C:/Dinder/Dinder/sd_322/Experiments/Jwills22/Experiment2/response4.json");
+        Scanner reader4 = new Scanner(new FileReader(file4));
+        reader4.useDelimiter(",");
+
+        while (reader4.hasNextLine()) {
+            a.add(reader4.next());
+        }
+        reader4.close();
         for (i = 0; i < a.size(); i++) {
+            if (a.get(i).contains("\"name\":")) {
+                System.out.println(a.get(i));
+            }
             if (a.get(i).substring(1).equals(response)) {
                 for (int j = i; j < (i+26); j++) {
                     if (a.get(j).contains("url") && !b.contains("url")) {
