@@ -6,15 +6,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 class WelcomeController {
-
+    static String pass = "";
+    static String passkey = "1234";
     @GetMapping("/")
     public String welcome() {
-        return "Hello and welcome to COMS 309 This is a cool picture for you https://t.ly/SuOcD";
-                //<img src="cat.jpg" height="50" width="50">;
+        if(pass.equals(passkey)){
+         return "Correct";
+        }
+        else {
+            return"Incorrect";
+        }
+
+    }
+    public static void setInput(String input){
+        pass = input;
     }
 
     @GetMapping("/{name}")
     public String welcome(@PathVariable String name) {
-        return "Hello and welcome to COMS 309 " + name;
+        return "aldkfj " + name;
     }
 }

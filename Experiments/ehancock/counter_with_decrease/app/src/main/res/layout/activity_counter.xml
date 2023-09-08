@@ -11,7 +11,7 @@
         android:layout_width="138dp"
         android:layout_height="169dp"
         android:textAlignment="center"
-        android:textSize="34sp"
+        android:textSize="96sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
