@@ -6,26 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="028fb3c0-3b12-4a81-ac1d-273027a2bb66" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../response.json" beforeDir="false" afterPath="$PROJECT_DIR$/../response.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Hopefully_Successful_Experiment3/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Hopefully_Successful_Experiment3/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Testing_PT_3/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Testing_PT_3/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Testing_PT_3/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Testing_PT_3/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Testing_PT_3/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Testing_PT_3/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Testing_PT_3/Testing_PT_3.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Testing_PT_3/User_Authentication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Testing_PT_3/out/production/Testing_PT_3/dinder/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Testing_PT_3/out/production/Testing_PT_3/dinder/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Testing_PT_3/out/production/Testing_PT_3/dinder/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Testing_PT_3/out/production/Testing_PT_3/dinder/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Testing_PT_3/out/production/Testing_PT_3/dinder/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Testing_PT_3/out/production/Testing_PT_3/dinder/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Testing_PT_3/out/production/Testing_PT_3/dinder/Testing_PT_3.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Experiment3/Testing_PT_3/out/production/Testing_PT_3/dinder/User_Authentication.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
