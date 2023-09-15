@@ -8,6 +8,14 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONObject;
+
 public class CounterActivity extends AppCompatActivity {
 
     Button increaseBtn;
@@ -30,6 +38,22 @@ public class CounterActivity extends AppCompatActivity {
 
         increaseBtn.setOnClickListener(v -> numberTxt.setText(String.valueOf(++counter)));
         decreaseBtn.setOnClickListener(v -> numberTxt.setText(String.valueOf(--counter)));
+
+        // Get a RequestQueue
+        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+
+        // ...
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, "https://bb2f1cae-347d-4a40-8941-11471d81db18.mock.pstmn.io/wasabi", null,
+            response -> {
+                numberTxt.setText("Response: " + response.toString());
+            },
+            error -> {
+                // TODO: Handle error
+            }
+        );
+
+        // Add a request (in this example, called stringRequest) to your RequestQueue.
+        queue.add(jsonObjectRequest);
 
         backBtn.setOnClickListener(v -> {
             Intent intent = new Intent(CounterActivity.this, MainActivity.class);
