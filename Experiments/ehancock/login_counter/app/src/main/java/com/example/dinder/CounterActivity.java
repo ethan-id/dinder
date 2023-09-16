@@ -10,16 +10,11 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-
-import org.json.JSONObject;
 
 public class CounterActivity extends AppCompatActivity {
 
-    Button increaseBtn;
-    Button decreaseBtn;
+    Button sendBtn;
     Button backBtn;
     TextView numberTxt;
 
@@ -30,30 +25,27 @@ public class CounterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_counter);
 
-        increaseBtn = findViewById(R.id.increaseBtn);
-        decreaseBtn = findViewById(R.id.decreaseBtn);
+        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+
+        // ...
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, "https://ip.jsontest.com/", null,
+                response -> {
+                    numberTxt.setText("Response: " + response.toString());
+                },
+                error -> {
+                    // TODO: Handle error
+                    numberTxt.setText("Error: " + error.toString());
+                }
+        );
+
+        sendBtn = findViewById(R.id.sendGet);
         backBtn = findViewById(R.id.backBtn);
         numberTxt = findViewById(R.id.number);
         numberTxt.setText(String.valueOf(counter));
 
-        increaseBtn.setOnClickListener(v -> numberTxt.setText(String.valueOf(++counter)));
-        decreaseBtn.setOnClickListener(v -> numberTxt.setText(String.valueOf(--counter)));
-
-        // Get a RequestQueue
-        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
-
-        // ...
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, "https://bb2f1cae-347d-4a40-8941-11471d81db18.mock.pstmn.io/wasabi", null,
-            response -> {
-                numberTxt.setText("Response: " + response.toString());
-            },
-            error -> {
-                // TODO: Handle error
-            }
-        );
-
-        // Add a request (in this example, called stringRequest) to your RequestQueue.
-        queue.add(jsonObjectRequest);
+        sendBtn.setOnClickListener(v -> {
+            queue.add(jsonObjectRequest);
+        });
 
         backBtn.setOnClickListener(v -> {
             Intent intent = new Intent(CounterActivity.this, MainActivity.class);
