@@ -13,6 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Restaurantsnearby"
+rootProject.name = "listview"
 include(":app")
- 

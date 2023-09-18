@@ -13,6 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Menudisplay"
+rootProject.name = "loginnnnnnnn"
 include(":app")
- 

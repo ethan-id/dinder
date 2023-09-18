@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Booking">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginTop="183dp"
+        android:layout_marginBottom="55dp"
+        android:gravity="left"
+        android:orientation="vertical">
+
+        <CheckBox
+            android:id="@+id/vegan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vegan"
+            android:textSize="30dp" />
+
+        <CheckBox
+            android:id="@+id/nonveg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Meats+Seafood"
+            android:textSize="30dp" />
+
+        <CheckBox
+            android:id="@+id/veg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Greens"
+            android:textSize="30dp" />
+
+        <CheckBox
+            android:id="@+id/drinks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All Available Drinks"
+            android:textSize="30dp" />
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/Book"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="133dp"
+        android:layout_marginRight="133dp"
+        android:layout_marginBottom="140dp"
+        android:background="#FF5722"
+        android:text="PLACE ORDER" />
+
+    <TextView
+        android:id="@+id/bill"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="55dp"
+        android:layout_marginLeft="55dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginRight="56dp"
+        android:layout_marginBottom="44dp"
+        android:textSize="30dp" />
+</RelativeLayout>
+
