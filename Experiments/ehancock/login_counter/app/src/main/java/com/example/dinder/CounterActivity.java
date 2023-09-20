@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 
 public class CounterActivity extends AppCompatActivity {
 
@@ -28,14 +29,15 @@ public class CounterActivity extends AppCompatActivity {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
 
         // ...
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, "http://ip.jsontest.com/", null,
-                response -> {
-                    numberTxt.setText("Response: " + response.toString());
-                },
-                error -> {
-                    // TODO: Handle error
-                    numberTxt.setText("Error: " + error.toString());
-                }
+        StringRequest basicRequest = new StringRequest(Request.Method.GET,
+            "http://10.0.2.2:8080/ethan",
+            response -> {
+                numberTxt.setText("Response: " + response);
+            },
+            error -> {
+                // TODO: Handle error
+                numberTxt.setText("Error: " + error);
+            }
         );
 
         sendBtn = findViewById(R.id.sendGet);
@@ -44,7 +46,7 @@ public class CounterActivity extends AppCompatActivity {
         numberTxt.setText(String.valueOf(counter));
 
         sendBtn.setOnClickListener(v -> {
-            queue.add(jsonObjectRequest);
+            queue.add(basicRequest);
         });
 
         backBtn.setOnClickListener(v -> {
