@@ -28,7 +28,7 @@ public class CounterActivity extends AppCompatActivity {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
 
         // ...
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, "https://ip.jsontest.com/", null,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, "http://ip.jsontest.com/", null,
                 response -> {
                     numberTxt.setText("Response: " + response.toString());
                 },
