@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="028fb3c0-3b12-4a81-ac1d-273027a2bb66" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="7725183e-6027-40ed-9414-aa0359627cfc" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../Experiment2/Portentially_Example_2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Experiment2/Portentially_Example_2/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Experiment3/helloworld/src/main/java/coms309/WelcomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Experiment3/helloworld/src/main/java/coms309/WelcomeController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,10 +16,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../.." />
   </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 5
-}</component>
-  <component name="ProjectId" id="2V2tg5CsIxv6SZ9dr0hHdQvUMVa" />
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="2VMU98tFrdEvccNuIPzKzooJWHX" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -28,35 +29,18 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Dinder/Dinder/sd_322/Experiments/Jwills22/Experiment1/helloworld",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+    "last_opened_file_path": "C:/Dinder/Dinder/sd_322/Experiments/Jwills22/Experiment4/helloworld"
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Dinder\Dinder\sd_322\Experiments\Jwills22\Experiment2\Portentially_Example_2\src" />
-    </key>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="028fb3c0-3b12-4a81-ac1d-273027a2bb66" name="Changes" comment="" />
-      <created>1694046112298</created>
+      <changelist id="7725183e-6027-40ed-9414-aa0359627cfc" name="Changes" comment="" />
+      <created>1694645290645</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1694046112298</updated>
+      <updated>1694645290645</updated>
     </task>
     <servers />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Main.java</url>
-          <line>9</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
