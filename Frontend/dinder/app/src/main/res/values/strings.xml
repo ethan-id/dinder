@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Dinder</string>
+    <string name="dinder">Dinder</string>
+    <string name="login">Login</string>
+    <string name="to_counter">To Counter</string>
+    <string name="increase">Increase</string>
+    <string name="decrease">Decrease</string>
+    <string name="sendGet">Sent Get Request</string>
+    <string name="back_to_main">Back to Main</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="logo_content_description">Logo For App</string>
+</resources>
