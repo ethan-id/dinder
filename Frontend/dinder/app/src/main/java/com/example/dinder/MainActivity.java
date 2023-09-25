@@ -9,25 +9,29 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.text.TextWatcher;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
     Button button;
-    EditText email;
+    EditText username;
     EditText password;
     ImageView logo;
+
+    protected boolean validLogin(String username, String password) {
+        return !Objects.equals(username, "") && !Objects.equals(password, "");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
         setContentView(R.layout.activity_main);
 
         button = findViewById(R.id.loginBtn);
-        email = findViewById(R.id.editTextEmail);
+        username = findViewById(R.id.editTextUsername);
         password = findViewById(R.id.editTextPassword);
         logo = findViewById(R.id.appLogo);
         logo.setImageResource(R.drawable.temporary_logo);
-
-
-        button.setEnabled(false);
 
         // TextWatcher to observe changes in the EditText fields
         TextWatcher textWatcher = new TextWatcher() {
@@ -40,17 +44,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 // Enable button only if both email and password have content
-                button.setEnabled(!email.getText().toString().trim().isEmpty() && !password.getText().toString().trim().isEmpty());
+                // update counts of username or password
             }
         };
 
-        email.addTextChangedListener(textWatcher);
+        username.addTextChangedListener(textWatcher);
         password.addTextChangedListener(textWatcher);
 
         button.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, CounterActivity.class);
-            startActivity(intent);
-            email.setText("");
+            if (validLogin(username.getText().toString(), password.getText().toString())) {
+                startActivity(intent);
+            }
+            username.setText("");
             password.setText("");
         });
     }
