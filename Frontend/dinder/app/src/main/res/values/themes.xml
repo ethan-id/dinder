@@ -16,7 +16,7 @@
 
     <style name="Button.Primary" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/dark_gray</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
