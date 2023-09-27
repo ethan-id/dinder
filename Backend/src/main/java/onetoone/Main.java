@@ -10,11 +10,6 @@ import onetoone.Laptops.LaptopRepository;
 import onetoone.Users.User;
 import onetoone.Users.UserRepository;
 
-/**
- * 
- * @author Vivek Bengre
- * 
- */ 
 
 @SpringBootApplication
 //@EnableJpaRepositories
@@ -35,9 +30,9 @@ class Main {
     @Bean
     CommandLineRunner initUser(UserRepository userRepository, LaptopRepository laptopRepository) {
         return args -> {
-            User user1 = new User("John", "john@somemail.com");
-            User user2 = new User("Jane", "jane@somemail.com");
-            User user3 = new User("Justin", "justin@somemail.com");
+            User user1 = new User("Eli", "BigE", "1234");
+            User user2 = new User("Ethan", "MrEthan", "johndeere");
+            User user3 = new User("Jesse", "Jessticals", "hehe");
             Laptop laptop1 = new Laptop( 2.5, 4, 8, "Lenovo", 300);
             Laptop laptop2 = new Laptop( 4.1, 8, 16, "Hp", 800);
             Laptop laptop3 = new Laptop( 3.5, 32, 32, "Dell", 2300);  

@@ -11,10 +11,10 @@ import javax.persistence.OneToOne;
 import onetoone.Laptops.Laptop;
 
 /**
- * 
+ *
  * @author Vivek Bengre
- * 
- */ 
+ *
+ */
 
 @Entity
 public class User {
@@ -27,8 +27,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private String emailId;
-    private boolean ifActive;
+    private String username;
+    private String passkey;
+    private boolean vegan;
+    private boolean vegitarian;
+    private boolean halal;
 
     /*
      * @OneToOne creates a relation between the current entity/table(Laptop) with the entity/table defined below it(User)
@@ -40,10 +43,13 @@ public class User {
     @JoinColumn(name = "laptop_id")
     private Laptop laptop;
 
-    public User(String name, String emailId) {
+    public User(String name, String username, String passkey) {
         this.name = name;
-        this.emailId = emailId;
-        this.ifActive = true;
+        this.username = username;
+        this.passkey = passkey;
+        this.vegan = false;
+        this.vegitarian = false;
+        this.halal = false;
     }
 
     public User() {
@@ -67,20 +73,36 @@ public class User {
         this.name = name;
     }
 
-    public String getEmailId(){
-        return emailId;
+    public String getUsername(){
+        return username;
     }
 
-    public void setEmailId(String emailId){
-        this.emailId = emailId;
+    public void setEmailId(String username){
+        this.username = username;
     }
 
-    public boolean getIsActive(){
-        return ifActive;
+    public boolean isVegan() {
+        return vegan;
     }
 
-    public void setIfActive(boolean ifActive){
-        this.ifActive = ifActive;
+    public void setVegan(boolean vegan) {
+        this.vegan = vegan;
+    }
+
+    public boolean isHalal() {
+        return halal;
+    }
+
+    public void setHalal(boolean halal) {
+        this.halal = halal;
+    }
+
+    public boolean isVegitarian() {
+        return vegitarian;
+    }
+
+    public void setVegitarian(boolean vegitarian) {
+        this.vegitarian = vegitarian;
     }
 
     public Laptop getLaptop(){
