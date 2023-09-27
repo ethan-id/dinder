@@ -10,6 +10,11 @@ import javax.persistence.OneToOne;
 
 import onetoone.Laptops.Laptop;
 
+/**
+ *
+ * @author Vivek Bengre
+ *
+ */
 
 @Entity
 public class User {
