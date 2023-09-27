@@ -3,6 +3,8 @@ package onetoone.Users;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,9 +40,14 @@ public class UserController {
         return userRepository.findById(id);
     }
 
-    @GetMapping(path = "/users/{username}")
-    User getUserByUsername( @PathVariable String username){
-        return userRepository.findByUsername(username);}
+    @GetMapping(path = "/users/login/{username}")
+  public ResponseEntity<?> getUserByUsername(@PathVariable String username){
+        User temp = userRepository.findByUsername(username);
+        if(temp != null){
+            return new ResponseEntity<>(temp, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    };
 
 
     @PostMapping(path = "/users")
@@ -59,7 +66,7 @@ public class UserController {
         userRepository.save(request);
         return userRepository.findById(id);
     }   
-    
+
     @PutMapping("/users/{userId}/laptops/{laptopId}")
     String assignLaptopToUser(@PathVariable int userId,@PathVariable int laptopId){
         User user = userRepository.findById(userId);
