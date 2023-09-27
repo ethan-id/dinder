@@ -24,6 +24,7 @@
 
     <Button
         android:id="@+id/sendGet"
+        style="@style/Button.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sendGet"
@@ -36,6 +37,7 @@
 
     <Button
         android:id="@+id/backBtn"
+        style="@style/Button.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="156dp"
