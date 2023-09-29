@@ -8,8 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import onetoone.Laptops.Laptop;
-
 /**
  *
  * @author Vivek Bengre
@@ -39,9 +37,8 @@ public class User {
      * in the database (more info : https://www.baeldung.com/jpa-cascade-types)
      * @JoinColumn defines the ownership of the foreign key i.e. the user table will have a field called laptop_id
      */
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "laptop_id")
-    private Laptop laptop;
+
+
 
     public User(String name, String username, String passkey) {
         this.name = name;
@@ -105,12 +102,5 @@ public class User {
         this.vegitarian = vegitarian;
     }
 
-    public Laptop getLaptop(){
-        return laptop;
-    }
 
-    public void setLaptop(Laptop laptop){
-        this.laptop = laptop;
-    }
-    
 }
