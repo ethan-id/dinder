@@ -62,6 +62,14 @@ public class User {
         this.id = id;
     }
 
+    public String getPasskey() {
+        return passkey;
+    }
+
+    public void setPasskey(String passkey) {
+        this.passkey = passkey;
+    }
+
     public String getName(){
         return name;
     }

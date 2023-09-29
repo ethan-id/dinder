@@ -36,11 +36,17 @@ public class UserController {
         return userRepository.findById(id);
     }
 
-    @GetMapping(path = "/users/login/{username}")
-  public ResponseEntity<?> getUserByUsername(@PathVariable String username){
+    @GetMapping(path = "/users/login/{sent}")
+    public ResponseEntity<?> getUserByUsername(@PathVariable String sent){
+        int index = sent.indexOf(",");
+        String username = sent.substring(0,index);
+        System.out.println(username);
+        String passkey = sent.substring(index+1);
         User temp = userRepository.findByUsername(username);
         if(temp != null){
-            return new ResponseEntity<>(temp, HttpStatus.OK);
+           if(temp.getPasskey().equals(passkey)) {
+                return new ResponseEntity<>(temp, HttpStatus.OK);
+           }
         }
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     };
