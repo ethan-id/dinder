@@ -47,6 +47,7 @@ public class UserController {
            if(temp.getPasskey().equals(passkey)) {
                 return new ResponseEntity<>(temp, HttpStatus.OK);
            }
+           return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     };
