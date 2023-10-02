@@ -25,17 +25,17 @@ public class RestaurantController {
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
 
-    @GetMapping(path = "/All/Restaurant")
+    @GetMapping(path = "/restaurant/all")
     List<Restaurant> getAllRestaurant(){
         return RestaurantRepository.findAll();
     }
 
-    @GetMapping(path = "/Restaurant/{id}")
+    @GetMapping(path = "/restaurant/{id}")
     Restaurant getRestaurantById(@PathVariable int id){
         return RestaurantRepository.findById(id);
     }
 
-    @PostMapping(path = "/Restaurant")
+    @PostMapping(path = "/restaurant")
     String createRestaurant(Restaurant Restaurant){
         if (Restaurant == null)
             return failure;
@@ -43,7 +43,7 @@ public class RestaurantController {
         return success;
     }
 
-    @PutMapping("/Restaurant/{id}")
+    @PutMapping("/restaurant/{id}")
     Restaurant updateRestaurant(@PathVariable int id, @RequestBody Restaurant request){
         Restaurant Restaurant = RestaurantRepository.findById(id);
         if(Restaurant == null)
@@ -52,7 +52,7 @@ public class RestaurantController {
         return RestaurantRepository.findById(id);
     }
 
-    @DeleteMapping(path = "/Restaurant/{id}")
+    @DeleteMapping(path = "/restaurant/{id}")
     String deleteRestaurant(@PathVariable int id){
         RestaurantRepository.deleteById(id);
         return success;
