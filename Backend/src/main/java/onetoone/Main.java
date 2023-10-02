@@ -48,7 +48,7 @@ class Main {
                  * This delimits all the files that were returned from the call from Postman. 5 files, each one contains 50 restaurants except the last one
                  * It adds a comma and \n after every value for easy parsing later
                  */
-                File file = new File("C:/Dinder/Dinder/sd_322/Experiments/Jwills22/Experiment7/tutorials/response.json");
+                File file = new File("response.json");
                 Scanner reader = new Scanner(new FileReader(file));
                 reader.useDelimiter(",");
 
@@ -57,7 +57,7 @@ class Main {
                 }
                 reader.close();
 
-                File file2 = new File("C:/Dinder/Dinder/sd_322/Experiments/Jwills22/Experiment7/tutorials/response2.json");
+                File file2 = new File("response2.json");
                 Scanner reader2 = new Scanner(new FileReader(file2));
                 reader2.useDelimiter(",");
 
@@ -66,7 +66,7 @@ class Main {
                 }
                 reader2.close();
 
-                File file3 = new File("C:/Dinder/Dinder/sd_322/Experiments/Jwills22/Experiment7/tutorials/response3.json");
+                File file3 = new File("response3.json");
                 Scanner reader3 = new Scanner(new FileReader(file3));
                 reader3.useDelimiter(",");
 
@@ -75,7 +75,7 @@ class Main {
                 }
                 reader3.close();
 
-                File file4 = new File("C:/Dinder/Dinder/sd_322/Experiments/Jwills22/Experiment7/tutorials/response4.json");
+                File file4 = new File("response4.json");
                 Scanner reader4 = new Scanner(new FileReader(file4));
                 reader4.useDelimiter(",");
 
@@ -84,7 +84,7 @@ class Main {
                 }
                 reader4.close();
 
-                File file5 = new File("C:/Dinder/Dinder/sd_322/Experiments/Jwills22/Experiment7/tutorials/response5.json");
+                File file5 = new File("response5.json");
                 Scanner reader5 = new Scanner(new FileReader(file5));
                 reader5.useDelimiter(",");
 
