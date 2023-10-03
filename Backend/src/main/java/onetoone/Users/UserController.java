@@ -70,7 +70,13 @@ public class UserController {
         User user = userRepository.findById(id);
         if(user == null)
             return null;
-        userRepository.save(request);
+        user.setName(request.getName());
+        user.setUsername(request.getUsername());
+        user.setPasskey(request.getPasskey());
+        user.setHalal(request.isHalal());
+        user.setVegan(request.isVegan());
+        user.setVegitarian(request.isVegitarian());
+        userRepository.save(user);
         return userRepository.findById(id);
     }   
 
