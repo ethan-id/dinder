@@ -25,6 +25,7 @@ public class UserController {
 
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
+    private String exists = "{\"message\":\"exists\"}";
 
     @GetMapping(path = "/users")
     List<User> getAllUsers(){
@@ -57,6 +58,9 @@ public class UserController {
     String createUser(@RequestBody User user){
         if (user == null)
             return failure;
+        if(userRepository.findByUsername(user.getUsername()) != null){
+            return "Already exists";
+        }
         userRepository.save(user);
         return success;
     }
