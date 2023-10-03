@@ -14,4 +14,9 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     void deleteById(int id);
 
+    Restaurant findByCode(String code);
+
+    void deleteByCode(String code);
+
+
 }

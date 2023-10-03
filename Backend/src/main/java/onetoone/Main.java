@@ -104,7 +104,7 @@ class Main {
                             if (a.get(j).contains("name")) {
                                 x.set_name(a.get(j).substring(8));
                             } else if (a.get(j).contains("id")) {
-                                x.set_id(a.get(j).substring(8));
+                                x.set_code(a.get(j).substring(8));
                             } else if (a.get(j).contains("is_closed")) {
                                 x.set_is_closed(a.get(j).substring(14));
                             } else if (a.get(j).contains("rating")) {

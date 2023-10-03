@@ -30,12 +30,12 @@ public class RestaurantController {
         return RestaurantRepository.findAll();
     }
 
-    @GetMapping(path = "/restaurant/{id}")
-    Restaurant getRestaurantById(@PathVariable int id){
-        return RestaurantRepository.findById(id);
+    @GetMapping(path = "/restaurant/find/{code}")
+    Restaurant getRestaurantById(@PathVariable String code){
+        return RestaurantRepository.findByCode(code);
     }
 
-    @PostMapping(path = "/restaurant")
+    @PostMapping(path = "/restaurant/newrestaurant")
     String createRestaurant(Restaurant Restaurant){
         if (Restaurant == null)
             return failure;
@@ -43,18 +43,18 @@ public class RestaurantController {
         return success;
     }
 
-    @PutMapping("/restaurant/{id}")
-    Restaurant updateRestaurant(@PathVariable int id, @RequestBody Restaurant request){
-        Restaurant Restaurant = RestaurantRepository.findById(id);
+    @PutMapping("/restaurant/{code}")
+    Restaurant updateRestaurant(@PathVariable String code, @RequestBody Restaurant request){
+        Restaurant Restaurant = RestaurantRepository.findByCode(code);
         if(Restaurant == null)
             return null;
         RestaurantRepository.save(request);
-        return RestaurantRepository.findById(id);
+        return RestaurantRepository.findByCode(code);
     }
 
-    @DeleteMapping(path = "/restaurant/{id}")
-    String deleteRestaurant(@PathVariable int id){
-        RestaurantRepository.deleteById(id);
+    @DeleteMapping(path = "/restaurant/{code}")
+    String deleteRestaurant(@PathVariable String code){
+        RestaurantRepository.deleteByCode(code);
         return success;
     }
 }
