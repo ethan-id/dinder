@@ -3,6 +3,7 @@ package com.example.dinder;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -12,26 +13,24 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import java.util.Objects;
 
-import java.util.Objects;
-
 public class MainActivity extends AppCompatActivity {
     Button loginBtn;
+    Button signUpBtn;
     EditText username;
     EditText password;
     ImageView logo;
 
     private JsonObjectRequest createUserLoginRequest(String username, String password) {
-        Intent intent = new Intent(MainActivity.this, CounterActivity.class);
-
-        String url = String.format("http://10.0.2.2:8080/login/%s", username);
+        String url = String.format("http://10.0.2.2:8080/users/login/%s,%s", username, password);
 
         return new JsonObjectRequest(url,
                 response -> {
-                    startActivity(intent);
+                    // Handle response
+                    Log.d("Response", response.toString());
                 },
                 error -> {
-                    startActivity(intent);
-                    // Handle login error/incorrect password or something
+                    // Handle error
+                    error.printStackTrace();
                 }
         );
     }
@@ -46,10 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
 
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
         setContentView(R.layout.activity_main);
 
-        loginBtn = findViewById(R.id.loginBtn);
+        loginBtn = findViewById(R.id.signUpBtn);
+        signUpBtn = findViewById(R.id.backToLoginBtn);
         username = findViewById(R.id.editTextUsername);
         password = findViewById(R.id.editTextPassword);
         logo = findViewById(R.id.appLogo);
@@ -64,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
 
             // Reset password input after clicking the button
             password.setText("");
+        });
+
+        signUpBtn.setOnClickListener(v -> {
+            Intent signUpScreen = new Intent(MainActivity.this, SignUpActivity.class);
+            startActivity(signUpScreen);
         });
     }
 }
