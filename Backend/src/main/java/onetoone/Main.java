@@ -41,109 +41,17 @@ class Main {
                 userRepository.save(user2);
                 userRepository.save(user3);
 
-                ArrayList<String> a = new ArrayList<String>();
-                int counter = 0;
-                int i;
-                /**
-                 * This delimits all the files that were returned from the call from Postman. 5 files, each one contains 50 restaurants except the last one
-                 * It adds a comma and \n after every value for easy parsing later
-                 */
-                File file = new File("response.json");
-                Scanner reader = new Scanner(new FileReader(file));
-                reader.useDelimiter(",");
-
-                while (reader.hasNextLine()) {
-                    a.add(reader.next());
-                }
-                reader.close();
-
-                File file2 = new File("response2.json");
-                Scanner reader2 = new Scanner(new FileReader(file2));
-                reader2.useDelimiter(",");
-
-                while (reader2.hasNextLine()) {
-                    a.add(reader2.next());
-                }
-                reader2.close();
-
-                File file3 = new File("response3.json");
-                Scanner reader3 = new Scanner(new FileReader(file3));
-                reader3.useDelimiter(",");
-
-                while (reader3.hasNextLine()) {
-                    a.add(reader3.next());
-                }
-                reader3.close();
-
-                File file4 = new File("response4.json");
-                Scanner reader4 = new Scanner(new FileReader(file4));
-                reader4.useDelimiter(",");
-
-                while (reader4.hasNextLine()) {
-                    a.add(reader4.next());
-                }
-                reader4.close();
-
-                File file5 = new File("response5.json");
-                Scanner reader5 = new Scanner(new FileReader(file5));
-                reader5.useDelimiter(",");
-
-                while (reader5.hasNextLine()) {
-                    a.add(reader5.next());
-                }
-                reader5.close();
-                /**
-                 * This portion of the method is iterating through the parsed .JSON file and finding the required parameters for the
-                 * Constructor for class Restaurant
-                 */
-                    for (i = 0; i < a.size(); i++) {
-                    Restaurant x = new Restaurant();
-                    if (a.get(i).contains("{\"id\"")) {
-                        counter++;
-                        for (int j = i; j < (i + 28); j++) {
-                            if (a.get(j).contains("name")) {
-                                x.set_name(a.get(j).substring(8, a.get(j).length()));
-                            } else if (a.get(j).contains("id")) {
-                                x.set_code(a.get(j).substring(8));
-                            } else if (a.get(j).contains("is_closed")) {
-                                x.set_is_closed(a.get(j).substring(14));
-                            } else if (a.get(j).contains("rating")) {
-                                x.set_rating(a.get(j).substring(11));
-                            } else if (a.get(j).contains("review_count")) {
-                                x.set_review_count(a.get(j).substring(17));
-                            } else if (a.get(j).contains("longitude")) {
-                                x.set_longitude(a.get(j).substring(13, a.get(j).length() - 1));
-                            } else if (a.get(j).contains("latitude")) {
-                                x.set_latitude(a.get(j).substring(28));
-                            } else if (a.get(j).contains("image_url")) {
-                                x.set_image_url(a.get(j).substring(14));
-                            } else if (a.get(j).contains("url")) {
-                                x.set_url(a.get(j).substring(8));
-                            } else if (a.get(j).contains("stan")) {
-                                x.set_distance(a.get(j).substring(13));
-                            } else if (a.get(j).contains("play_ph")) {
-                                x.set_phone_number(a.get(j).substring(19));
-                            } else if (a.get(j).contains("play_addr")) {
-                                x.set_address(a.get(j).substring(22));
-                            } else if (a.get(j).contains("price")) {
-                                x.set_price(a.get(j).substring(9));
-                            }
-                        }
-                    }
-                    /**
-                     * This if statement is necessary because every iteration of the for loop it creates a new restaurant
-                     * regardless if the values get assigned
-                     **/
-                    if (x.get_name() != null) {
-                        x.set_count(counter);
-                        if (x.get_price() == null) {
-                            x.set_price("$");
-                        }
-                        //System.out.println(x.get_code());
-                        restaurantRepository.save(x);
-                    }
-                }
+                        restaurantRepository.save(new Restaurant(1, "Cornbread", "kBw1q0aMC5HkJ5vWT_axFA", "false", "4.5", "217", "https://www.yelp.com/biz/cornbred-ames?adjust_creative=RyNyMQd7rvZeoBrbuIrc1w&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=RyNyMQd7rvZeoBrbuIrc1w", "https://s3-media1.fl.yelpcdn.com/bphoto/lwExCed7IisI_koQU1tWKg/o.jpg", "$$", "-93.618123", "42.024457", "526 Main St", "null","null"));
+                        restaurantRepository.save(new Restaurant(2, "Provisions Lot F", "5UQIWWFOGF_3ZC5XLpuUuQ", "false", "4.5", "258", "https://www.yelp.com/biz/provisions-lot-f-ames-2?adjust_creative=RyNyMQd7rvZeoBrbuIrc1w&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=RyNyMQd7rvZeoBrbuIrc1w", "https://s3-media1.fl.yelpcdn.com/bphoto/JHgm0Fz462NAN9lxi7Mpfg/o.jpg", "$$", "-93.63569581557114", "42.00077713820821", "2400 N Loop Dr", "null","null"));
+                        restaurantRepository.save(new Restaurant(3, "Dublin Bay Irish Pub Grill", "PXmhUIYWV6Wa3Ua3UFNV0Q", "false", "4.0", "202", "https://www.yelp.com/biz/dublin-bay-irish-pub-and-grill-ames-3?adjust_creative=RyNyMQd7rvZeoBrbuIrc1w&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=RyNyMQd7rvZeoBrbuIrc1w", "https://s3-media3.fl.yelpcdn.com/bphoto/fHRQNKcHFSMGH05FJX_4-w/o.jpg",  "$$",  "-93.614776",  "42.008025", "320 S 16th St", null, null));
+                        restaurantRepository.save(new Restaurant(4, "Aunt Maude's", "yDf8_64Lp05EXglmcl2Slg", "false", "4.0", "141", "https://www.yelp.com/biz/aunt-maudes-ames?adjust_creative=RyNyMQd7rvZeoBrbuIrc1w&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=RyNyMQd7rvZeoBrbuIrc1w", "https://s3-media2.fl.yelpcdn.com/bphoto/2ooETNT_D8HeFNTeLR1dcQ/o.jpg",  "$$",  "-93.6190831661224",  "42.025307743985", "547 Main St", "(515) 233-4136", "769.0394985467868"));
+                        restaurantRepository.save(new Restaurant(5,"The Cafe", "yDf8_64Lp05EXglmcl2Slg", "false", "4.5", "488", "https://www.yelp.com/biz/the-cafe-ames-9?adjust_creative=RyNyMQd7rvZeoBrbuIrc1w&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=RyNyMQd7rvZeoBrbuIrc1w", "https://s3-media1.fl.yelpcdn.com/bphoto/fh2WLCgZOww0XjZcLobiNA/o.jpg",  "$$",  "-93.64367",  "42.04872", "2616 Northridge Pkwy", null, null));
+                        restaurantRepository.save(new Restaurant(6, "Hickory Park Restaurant Co.", "GNAiaFeLzy2J_8S2ZxrybQ", "false", "4.0", "601", "https://www.yelp.com/biz/hickory-park-restaurant-co-ames?adjust_creative=RyNyMQd7rvZeoBrbuIrc1w&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=RyNyMQd7rvZeoBrbuIrc1w", "https://s3-media1.fl.yelpcdn.com/bphoto/YkPVT2SVu9GBwYxlh7acXA/o.jpg",  "$$",  "-93.6094067755548",  "42.0099445811956", "1404 S Duff Ave", "(515) 232-8940", null));
+                        restaurantRepository.save(new Restaurant(7, "The Mucky Duck Pub", "90wYasFlXTjSWsA3BjF4zw", "false", "4.5", "197", "https://www.yelp.com/biz/the-mucky-duck-pub-ames?adjust_creative=RyNyMQd7rvZeoBrbuIrc1w&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=RyNyMQd7rvZeoBrbuIrc1w", "https://s3-media3.fl.yelpcdn.com/bphoto/19s165sggAowG756Ac_CmQ/o.jpg",  "$$",  "-93.60955112265208",  "41.99469728386815", "3100 S Duff Ave", null, null));
+                        restaurantRepository.save(new Restaurant(8, "Bar La Tosca", "8nD2P50BFqaUQAG-4TY36w", "false", "4.0", "60", "https://www.yelp.com/biz/bar-la-tosca-ames?adjust_creative=RyNyMQd7rvZeoBrbuIrc1w&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=RyNyMQd7rvZeoBrbuIrc1w", "https://s3-media4.fl.yelpcdn.com/bphoto/f9dDXNNmqDrHkv8QnZ-aug/o.jpg",  "$$",  "-93.6156766707959",  "42.0249912978246", "303 Welch Ave", "(515) 292-5258", "1042.7453372325815"));
+                        restaurantRepository.save(new Restaurant(9, "The Great Plains Sauce & Dough", "8nD2P50BFqaUQAG-4TY36w", "false", "4.0", "186", "https://www.yelp.com/biz/the-great-plains-sauce-and-dough-ames?adjust_creative=RyNyMQd7rvZeoBrbuIrc1w&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=RyNyMQd7rvZeoBrbuIrc1w", "https://s3-media2.fl.yelpcdn.com/bphoto/iorgtqKIwAZHnslqa7DQBg/o.jpg",  "$$",  "-93.6118147",  "42.0253575", "129 Main St", null, null));
+                        restaurantRepository.save(new Restaurant(10, "La Casa Maya", "yPGjbSl_vQKPekYfCT9VJw", "false", "4.5", "17", "https://www.yelp.com/biz/la-casa-maya-ames?adjust_creative=RyNyMQd7rvZeoBrbuIrc1w&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=RyNyMQd7rvZeoBrbuIrc1w", "https://s3-media1.fl.yelpcdn.com/bphoto/CR6HFfVrgrOJSW1ZEp2oMw/o.jpg",  "$$",  "-93.61941367",  "42.02364783", "631 Lincoln Way", "(515) 233-7179", "724.4502904006047"));
 
             };
-        };
+        }
     }
