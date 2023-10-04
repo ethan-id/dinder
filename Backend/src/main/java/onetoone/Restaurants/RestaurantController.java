@@ -25,36 +25,36 @@ public class RestaurantController {
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
 
-    @GetMapping(path = "/All/Restaurant")
+    @GetMapping(path = "/restaurant/all")
     List<Restaurant> getAllRestaurant(){
         return RestaurantRepository.findAll();
     }
 
-    @GetMapping(path = "/Restaurant/{id}")
-    Restaurant getRestaurantById(@PathVariable int id){
-        return RestaurantRepository.findById(id);
+    @GetMapping(path = "/restaurant/find/{code}")
+    Restaurant getRestaurantById(@PathVariable String code){
+        return RestaurantRepository.findByCode(code);
     }
 
-    @PostMapping(path = "/Restaurant")
-    String createRestaurant(Restaurant Restaurant){
+    @PutMapping(path = "/restaurant/new-restaurant")
+    String createRestaurant(@RequestBody Restaurant Restaurant){
         if (Restaurant == null)
             return failure;
         RestaurantRepository.save(Restaurant);
         return success;
     }
 
-    @PutMapping("/Restaurant/{id}")
-    Restaurant updateRestaurant(@PathVariable int id, @RequestBody Restaurant request){
-        Restaurant Restaurant = RestaurantRepository.findById(id);
+    @PutMapping("/restaurant/{code}")
+    Restaurant updateRestaurant(@PathVariable String code, @RequestBody Restaurant request){
+        Restaurant Restaurant = RestaurantRepository.findByCode(code);
         if(Restaurant == null)
             return null;
         RestaurantRepository.save(request);
-        return RestaurantRepository.findById(id);
+        return RestaurantRepository.findByCode(code);
     }
 
-    @DeleteMapping(path = "/Restaurant/{id}")
-    String deleteRestaurant(@PathVariable int id){
-        RestaurantRepository.deleteById(id);
+    @DeleteMapping(path = "/restaurant/{code}")
+    String deleteRestaurant(@PathVariable String code){
+        RestaurantRepository.deleteByCode(code);
         return success;
     }
 }
