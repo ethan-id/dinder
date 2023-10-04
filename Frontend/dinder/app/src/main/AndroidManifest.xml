@@ -11,7 +11,7 @@
         android:theme="@style/Theme.Dinder"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".CounterActivity"
+            android:name=".SignUpActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
