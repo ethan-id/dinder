@@ -96,9 +96,6 @@ class Main {
                  * This portion of the method is iterating through the parsed .JSON file and finding the required parameters for the
                  * Constructor for class Restaurant
                  */
-                for (i = 0; i < a.size(); i++) {
-                    System.out.println(a.get(i));
-                }
                     for (i = 0; i < a.size(); i++) {
                     Restaurant x = new Restaurant();
                     if (a.get(i).contains("{\"id\"")) {
@@ -142,7 +139,7 @@ class Main {
                         if (x.get_price() == null) {
                             x.set_price("$");
                         }
-                        System.out.println(x.get_code());
+                        //System.out.println(x.get_code());
                         restaurantRepository.save(x);
                     }
                 }
