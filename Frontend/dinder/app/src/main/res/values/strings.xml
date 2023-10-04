@@ -10,8 +10,8 @@
 
     <string name="login">Login</string>
     <string name="signUp">Sign-Up</string>
-    <string name="email">Email</string>
-    <string name="emailExample">johnsmith123@gmail.com</string>
+    <string name="name">Name</string>
+    <string name="nameExample">John</string>
     <string name="username">Username</string>
     <string name="usernameExample">john123</string>
     <string name="password">Password</string>

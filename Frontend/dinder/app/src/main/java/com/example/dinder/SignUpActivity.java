@@ -34,12 +34,12 @@ public class SignUpActivity extends AppCompatActivity {
     CheckBox data;
     ImageView logo;
 
-    private JSONObject makeUserJson(String email, String username, String password) {
+    private JSONObject makeUserJson(String name, String username, String password) {
         JSONObject userJson = new JSONObject();
         try {
-            userJson.put("email", email);
+            userJson.put("name", name);
             userJson.put("username", username);
-            userJson.put("password", password);
+            userJson.put("passkey", password);
         } catch (JSONException e) {
             e.printStackTrace();
         }
