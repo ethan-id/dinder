@@ -35,8 +35,8 @@ public class RestaurantController {
         return RestaurantRepository.findByCode(code);
     }
 
-    @PostMapping(path = "/restaurant/newrestaurant")
-    String createRestaurant(Restaurant Restaurant){
+    @PutMapping(path = "/restaurant/new-restaurant")
+    String createRestaurant(@RequestBody Restaurant Restaurant){
         if (Restaurant == null)
             return failure;
         RestaurantRepository.save(Restaurant);

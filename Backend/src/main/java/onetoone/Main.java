@@ -97,12 +97,15 @@ class Main {
                  * Constructor for class Restaurant
                  */
                 for (i = 0; i < a.size(); i++) {
+                    System.out.println(a.get(i));
+                }
+                    for (i = 0; i < a.size(); i++) {
                     Restaurant x = new Restaurant();
                     if (a.get(i).contains("{\"id\"")) {
                         counter++;
                         for (int j = i; j < (i + 28); j++) {
                             if (a.get(j).contains("name")) {
-                                x.set_name(a.get(j).substring(8));
+                                x.set_name(a.get(j).substring(8, a.get(j).length()));
                             } else if (a.get(j).contains("id")) {
                                 x.set_code(a.get(j).substring(8));
                             } else if (a.get(j).contains("is_closed")) {
@@ -139,7 +142,7 @@ class Main {
                         if (x.get_price() == null) {
                             x.set_price("$");
                         }
-                        //System.out.println(x.printValues());
+                        System.out.println(x.get_code());
                         restaurantRepository.save(x);
                     }
                 }
