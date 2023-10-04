@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignUpActivity"
+    tools:layout_editor_absoluteX="-2dp"
+    tools:layout_editor_absoluteY="11dp">
+
+    <EditText
+        android:id="@+id/editTextConfirmPassword"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="532dp"
+        android:autofillHints="password"
+        android:ems="10"
+        android:hint="@string/passwordExample"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="264dp"
+        android:autofillHints="emailAddress"
+        android:ems="10"
+        android:hint="@string/nameExample"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/emailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="8dp"
+        android:labelFor="@id/editTextUsername"
+        android:text="@string/name"
+        android:textAlignment="textStart"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
+
+    <EditText
+        android:id="@+id/editTextUsername"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="352dp"
+        android:autofillHints="emailAddress"
+        android:ems="10"
+        android:hint="@string/usernameExample"
+        android:inputType="text|textNoSuggestions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/usernameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="8dp"
+        android:labelFor="@id/editTextUsername"
+        android:text="@string/username"
+        android:textAlignment="textStart"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextUsername" />
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="444dp"
+        android:autofillHints="password"
+        android:ems="10"
+        android:hint="@string/passwordExample"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/passwordLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="8dp"
+        android:labelFor="@id/editTextPassword"
+        android:text="@string/password"
+        android:textAlignment="textStart"
+        android:textIsSelectable="false"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
+
+    <TextView
+        android:id="@+id/passwordConfirmLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="584dp"
+        android:labelFor="@id/editTextPassword"
+        android:text="@string/confirmPassword"
+        android:textAlignment="textStart"
+        android:textIsSelectable="false"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/backToLoginBtn"
+        style="@style/Button.Secondary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="768dp"
+        android:text="@string/back"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/signUpBtn"
+        style="@style/Button.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="768dp"
+        android:text="@string/signUp"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/backToLoginBtn"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/appLogo"
+        android:layout_width="210dp"
+        android:layout_height="210dp"
+        android:layout_marginStart="85dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="90dp"
+        android:layout_marginBottom="470dp"
+        android:contentDescription="@string/logo_content_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.54"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/temporary_logo" />
+
+    <CheckBox
+        android:id="@+id/termsCheckbox"
+        android:layout_width="256dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="77dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/termsOfServiceAgreement"
+        android:textAlignment="textStart"
+        app:layout_constraintBottom_toTopOf="@+id/dataConsentCheckbox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordConfirmLabel"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <CheckBox
+        android:id="@+id/dataConsentCheckbox"
+        android:layout_width="255dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="77dp"
+        android:layout_marginTop="696dp"
+        android:text="@string/dataConsent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

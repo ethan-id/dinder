@@ -1,14 +1,25 @@
 <resources>
     <string name="app_name">Dinder</string>
     <string name="dinder">Dinder</string>
-    <string name="login">Login</string>
-    <string name="signUp">Sign-Up</string>
     <string name="to_counter">To Counter</string>
     <string name="increase">Increase</string>
     <string name="decrease">Decrease</string>
     <string name="sendGet">Send Get Request</string>
     <string name="back_to_main">Back to Main</string>
-    <string name="password">Password</string>
+    <string name="back">Back</string>
+
+    <string name="login">Login</string>
+    <string name="signUp">Sign-Up</string>
+    <string name="name">Name</string>
+    <string name="nameExample">John</string>
     <string name="username">Username</string>
+    <string name="usernameExample">john123</string>
+    <string name="password">Password</string>
+    <string name="passwordExample">johnsPa55w0rd!</string>
+    <string name="confirmPassword">Confirm Password</string>
+
+    <string name="termsOfServiceAgreement">I agree to Dinder\'s Terms of Service</string>
+    <string name="dataConsent">I consent to Dinder using my data</string>
+
     <string name="logo_content_description">Logo For App</string>
 </resources>
