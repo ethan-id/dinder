@@ -22,8 +22,10 @@ public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int count;
+
+    private int id;
     private String name;
-    private String id;
+    private String code;
     private String rating;
     private String review_count;
     private String image_url;
@@ -43,12 +45,12 @@ public class Restaurant {
      * @JoinColumn defines the ownership of the foreign key i.e. the user table will have a field called laptop_id
      */
 
-    public Restaurant(int count, String name, String id, String is_closed, String rating, String review_count, String image_url,
+    public Restaurant(int count, String name, String code, String is_closed, String rating, String review_count, String image_url,
                       String url, String price, String longitude, String latitude, String address, String phone_number,
                       String distance) {
         this.count = count;
         this.name = name;
-        this.id = id;
+        this.code = code;
         this.is_closed = is_closed;
         this.rating = rating;
         this.review_count = review_count;
@@ -72,8 +74,8 @@ public class Restaurant {
         return this.name;
     }
 
-    public String get_id() {
-        return this.id;
+    public String get_code() {
+        return this.code;
     }
 
     public String get_is_closed() {return this.is_closed; }
@@ -125,8 +127,8 @@ public class Restaurant {
         this.name = name;
     }
 
-    public void set_id(String id) {
-        this.id = id;
+    public void set_code(String code) {
+        this.code = code;
     }
 
     public void set_is_closed(String is_closed) {this.is_closed = is_closed; }
@@ -169,7 +171,7 @@ public class Restaurant {
     }
 
     public String printValues() {
-        return (count + "" + name + ", " + id + ", " + is_closed +", " + rating +", " + review_count +", " + url +", " + image_url +", " + price +", " + longitude +
+        return (count + "" + name + ", " + code + ", " + is_closed +", " + rating +", " + review_count +", " + url +", " + image_url +", " + price +", " + longitude +
                 ", " + latitude +", " + address +", " + phone_number +", " + distance);
     }
 
