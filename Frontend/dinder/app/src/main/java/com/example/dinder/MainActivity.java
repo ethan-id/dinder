@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         return new JsonObjectRequest(url,
                 response -> {
                     // Handle response
+                    startActivity(new Intent(MainActivity.this, UserHomeActivity.class));
                     Log.d("Response", response.toString());
                 },
                 error -> {
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
             if (validLogin(username.getText().toString(), password.getText().toString())) {
                 JsonObjectRequest loginRequest = createUserLoginRequest(username.getText().toString(), password.getText().toString());
                 queue.add(loginRequest);
+                startActivity(new Intent(MainActivity.this, UserHomeActivity.class));
             }
 
             // Reset password input after clicking the button
