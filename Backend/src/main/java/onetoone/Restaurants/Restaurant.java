@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.ArrayList;
 
 
 /**
@@ -38,6 +39,8 @@ public class Restaurant {
     private String distance;
     private String phone_number;
 
+    ArrayList<String> title = new ArrayList<String>();
+
     /*
      * @OneToOne creates a relation between the current entity/table(Laptop) with the entity/table defined below it(User)
      * cascade is responsible propagating all changes, even to children of the class Eg: changes made to laptop within a user object will be reflected
@@ -47,7 +50,7 @@ public class Restaurant {
 
     public Restaurant(int count, String name, String code, String is_closed, String rating, String review_count, String image_url,
                       String url, String price, String longitude, String latitude, String address, String phone_number,
-                      String distance) {
+                      String distance, ArrayList<String> title) {
         this.count = count;
         this.name = name;
         this.code = code;
@@ -62,6 +65,7 @@ public class Restaurant {
         this.address = address;
         this.phone_number = phone_number;
         this.distance = distance;
+        this.title = title;
 
     }
 
@@ -114,6 +118,8 @@ public class Restaurant {
     public String get_distance() {
         return this.distance;
     }
+    public ArrayList<String> get_titles() {return this.title; }
+
 
     /**
      * Setters for restaurant class
@@ -169,6 +175,7 @@ public class Restaurant {
     public void set_distance(String distance) {
         this.distance = distance;
     }
+    public void set_titles(ArrayList<String> title){this.title = title; }
 
     public String printValues() {
         return (count + "" + name + ", " + code + ", " + is_closed +", " + rating +", " + review_count +", " + url +", " + image_url +", " + price +", " + longitude +
