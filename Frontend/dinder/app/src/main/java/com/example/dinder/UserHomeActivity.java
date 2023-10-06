@@ -25,7 +25,10 @@ public class UserHomeActivity extends AppCompatActivity {
     ImageView centerImage;
     ImageView logo;
     ImageView locationIcon;
+    ImageView ratingIcon;
     TextView restaurantName;
+    TextView rating;
+    TextView ratingCount;
     TextView address;
     ImageButton dislike;
     ImageButton favorite;
@@ -50,6 +53,8 @@ public class UserHomeActivity extends AppCompatActivity {
                 restaurantName.setText(currentRestaurant.getString("_name"));
                 address.setText(currentRestaurant.getString("_address"));
                 chip1.setText(currentRestaurant.getString("_price"));
+                rating.setText(currentRestaurant.getString("_rating"));
+                ratingCount.setText(String.format("(%s)", currentRestaurant.getString("_review_count")));
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
@@ -102,7 +107,10 @@ public class UserHomeActivity extends AppCompatActivity {
         centerImage = findViewById(R.id.centerRestaurantImage);
         centerImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
         locationIcon = findViewById(R.id.locationIcon);
+        ratingIcon = findViewById(R.id.ratingIcon);
         restaurantName = findViewById(R.id.restName);
+        rating = findViewById(R.id.rating);
+        ratingCount = findViewById(R.id.ratingCount);
         address = findViewById(R.id.address);
         dislike = findViewById(R.id.dislikeBtn);
         favorite = findViewById(R.id.heartBtn);
