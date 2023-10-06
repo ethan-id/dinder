@@ -21,5 +21,16 @@
     <string name="termsOfServiceAgreement">I agree to Dinder\'s Terms of Service</string>
     <string name="dataConsent">I consent to Dinder using my data</string>
 
+    <string name="imageDescription">Image for Restaurant</string>
+    <string name="logoDesc">Logo of Restaurant</string>
+
+    <string name="dislike">Dislike</string>
+    <string name="userProfile">User Profile</string>
+    <string name="heart">Heart/Favorite</string>
+    <string name="location">Location/Address</string>
+
+    <string name="tags">Tag Data for Restaurant</string>
+
+
     <string name="logo_content_description">Logo For App</string>
 </resources>
