@@ -20,6 +20,7 @@ class WelcomeController {
 
     @GetMapping("/{name}")
     public String welcome(@PathVariable String name) {
+
         return "Informaion about "+ request + ": " + name;
     }
 
