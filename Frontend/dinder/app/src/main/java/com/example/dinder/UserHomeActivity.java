@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.ImageRequest;
 import com.google.android.material.chip.Chip;
 
 import org.json.JSONArray;
@@ -64,14 +65,36 @@ public class UserHomeActivity extends AppCompatActivity {
                 if (!restaurants.isEmpty()) {
                     currentRestaurant = restaurants.get(0);
                     try {
+                        // Populate screen with info about current restaurant
+                        sendCenterImageRequest(currentRestaurant.getString("_url"), queue);
                         restaurantName.setText(currentRestaurant.getString("_name"));
                         address.setText(currentRestaurant.getString("_address"));
+                        chip1.setText(currentRestaurant.getString("_price"));
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
                 }
             },
             (Response.ErrorListener) Throwable::printStackTrace
+        ));
+    }
+
+    private void sendCenterImageRequest(String imageUrl, RequestQueue queue) {
+        queue.add(new ImageRequest(
+                imageUrl,
+                response -> {
+                    // Handle the bitmap here. For example, set it to an ImageView.
+                    centerImage.setImageBitmap(response);
+                    Log.d("ImageRequest", "Width: " + response.getWidth());
+                    Log.d("ImageRequest", "Height: " + response.getHeight());
+                    Log.d("ImageRequest", "Byte count: " + response.getByteCount());
+                },
+                0, 0, ImageView.ScaleType.CENTER_CROP, null,
+                error -> {
+                    // Handle the error here.
+                    error.printStackTrace();
+                    Log.d("Error", error.toString());
+                }
         ));
     }
 

@@ -27,6 +27,7 @@
         android:layout_height="65dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
+        android:background="#434343"
         android:contentDescription="@string/logoDesc"
         app:layout_constraintBottom_toTopOf="@+id/centerRestaurantImage"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,6 +40,7 @@
         android:layout_marginStart="7dp"
         android:layout_marginBottom="24dp"
         android:textSize="34sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/centerRestaurantImage"
         app:layout_constraintStart_toEndOf="@+id/restLogo" />
 
@@ -48,6 +50,7 @@
         android:layout_height="65dp"
         android:layout_marginStart="15dp"
         android:layout_marginBottom="11dp"
+        android:background="@drawable/rounded_icon_button"
         android:contentDescription="@string/dislike"
         app:layout_constraintBottom_toBottomOf="@+id/centerRestaurantImage"
         app:layout_constraintStart_toStartOf="@+id/centerRestaurantImage"
@@ -59,7 +62,8 @@
         android:layout_height="65dp"
         android:layout_marginTop="111dp"
         android:layout_marginEnd="16dp"
-        android:contentDescription="@string/dislike"
+        android:background="@drawable/rounded_icon_button_outlined"
+        android:contentDescription="@string/userProfile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/centerRestaurantImage"
         app:srcCompat="@drawable/account_circle" />
@@ -70,6 +74,7 @@
         android:layout_height="65dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="11dp"
+        android:background="@drawable/rounded_icon_button"
         android:contentDescription="@string/heart"
         app:layout_constraintBottom_toBottomOf="@+id/centerRestaurantImage"
         app:layout_constraintEnd_toEndOf="@+id/centerRestaurantImage"
@@ -140,8 +145,9 @@
         android:id="@+id/locationIcon"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_marginStart="1dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="48dp"
+        android:contentDescription="@string/location"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/centerRestaurantImage"
         app:srcCompat="@drawable/location_on" />

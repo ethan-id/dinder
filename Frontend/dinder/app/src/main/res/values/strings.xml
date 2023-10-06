@@ -24,8 +24,10 @@
     <string name="imageDescription">Image for Restaurant</string>
     <string name="logoDesc">Logo of Restaurant</string>
 
-    <string name="dislike">Dislike Button</string>
-    <string name="heart">Heart Button</string>
+    <string name="dislike">Dislike</string>
+    <string name="userProfile">User Profile</string>
+    <string name="heart">Heart/Favorite</string>
+    <string name="location">Location/Address</string>
 
     <string name="tags">Tag Data for Restaurant</string>
 
