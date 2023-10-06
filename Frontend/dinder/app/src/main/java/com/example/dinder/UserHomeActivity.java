@@ -1,9 +1,7 @@
 package com.example.dinder;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,9 +9,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.ImageRequest;
 import com.google.android.material.chip.Chip;
 
@@ -22,7 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class UserHomeActivity extends AppCompatActivity {
 
@@ -81,20 +76,16 @@ public class UserHomeActivity extends AppCompatActivity {
 
     private void sendCenterImageRequest(String imageUrl, RequestQueue queue) {
         queue.add(new ImageRequest(
-                imageUrl,
-                response -> {
-                    // Handle the bitmap here. For example, set it to an ImageView.
-                    centerImage.setImageBitmap(response);
-                    Log.d("ImageRequest", "Width: " + response.getWidth());
-                    Log.d("ImageRequest", "Height: " + response.getHeight());
-                    Log.d("ImageRequest", "Byte count: " + response.getByteCount());
-                },
-                0, 0, ImageView.ScaleType.CENTER_CROP, null,
-                error -> {
-                    // Handle the error here.
-                    error.printStackTrace();
-                    Log.d("Error", error.toString());
-                }
+            imageUrl,
+            response -> {
+                // Handle the bitmap here. For example, set it to an ImageView.
+                centerImage.setImageBitmap(response);
+            },
+            0, 0, ImageView.ScaleType.CENTER_CROP, null,
+            error -> {
+                // Handle the error here.
+                error.printStackTrace();
+            }
         ));
     }
 
@@ -106,6 +97,7 @@ public class UserHomeActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_userhome);
         centerImage = findViewById(R.id.centerRestaurantImage);
+        centerImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
         locationIcon = findViewById(R.id.locationIcon);
         restaurantName = findViewById(R.id.restName);
         address = findViewById(R.id.address);
@@ -120,7 +112,6 @@ public class UserHomeActivity extends AppCompatActivity {
         chip6 = findViewById(R.id.chip6);
         chip7 = findViewById(R.id.chip7);
         logo = findViewById(R.id.restLogo);
-//        logo.setImageResource(R.drawable.temporary_logo);
 
         getRestaurants(queue);
     }
