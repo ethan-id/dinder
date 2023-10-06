@@ -1,6 +1,8 @@
 package com.example.dinder;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -40,6 +42,23 @@ public class UserHomeActivity extends AppCompatActivity {
     ArrayList<JSONObject> restaurants = new ArrayList<>();
     JSONObject currentRestaurant;
 
+    private void populateScreen(RequestQueue queue, int index) {
+        if (index < restaurants.size()) {
+            currentRestaurant = restaurants.get(index);
+            try {
+                // Populate screen with info about current restaurant
+                sendCenterImageRequest(currentRestaurant.getString("_url"), queue);
+                restaurantName.setText(currentRestaurant.getString("_name"));
+                address.setText(currentRestaurant.getString("_address"));
+                chip1.setText(currentRestaurant.getString("_price"));
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            // Tell user there are no more restaurants :(
+        }
+    }
+
     private void getRestaurants(RequestQueue queue) {
         queue.add(new JsonArrayRequest(
             Request.Method.GET,
@@ -56,18 +75,8 @@ public class UserHomeActivity extends AppCompatActivity {
                     }
                 }
 
-                // Move this block of code into the response callback
                 if (!restaurants.isEmpty()) {
-                    currentRestaurant = restaurants.get(0);
-                    try {
-                        // Populate screen with info about current restaurant
-                        sendCenterImageRequest(currentRestaurant.getString("_url"), queue);
-                        restaurantName.setText(currentRestaurant.getString("_name"));
-                        address.setText(currentRestaurant.getString("_address"));
-                        chip1.setText(currentRestaurant.getString("_price"));
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
+                    populateScreen(queue, 0);
                 }
             },
             (Response.ErrorListener) Throwable::printStackTrace
@@ -114,5 +123,13 @@ public class UserHomeActivity extends AppCompatActivity {
         logo = findViewById(R.id.restLogo);
 
         getRestaurants(queue);
+
+        dislike.setOnClickListener(v -> {
+            populateScreen(queue,restaurants.indexOf(currentRestaurant) + 1);
+        });
+
+        favorite.setOnClickListener(v -> {
+            populateScreen(queue,restaurants.indexOf(currentRestaurant) + 1);
+        });
     }
 }
