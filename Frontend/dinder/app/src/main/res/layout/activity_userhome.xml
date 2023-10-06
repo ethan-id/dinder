@@ -60,12 +60,12 @@
         android:id="@+id/profileBtn"
         android:layout_width="65dp"
         android:layout_height="65dp"
-        android:layout_marginTop="111dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/rounded_icon_button_outlined"
         android:contentDescription="@string/userProfile"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/centerRestaurantImage"
         app:srcCompat="@drawable/account_circle" />
 
     <ImageButton
@@ -134,10 +134,11 @@
     <TextView
         android:id="@+id/address"
         android:layout_width="147dp"
-        android:layout_height="27dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="11dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
         android:textSize="20sp"
+        app:flow_verticalAlign="center"
         app:layout_constraintStart_toEndOf="@+id/locationIcon"
         app:layout_constraintTop_toTopOf="@+id/locationIcon" />
 
@@ -145,11 +146,45 @@
         android:id="@+id/locationIcon"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="48dp"
         android:contentDescription="@string/location"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/centerRestaurantImage"
         app:srcCompat="@drawable/location_on" />
+
+    <ImageView
+        android:id="@+id/ratingIcon"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="360dp"
+        android:layout_marginTop="48dp"
+        android:contentDescription="@string/location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/centerRestaurantImage"
+        app:srcCompat="@drawable/star" />
+
+    <TextView
+        android:id="@+id/rating"
+        android:layout_width="98dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="4dp"
+        android:textAlignment="textEnd"
+        android:textSize="20sp"
+        app:flow_verticalAlign="center"
+        app:layout_constraintEnd_toStartOf="@+id/ratingIcon"
+        app:layout_constraintTop_toBottomOf="@+id/centerRestaurantImage" />
+
+    <TextView
+        android:id="@+id/ratingCount"
+        android:layout_width="45dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="3dp"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        app:flow_verticalAlign="top"
+        app:layout_constraintStart_toStartOf="@+id/ratingIcon"
+        app:layout_constraintTop_toBottomOf="@+id/ratingIcon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
