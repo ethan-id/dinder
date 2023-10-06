@@ -2,7 +2,6 @@ package com.example.dinder;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -87,14 +86,9 @@ public class UserHomeActivity extends AppCompatActivity {
         queue.add(new ImageRequest(
             imageUrl,
             response -> {
-                // Handle the bitmap here. For example, set it to an ImageView.
                 centerImage.setImageBitmap(response);
-            },
-            0, 0, ImageView.ScaleType.CENTER_CROP, null,
-            error -> {
-                // Handle the error here.
-                error.printStackTrace();
-            }
+            }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,
+            Throwable::printStackTrace
         ));
     }
 

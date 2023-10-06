@@ -23,16 +23,13 @@ public class MainActivity extends AppCompatActivity {
     private JsonObjectRequest createUserLoginRequest(String username, String password) {
         String url = String.format("http://10.0.2.2:8080/users/login/%s,%s", username, password);
 
+        // Handle error
         return new JsonObjectRequest(url,
-                response -> {
-                    // Handle response
-                    startActivity(new Intent(MainActivity.this, UserHomeActivity.class));
-                    Log.d("Response", response.toString());
-                },
-                error -> {
-                    // Handle error
-                    error.printStackTrace();
-                }
+            response -> {
+                // Handle response
+                startActivity(new Intent(MainActivity.this, UserHomeActivity.class));
+            },
+            Throwable::printStackTrace
         );
     }
 
@@ -60,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
             if (validLogin(username.getText().toString(), password.getText().toString())) {
                 JsonObjectRequest loginRequest = createUserLoginRequest(username.getText().toString(), password.getText().toString());
                 queue.add(loginRequest);
+
+                // Eventually check the user type here and then we can either start the default home page,
+                // restaurant home page or the dev home page.
                 startActivity(new Intent(MainActivity.this, UserHomeActivity.class));
             }
 
