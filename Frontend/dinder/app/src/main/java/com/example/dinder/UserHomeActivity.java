@@ -66,9 +66,9 @@ public class UserHomeActivity extends AppCompatActivity {
     private void getRestaurants(RequestQueue queue) {
         queue.add(new JsonArrayRequest(
             Request.Method.GET,
-            "http://10.0.2.2:8080/restaurant/all",
+            "http://coms-309-055.class.las.iastate.edu:8080/restaurant/all",
             null,
-            (Response.Listener<JSONArray>) response -> {
+            (Response.Listener<JSON1Array>) response -> {
                 // Handle the JSON array response
                 for (int i = 0; i < response.length(); i++) {
                     try {

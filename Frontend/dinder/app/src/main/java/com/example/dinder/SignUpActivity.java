@@ -48,7 +48,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void sendRequestToMakeUser(RequestQueue queue, JSONObject userJson) {
         // Handle error
-        StringRequest postRequest = new StringRequest(Request.Method.POST, "http://10.0.2.2:8080/users",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, "http://coms-309-055.class.las.iastate.edu:8080/users",
                 (Response.Listener<String>) response -> {
                     // Handle response
                     Log.d("Response", response);
