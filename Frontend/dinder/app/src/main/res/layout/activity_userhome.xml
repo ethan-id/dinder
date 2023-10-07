@@ -35,12 +35,13 @@
 
     <TextView
         android:id="@+id/restName"
-        android:layout_width="234dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginBottom="24dp"
+        android:layout_width="312dp"
+        android:layout_height="72dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="12dp"
         android:textSize="34sp"
         android:textStyle="bold"
+        app:flow_verticalAlign="center"
         app:layout_constraintBottom_toTopOf="@+id/centerRestaurantImage"
         app:layout_constraintStart_toEndOf="@+id/restLogo" />
 
@@ -80,64 +81,74 @@
         app:layout_constraintEnd_toEndOf="@+id/centerRestaurantImage"
         app:srcCompat="@drawable/favorite" />
 
-    <com.google.android.material.chip.ChipGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:maxHeight="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/centerRestaurantImage">
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:overScrollMode="ifContentScrolls"
+        app:flexWrap="nowrap"
+        app:layout_constraintTop_toBottomOf="@+id/centerRestaurantImage"
+        tools:layout_editor_absoluteX="8dp">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip"
+        <com.google.android.material.chip.ChipGroup
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/tags" />
+            android:layout_marginStart="1dp"
+            android:maxHeight="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/centerRestaurantImage">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/tags" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/tags" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/tags" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/tags" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/tags" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/tags" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/tags" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/tags" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/tags" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/tags" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/tags" />
-    </com.google.android.material.chip.ChipGroup>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/tags" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/tags" />
+        </com.google.android.material.chip.ChipGroup>
+    </com.google.android.flexbox.FlexboxLayout>
 
     <TextView
         android:id="@+id/address"
-        android:layout_width="147dp"
-        android:layout_height="30dp"
+        android:layout_width="196dp"
+        android:layout_height="31dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
-        android:textSize="20sp"
+        android:maxLines="1"
+        android:textSize="18sp"
         app:flow_verticalAlign="center"
         app:layout_constraintStart_toEndOf="@+id/locationIcon"
         app:layout_constraintTop_toTopOf="@+id/locationIcon" />
@@ -186,5 +197,17 @@
         app:flow_verticalAlign="top"
         app:layout_constraintStart_toStartOf="@+id/ratingIcon"
         app:layout_constraintTop_toBottomOf="@+id/ratingIcon" />
+
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="89dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="34dp"
+        android:textAlignment="textEnd"
+        android:textSize="16sp"
+        app:flow_verticalAlign="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/profileBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
