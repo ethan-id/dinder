@@ -31,6 +31,11 @@
 
     <string name="tags">Tag Data for Restaurant</string>
 
+    <string name="dietRest">Dietary Restrictions</string>
+    <string name="vegetarian">Vegetarian</string>
+    <string name="vegan">Vegan</string>
+    <string name="halal">Halal</string>
+    <string name="profileIcon">User Icon</string>
 
     <string name="logo_content_description">Logo For App</string>
 </resources>
