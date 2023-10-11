@@ -52,54 +52,68 @@ public class UserHomeActivity extends AppCompatActivity {
     private void setChip(int index, String tag) {
         switch(index) {
             case 0:
-                chip2.setText(tag);
-                chip2.setVisibility(View.VISIBLE);
+                runOnUiThread(() -> {
+                    chip2.setText(tag);
+                    chip2.setVisibility(View.VISIBLE);
+                });
                 break;
             case 1:
-                chip3.setText(tag);
-                chip3.setVisibility(View.VISIBLE);
+                runOnUiThread(() -> {
+                    chip3.setText(tag);
+                    chip3.setVisibility(View.VISIBLE);
+                });
                 break;
             case 2:
-                chip4.setText(tag);
-                chip4.setVisibility(View.VISIBLE);
+                runOnUiThread(() -> {
+                    chip4.setText(tag);
+                    chip4.setVisibility(View.VISIBLE);
+                });
                 break;
             case 3:
-                chip5.setText(tag);
-                chip5.setVisibility(View.VISIBLE);
+                runOnUiThread(() -> {
+                    chip5.setText(tag);
+                    chip5.setVisibility(View.VISIBLE);
+                });
                 break;
             case 4:
-                chip6.setText(tag);
-                chip6.setVisibility(View.VISIBLE);
+                runOnUiThread(() -> {
+                    chip6.setText(tag);
+                    chip6.setVisibility(View.VISIBLE);
+                });
                 break;
             case 5:
-                chip7.setText(tag);
-                chip7.setVisibility(View.VISIBLE);
+                runOnUiThread(() -> {
+                    chip7.setText(tag);
+                    chip7.setVisibility(View.VISIBLE);
+                });
                 break;
         }
     }
 
     private void hideEmptyChips() {
-        if (chip1.getText().toString().equals("")) {
-            chip1.setVisibility(View.GONE);
-        }
-        if (chip2.getText().toString().equals("")) {
-            chip2.setVisibility(View.GONE);
-        }
-        if (chip3.getText().toString().equals("")) {
-            chip3.setVisibility(View.GONE);
-        }
-        if (chip4.getText().toString().equals("")) {
-            chip4.setVisibility(View.GONE);
-        }
-        if (chip5.getText().toString().equals("")) {
-            chip5.setVisibility(View.GONE);
-        }
-        if (chip6.getText().toString().equals("")) {
-            chip6.setVisibility(View.GONE);
-        }
-        if (chip7.getText().toString().equals("")) {
-            chip7.setVisibility(View.GONE);
-        }
+        runOnUiThread(() -> {
+            if (chip1.getText().toString().equals("")) {
+                chip1.setVisibility(View.GONE);
+            }
+            if (chip2.getText().toString().equals("")) {
+                chip2.setVisibility(View.GONE);
+            }
+            if (chip3.getText().toString().equals("")) {
+                chip3.setVisibility(View.GONE);
+            }
+            if (chip4.getText().toString().equals("")) {
+                chip4.setVisibility(View.GONE);
+            }
+            if (chip5.getText().toString().equals("")) {
+                chip5.setVisibility(View.GONE);
+            }
+            if (chip6.getText().toString().equals("")) {
+                chip6.setVisibility(View.GONE);
+            }
+            if (chip7.getText().toString().equals("")) {
+                chip7.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void populateScreen(RequestQueue queue, int index) {
@@ -113,6 +127,33 @@ public class UserHomeActivity extends AppCompatActivity {
                 chip1.setText(currentRestaurant.getString("_price"));
                 rating.setText(currentRestaurant.getString("_rating"));
                 ratingCount.setText(String.format("(%s)", currentRestaurant.getString("_review_count")));
+                runOnUiThread(() -> {
+                    try {
+                        restaurantName.setText(currentRestaurant.getString("_name"));
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                    try {
+                        address.setText(currentRestaurant.getString("_address"));
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                    try {
+                        chip1.setText(currentRestaurant.getString("_price"));
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                    try {
+                        rating.setText(currentRestaurant.getString("_rating"));
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                    try {
+                        ratingCount.setText(String.format("(%s)", currentRestaurant.getString("_review_count")));
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
                 JSONArray titles = currentRestaurant.getJSONArray("_titles");
                 for (int i = 0; i < titles.length(); i++) {
                     setChip(i, titles.get(i).toString());
@@ -129,7 +170,7 @@ public class UserHomeActivity extends AppCompatActivity {
     private void getRestaurants(RequestQueue queue) {
         queue.add(new JsonArrayRequest(
             Request.Method.GET,
-            "http://coms-309-055.class.las.iastate.edu:8080/restaurant/all",
+            "http://10.0.2.2:8080/restaurant/all",
             null,
             (Response.Listener<JSONArray>) response -> {
                 // Handle the JSON array response
@@ -154,7 +195,9 @@ public class UserHomeActivity extends AppCompatActivity {
         queue.add(new ImageRequest(
             imageUrl,
             response -> {
-                centerImage.setImageBitmap(response);
+                runOnUiThread(() -> {
+                    centerImage.setImageBitmap(response);
+                });
             }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,
             Throwable::printStackTrace
         ));
@@ -192,8 +235,13 @@ public class UserHomeActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String userName = intent.getStringExtra("Username");
+        boolean vegetarian = intent.getBooleanExtra("vegetarian", false);
+        boolean vegan = intent.getBooleanExtra("vegan", false);
+        boolean halal = intent.getBooleanExtra("halal", false);
 
-        username.setText(userName);
+        runOnUiThread(() -> {
+            username.setText(userName);
+        });
 
         dislike.setOnClickListener(v -> {
             populateScreen(queue,restaurants.indexOf(currentRestaurant) + 1);
@@ -201,6 +249,15 @@ public class UserHomeActivity extends AppCompatActivity {
 
         favorite.setOnClickListener(v -> {
             populateScreen(queue,restaurants.indexOf(currentRestaurant) + 1);
+        });
+
+        profile.setOnClickListener(v -> {
+            Intent profile = new Intent(UserHomeActivity.this, UserProfileActivity.class);
+            profile.putExtra("name", userName);
+            profile.putExtra("vegetarian", vegetarian);
+            profile.putExtra("vegan", vegan);
+            profile.putExtra("halal", halal);
+            startActivity(profile);
         });
     }
 }

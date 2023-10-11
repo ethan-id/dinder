@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView logo;
 
     private JsonObjectRequest createUserLoginRequest(String username, String password) {
-        String url = String.format("http://coms-309-055.class.las.iastate.edu:8080/users/login/%s,%s", username, password);
+        String url = String.format("http://10.0.2.2:8080/users/login/%s,%s", username, password);
 
         // Handle error
         return new JsonObjectRequest(url,
@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent login = new Intent(MainActivity.this, UserHomeActivity.class);
                 try {
                     login.putExtra("Username", response.getString("username"));
+                    login.putExtra("vegetarian", response.getBoolean("vegitarian"));
+                    login.putExtra("halal", response.getBoolean("halal"));
+                    login.putExtra("vegan", response.getBoolean("vegan"));
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -72,7 +75,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Reset password input after clicking the button
-            password.setText("");
+            runOnUiThread(() -> {
+                password.setText("");
+            });
         });
 
         signUpBtn.setOnClickListener(v -> {
