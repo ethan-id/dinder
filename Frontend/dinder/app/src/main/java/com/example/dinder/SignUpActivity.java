@@ -95,12 +95,12 @@ public class SignUpActivity extends AppCompatActivity {
                 // send post request to create user, then send request to login user based on response.
                 JSONObject user = makeUserJson(email.getText().toString(), username.getText().toString(), password.getText().toString());
                 sendRequestToMakeUser(queue, user);
-                startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
             }
         });
 
         backBtn.setOnClickListener(v -> {
-            startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+            startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
         });
     }
 }
