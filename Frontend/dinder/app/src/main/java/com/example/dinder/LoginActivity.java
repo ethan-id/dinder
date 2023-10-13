@@ -15,7 +15,7 @@ import org.json.JSONException;
 
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     Button loginBtn;
     Button signUpBtn;
     EditText username;
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Eventually check the user type here and then we can either start the default home page,
                 // restaurant home page or the dev home page.
-                Intent login = new Intent(MainActivity.this, UserHomeActivity.class);
+                Intent login = new Intent(LoginActivity.this, UserHomeActivity.class);
                 try {
                     login.putExtra("Username", response.getString("username"));
                     login.putExtra("vegetarian", response.getBoolean("vegitarian"));
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         signUpBtn.setOnClickListener(v -> {
-            Intent signUpScreen = new Intent(MainActivity.this, SignUpActivity.class);
+            Intent signUpScreen = new Intent(LoginActivity.this, SignUpActivity.class);
             startActivity(signUpScreen);
         });
     }
