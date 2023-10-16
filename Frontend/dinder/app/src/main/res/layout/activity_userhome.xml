@@ -198,16 +198,4 @@
         app:layout_constraintStart_toStartOf="@+id/ratingIcon"
         app:layout_constraintTop_toBottomOf="@+id/ratingIcon" />
 
-    <TextView
-        android:id="@+id/username"
-        android:layout_width="89dp"
-        android:layout_height="30dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="34dp"
-        android:textAlignment="textEnd"
-        android:textSize="16sp"
-        app:flow_verticalAlign="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/profileBtn" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
