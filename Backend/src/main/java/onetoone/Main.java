@@ -27,7 +27,6 @@ class Main {
 //        SpringApplication.run(WebSocketSpringbootApplication.class, args);
     }
 
-    // Create 3 users with their machines
 
     /**
      * @param userRepository repository for the User entity
