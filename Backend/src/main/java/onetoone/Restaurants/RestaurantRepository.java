@@ -18,5 +18,5 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     void deleteByCode(String code);
 
-
+    Restaurant findByName(String name);
 }
