@@ -64,7 +64,6 @@ public class LoginActivity extends AppCompatActivity {
         logo = findViewById(R.id.appLogo);
         logo.setImageResource(R.drawable.temporary_logo);
 
-        // loginBtn
         loginBtn.setOnClickListener(v -> {
             if (validLogin(username.getText().toString(), password.getText().toString())) {
                 JsonObjectRequest loginRequest = createUserLoginRequest(username.getText().toString(), password.getText().toString());
@@ -72,9 +71,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             // Reset password input after clicking the button
-            runOnUiThread(() -> {
-                password.setText("");
-            });
+            runOnUiThread(() -> password.setText(""));
         });
 
         signUpBtn.setOnClickListener(v -> {
