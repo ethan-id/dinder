@@ -32,6 +32,6 @@ class Main {
      */
     @Bean
     CommandLineRunner initUser(UserRepository userRepository, RestaurantRepository restaurantRepository) {
-        return args -> { };
+        return args -> {};
     }
 }
