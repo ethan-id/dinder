@@ -35,10 +35,7 @@ public class LoginActivity extends AppCompatActivity {
                 // restaurant home page or the dev home page.
                 Intent login = new Intent(LoginActivity.this, UserHomeActivity.class);
                 try {
-                    login.putExtra("Username", response.getString("username"));
-                    login.putExtra("vegetarian", response.getBoolean("vegitarian"));
-                    login.putExtra("halal", response.getBoolean("halal"));
-                    login.putExtra("vegan", response.getBoolean("vegan"));
+                    login.putExtra("id", String.valueOf(response.getInt("id")));
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }

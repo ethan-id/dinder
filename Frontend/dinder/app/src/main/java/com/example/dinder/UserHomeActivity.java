@@ -33,7 +33,6 @@ public class UserHomeActivity extends AppCompatActivity {
     TextView rating;
     TextView ratingCount;
     TextView address;
-    TextView username;
     ImageButton dislike;
     ImageButton favorite;
     ImageButton profile;
@@ -218,7 +217,6 @@ public class UserHomeActivity extends AppCompatActivity {
         rating = findViewById(R.id.rating);
         ratingCount = findViewById(R.id.ratingCount);
         address = findViewById(R.id.address);
-        username = findViewById(R.id.username);
         dislike = findViewById(R.id.dislikeBtn);
         favorite = findViewById(R.id.heartBtn);
         profile = findViewById(R.id.profileBtn);
@@ -234,14 +232,7 @@ public class UserHomeActivity extends AppCompatActivity {
         getRestaurants(queue);
 
         Intent intent = getIntent();
-        String userName = intent.getStringExtra("Username");
-        boolean vegetarian = intent.getBooleanExtra("vegetarian", false);
-        boolean vegan = intent.getBooleanExtra("vegan", false);
-        boolean halal = intent.getBooleanExtra("halal", false);
-
-        runOnUiThread(() -> {
-            username.setText(userName);
-        });
+        String id = intent.getStringExtra("id");
 
         dislike.setOnClickListener(v -> {
             populateScreen(queue,restaurants.indexOf(currentRestaurant) + 1);
@@ -253,10 +244,7 @@ public class UserHomeActivity extends AppCompatActivity {
 
         profile.setOnClickListener(v -> {
             Intent profile = new Intent(UserHomeActivity.this, UserProfileActivity.class);
-            profile.putExtra("name", userName);
-            profile.putExtra("vegetarian", vegetarian);
-            profile.putExtra("vegan", vegan);
-            profile.putExtra("halal", halal);
+            profile.putExtra("id", id);
             startActivity(profile);
         });
     }
