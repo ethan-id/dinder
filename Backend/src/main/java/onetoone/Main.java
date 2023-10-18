@@ -18,7 +18,7 @@ import java.util.Scanner;
 
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"onetoone.websocket"})
+@ComponentScan(basePackages = {"onetoone.websocket", "onetoone.restaurants", "onetoone.users"})
 //@EnableJpaRepositories
 class Main {
 
