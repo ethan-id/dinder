@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 
 import onetoone.Users.User;
 import onetoone.Users.UserRepository;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.io.File;
 import java.io.FileReader;
@@ -17,14 +18,15 @@ import java.util.Scanner;
 
 
 @SpringBootApplication
+@ComponentScan(basePackages = {"onetoone.websocket"})
 //@EnableJpaRepositories
 class Main {
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
+//        SpringApplication.run(WebSocketSpringbootApplication.class, args);
     }
 
-    // Create 3 users with their machines
 
     /**
      * @param userRepository repository for the User entity
@@ -33,13 +35,6 @@ class Main {
     @Bean
     CommandLineRunner initUser(UserRepository userRepository, RestaurantRepository restaurantRepository) {
         return args -> {
-            User user1 = new User("Eli", "BigE", "1234");
-            User user2 = new User("Ethan", "MrEthan", "johndeere");
-            User user3 = new User("Jesse", "Jessticals", "hehe");
-            userRepository.save(user1);
-            userRepository.save(user2);
-            userRepository.save(user3);
-
             ArrayList<String> a = new ArrayList<String>();
             a.add("Barbeque");a.add("Beer Bar");a.add("Cocktail Bar");
             ArrayList<String> b = new ArrayList<String>();
