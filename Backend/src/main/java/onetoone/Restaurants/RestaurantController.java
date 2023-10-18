@@ -3,15 +3,12 @@ package onetoone.Restaurants;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
@@ -76,11 +73,11 @@ public class RestaurantController {
         ArrayList<JsonNode> restaurants = new ArrayList<JsonNode>();
         categories = categories.replaceAll(",", "%2C");
         attributes = attributes.replaceAll(",", "%20");
-        String url = ("https://api.yelp.com/v3/businesses/search?term=restaurants&categories=" + categories + "&attributes=" + attributes);
+        String url = ("https://api.yelp.com/v3/businesses/search?&limit=50&term=restaurants&categories=" + categories + "&attributes=" + attributes);
         for (int i = 0; i < 5; i++) {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(url + "&location=" + city + "&limit=50&price=" + price + "&offset=" + i)
+                    .url(url + "&location=" + city + "&price=" + price + "&offset=" + i)
                     .addHeader("accept", "application/json")
                     .addHeader("Authorization", "Bearer MVfL5KGDWbaFAwn7beZaNIdCJZ95r8o09YFJgksy9pN8Q7bgqEhRbJKdtBd" +
                             "LPPmss6xv9mz3s3OTEAAu3oWaCJu5J838o1Aouy68aK2--ugkynfBSbLHKqqfVRr5ZHYx")
@@ -122,7 +119,6 @@ public class RestaurantController {
     }
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        System.out.println(success);
         return builder.build();
     }
 }
