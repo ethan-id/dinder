@@ -21,6 +21,7 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+    UserRepository repo2;
 
 
     private String success = "{\"message\":\"success\"}";
@@ -29,6 +30,7 @@ public class UserController {
 
     @GetMapping(path = "/users")
     List<User> getAllUsers(){
+        repo2.findByUsername("l");
         return userRepository.findAll();
     }
 

@@ -5,6 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/saveBtn"
+        style="@style/Button.Secondary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:text="@string/save"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <ImageButton
         android:id="@+id/backBtn"
         android:layout_width="65dp"
@@ -79,4 +92,5 @@
         android:text="@string/halal"
         app:layout_constraintStart_toStartOf="@+id/veganCheck"
         app:layout_constraintTop_toBottomOf="@+id/vegetarianCheck" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

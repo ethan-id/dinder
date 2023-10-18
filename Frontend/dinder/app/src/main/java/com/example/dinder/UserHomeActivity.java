@@ -17,13 +17,14 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.ImageRequest;
 import com.google.android.material.chip.Chip;
 
+import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class UserHomeActivity extends AppCompatActivity {
+public class UserHomeActivity extends AppCompatActivity implements WebSocketListener {
 
     ImageView centerImage;
     ImageView logo;
@@ -33,7 +34,6 @@ public class UserHomeActivity extends AppCompatActivity {
     TextView rating;
     TextView ratingCount;
     TextView address;
-    TextView username;
     ImageButton dislike;
     ImageButton favorite;
     ImageButton profile;
@@ -195,9 +195,7 @@ public class UserHomeActivity extends AppCompatActivity {
         queue.add(new ImageRequest(
             imageUrl,
             response -> {
-                runOnUiThread(() -> {
-                    centerImage.setImageBitmap(response);
-                });
+                runOnUiThread(() -> centerImage.setImageBitmap(response));
             }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,
             Throwable::printStackTrace
         ));
@@ -218,7 +216,6 @@ public class UserHomeActivity extends AppCompatActivity {
         rating = findViewById(R.id.rating);
         ratingCount = findViewById(R.id.ratingCount);
         address = findViewById(R.id.address);
-        username = findViewById(R.id.username);
         dislike = findViewById(R.id.dislikeBtn);
         favorite = findViewById(R.id.heartBtn);
         profile = findViewById(R.id.profileBtn);
@@ -234,14 +231,7 @@ public class UserHomeActivity extends AppCompatActivity {
         getRestaurants(queue);
 
         Intent intent = getIntent();
-        String userName = intent.getStringExtra("Username");
-        boolean vegetarian = intent.getBooleanExtra("vegetarian", false);
-        boolean vegan = intent.getBooleanExtra("vegan", false);
-        boolean halal = intent.getBooleanExtra("halal", false);
-
-        runOnUiThread(() -> {
-            username.setText(userName);
-        });
+        String id = intent.getStringExtra("id");
 
         dislike.setOnClickListener(v -> {
             populateScreen(queue,restaurants.indexOf(currentRestaurant) + 1);
@@ -253,11 +243,32 @@ public class UserHomeActivity extends AppCompatActivity {
 
         profile.setOnClickListener(v -> {
             Intent profile = new Intent(UserHomeActivity.this, UserProfileActivity.class);
-            profile.putExtra("name", userName);
-            profile.putExtra("vegetarian", vegetarian);
-            profile.putExtra("vegan", vegan);
-            profile.putExtra("halal", halal);
+            profile.putExtra("id", id);
             startActivity(profile);
         });
+    }
+
+    @Override
+    public void onWebSocketOpen(ServerHandshake handshakeData) {
+        // Show user notification that they have joined a group!
+        Log.d("WebSocketOpen", handshakeData.toString());
+    }
+
+    @Override
+    public void onWebSocketMessage(String message) {
+        // If the message is an invitation show notification on screen, telling user who invited them to a group
+        Log.d("Message", message);
+    }
+
+    @Override
+    public void onWebSocketClose(int code, String reason, boolean remote) {
+        // Show message telling the user who left the group
+        Log.d("WebSocketClose", reason);
+    }
+
+    @Override
+    public void onWebSocketError(Exception ex) {
+        // Show notification to user informing them of the error
+        Log.e("WebSocketError", ex.toString());
     }
 }

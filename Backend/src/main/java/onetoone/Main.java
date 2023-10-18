@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 
 import onetoone.Users.User;
 import onetoone.Users.UserRepository;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.io.File;
 import java.io.FileReader;
@@ -17,14 +18,15 @@ import java.util.Scanner;
 
 
 @SpringBootApplication
+@ComponentScan(basePackages = {"onetoone.websocket"})
 //@EnableJpaRepositories
 class Main {
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
+//        SpringApplication.run(WebSocketSpringbootApplication.class, args);
     }
 
-    // Create 3 users with their machines
 
     /**
      * @param userRepository repository for the User entity
