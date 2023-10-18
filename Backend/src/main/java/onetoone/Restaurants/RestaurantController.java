@@ -69,35 +69,18 @@ public class RestaurantController {
         }
     }
 
-    @GetMapping(path = "/home/{city}/{radius}/{party_size}/{price}/{categories}/{attributes}")
+    @GetMapping(path = "/home/{city}/{price}/{categories}/{attributes}")
     @ResponseBody
-    ArrayList<JsonNode> getSwiping(@PathVariable String city, @PathVariable Integer radius, @PathVariable Boolean party_size,
-                                   @PathVariable Integer price, @PathVariable String categories, @PathVariable String attributes) throws IOException {
+    ArrayList<JsonNode> getSwiping(@PathVariable String city, @PathVariable Integer price, @PathVariable String categories,
+                                   @PathVariable String attributes) throws IOException {
         ArrayList<JsonNode> restaurants = new ArrayList<JsonNode>();
-        List<String> categoryParams = new ArrayList<String>(Arrays.asList(categories.split(",")));
-        List<String> attributesParams = new ArrayList<String>(Arrays.asList(categories.split(",")));
-        String url = "https://api.yelp.com/v3/businesses/search?&categories=";
-        int j = 0;
-        for(String b : categoryParams) {
-            if (categoryParams.size() == 1) {
-                url += categories;
-                break;
-            }
-            url += b + "%2C";
-        }
-        url += "&attributes=";
-        for(String b : attributesParams) {
-            if (attributesParams.size() == 1) {
-                url +=  attributes;
-                break;
-            }
-            url += b + "%20";
-        }
+        categories = categories.replaceAll(",", "%2C");
+        attributes = attributes.replaceAll(",", "%20");
+        String url = ("https://api.yelp.com/v3/businesses/search?term=restaurants&categories=" + categories + "&attributes=" + attributes);
         for (int i = 0; i < 5; i++) {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(url + "&radius=" + radius + "&location=" + city + "&limit=50&price=" +
-                            price + "&matches_party_size_param=" + party_size + "&offset=" + i)
+                    .url(url + "&location=" + city + "&limit=50&price=" + price + "&offset=" + i)
                     .addHeader("accept", "application/json")
                     .addHeader("Authorization", "Bearer MVfL5KGDWbaFAwn7beZaNIdCJZ95r8o09YFJgksy9pN8Q7bgqEhRbJKdtBd" +
                             "LPPmss6xv9mz3s3OTEAAu3oWaCJu5J838o1Aouy68aK2--ugkynfBSbLHKqqfVRr5ZHYx")
@@ -109,13 +92,6 @@ public class RestaurantController {
                     if (!restaurants.contains(objectMapper.readTree(responseBody))) {
                         restaurants.add(objectMapper.readTree(responseBody));
                     }
-                }else {
-                    // Log the error details
-                    String errorMessage = "Error while fetching data from Yelp API. HTTP status code: " + response.code();
-                    if (response.body() != null) {
-                        errorMessage += ", Response body: " + response.body().string();
-                    }
-                    System.err.println(errorMessage); // Log the error message
                 }
             }
         }
