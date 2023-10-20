@@ -12,6 +12,9 @@
         android:usesCleartextTraffic="true"
         android:enableOnBackInvokedCallback="true">
         <activity
+            android:name=".SocialActivity"
+            android:exported="true"/>
+        <activity
             android:name=".UserHomeActivity"
             android:exported="true" />
         <activity
