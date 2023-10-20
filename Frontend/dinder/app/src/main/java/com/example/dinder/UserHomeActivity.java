@@ -239,7 +239,7 @@ public class UserHomeActivity extends AppCompatActivity {
         favorite.setOnClickListener(v -> populateScreen(queue,restaurants.indexOf(currentRestaurant) + 1));
 
         profile.setOnClickListener(v -> {
-            Intent profile = new Intent(UserHomeActivity.this, UserProfileActivity.class);
+            Intent profile = new Intent(UserHomeActivity.this, SocialActivity.class);
             profile.putExtra("id", id);
             startActivity(profile);
         });

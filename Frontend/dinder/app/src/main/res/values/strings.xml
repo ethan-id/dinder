@@ -38,6 +38,7 @@
     <string name="halal">Halal</string>
     <string name="profileIcon">User Icon</string>
     <string name="save">Save</string>
+    <string name="invite">Invite</string>
 
     <string name="logo_content_description">Logo For App</string>
 </resources>
