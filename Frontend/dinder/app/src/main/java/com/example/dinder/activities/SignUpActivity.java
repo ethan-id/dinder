@@ -1,4 +1,4 @@
-package com.example.dinder;
+package com.example.dinder.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +14,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
+import com.example.dinder.R;
+import com.example.dinder.VolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;

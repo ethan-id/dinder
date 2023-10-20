@@ -1,4 +1,4 @@
-package com.example.dinder;
+package com.example.dinder.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,6 +15,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.ImageRequest;
+import com.example.dinder.R;
+import com.example.dinder.VolleySingleton;
+import com.example.dinder.websocket.WebSocketListener;
 import com.google.android.material.chip.Chip;
 
 import org.java_websocket.handshake.ServerHandshake;

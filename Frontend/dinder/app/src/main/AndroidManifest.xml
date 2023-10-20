@@ -12,19 +12,19 @@
         android:usesCleartextTraffic="true"
         android:enableOnBackInvokedCallback="true">
         <activity
-            android:name=".SocialActivity"
+            android:name=".activities.SocialActivity"
             android:exported="true"/>
         <activity
-            android:name=".UserHomeActivity"
+            android:name=".activities.UserHomeActivity"
             android:exported="true" />
         <activity
-            android:name=".UserProfileActivity"
+            android:name=".activities.UserProfileActivity"
             android:exported="true" />
         <activity
-            android:name=".SignUpActivity"
+            android:name=".activities.SignUpActivity"
             android:exported="true" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

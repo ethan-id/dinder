@@ -1,4 +1,4 @@
-package com.example.dinder;
+package com.example.dinder.websocket;
 
 import android.util.Log;
 

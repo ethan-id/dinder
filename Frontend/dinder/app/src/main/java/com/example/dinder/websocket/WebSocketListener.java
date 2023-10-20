@@ -1,4 +1,4 @@
-package com.example.dinder;
+package com.example.dinder.websocket;
 
 import org.java_websocket.handshake.ServerHandshake;
 
