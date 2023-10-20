@@ -39,8 +39,8 @@ public class ChatServer {
     private static Map < Session, String > sessionUsernameMap = new Hashtable < > ();
     private static Map < String, Session > usernameSessionMap = new Hashtable < > ();
 
-    private static Map < Session, String > sessionUserMap = new Hashtable < > ();
-    private static Map < String, Session > userSessionMap = new Hashtable < > ();
+    private static Map < Session, String > groupSessionUsernameMap = new Hashtable < > ();
+    private static Map < String, Session > groupUsernameSessionMap = new Hashtable < > ();
 
     // server side logger
     private final Logger logger = LoggerFactory.getLogger(ChatServer.class);
@@ -108,9 +108,17 @@ public class ChatServer {
             sendMessageToPArticularUser(destUserName, "[DM from " + username + "]: " + actualMessage);
             sendMessageToPArticularUser(username, "[DM from " + username + "]: " + actualMessage);
         }
-//        else { // Message to whole chat
-//            broadcast(username + ": " + message);
-//        }
+        if(message.contains("group")){
+            // map current group session with username
+            groupSessionUsernameMap.put(session, username);
+
+            // map current group username with session
+            groupUsernameSessionMap.put(username, session);
+            sendMessageToPArticularUser(username, "[Group " + username + "]: You are in a group " );
+        }
+        else { // Message to whole chat
+            broadcast(username + ": " + message);
+        }
     }
 
     /**
