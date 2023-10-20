@@ -233,13 +233,9 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
 
-        dislike.setOnClickListener(v -> {
-            populateScreen(queue,restaurants.indexOf(currentRestaurant) + 1);
-        });
+        dislike.setOnClickListener(v -> populateScreen(queue,restaurants.indexOf(currentRestaurant) + 1));
 
-        favorite.setOnClickListener(v -> {
-            populateScreen(queue,restaurants.indexOf(currentRestaurant) + 1);
-        });
+        favorite.setOnClickListener(v -> populateScreen(queue,restaurants.indexOf(currentRestaurant) + 1));
 
         profile.setOnClickListener(v -> {
             Intent profile = new Intent(UserHomeActivity.this, UserProfileActivity.class);

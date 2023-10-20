@@ -23,6 +23,7 @@
 
     <string name="imageDescription">Image for Restaurant</string>
     <string name="logoDesc">Logo of Restaurant</string>
+    <string name="friendsList">List of Friends</string>
 
     <string name="dislike">Dislike</string>
     <string name="userProfile">User Profile</string>
@@ -37,6 +38,7 @@
     <string name="halal">Halal</string>
     <string name="profileIcon">User Icon</string>
     <string name="save">Save</string>
+    <string name="invite">Invite</string>
 
     <string name="logo_content_description">Logo For App</string>
 </resources>
