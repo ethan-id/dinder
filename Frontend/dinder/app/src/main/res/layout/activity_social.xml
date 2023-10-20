@@ -5,20 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/backBtn2"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="328dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/rounded_icon_button_outlined"
-        android:contentDescription="@string/userProfile"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/arrow_back" />
-
     <SearchView
         android:id="@+id/search"
         android:layout_width="378dp"
