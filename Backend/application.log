@@ -647,3 +647,8 @@ Error starting ApplicationContext. To display the conditions report re-run your 
 2023-10-20 14:43:53.429  INFO 35872 --- [http-nio-8080-exec-1] onetoone.websocket.ChatServer            : [onOpen] noteli
 2023-10-20 14:43:55.525  INFO 35872 --- [http-nio-8080-exec-2] onetoone.websocket.ChatServer            : [onMessage] noteli: group
 
+2023-10-20 14:45:58.345  INFO 35872 --- [SpringContextShutdownHook] onetoone.websocket.ChatServer            : [onClose] noteli
+2023-10-20 14:45:58.410  INFO 35872 --- [SpringContextShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-10-20 14:45:58.413  INFO 35872 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2023-10-20 14:45:58.414  INFO 35872 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-10-20 14:45:58.434  INFO 35872 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
