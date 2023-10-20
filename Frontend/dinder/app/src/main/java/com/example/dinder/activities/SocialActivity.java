@@ -1,4 +1,4 @@
-package com.example.dinder;
+package com.example.dinder.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,10 @@ import android.widget.SearchView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.dinder.R;
+import com.example.dinder.adapters.FriendsAdapter;
+import com.example.dinder.websocket.WebSocketListener;
 
 import org.java_websocket.handshake.ServerHandshake;
 

@@ -1,4 +1,4 @@
-package com.example.dinder;
+package com.example.dinder.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.widget.ImageView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.dinder.R;
+import com.example.dinder.VolleySingleton;
 
 import org.json.JSONException;
 
