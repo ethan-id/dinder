@@ -35,13 +35,14 @@ public class LoginActivity extends AppCompatActivity {
 
                 // Eventually check the user type here and then we can either start the default home page,
                 // restaurant home page or the dev home page.
-                Intent login = new Intent(LoginActivity.this, UserHomeActivity.class);
+                Intent Homepage = new Intent(LoginActivity.this, UserHomeActivity.class);
                 try {
-                    login.putExtra("id", String.valueOf(response.getInt("id")));
+                    Homepage.putExtra("id", String.valueOf(response.getInt("id")));
+                    Homepage.putExtra("username", response.getString("username"));
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
-                startActivity(login);
+                startActivity(Homepage);
             },
             Throwable::printStackTrace
         );

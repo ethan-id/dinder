@@ -18,6 +18,7 @@ import com.android.volley.toolbox.ImageRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
 import com.example.dinder.websocket.WebSocketListener;
+import com.example.dinder.websocket.WebSocketManager;
 import com.google.android.material.chip.Chip;
 
 import org.java_websocket.handshake.ServerHandshake;
@@ -208,9 +209,17 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent intent = getIntent();
+        String id = intent.getStringExtra("id");
+        String username = intent.getStringExtra("username");
+
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
 
         setContentView(R.layout.activity_userhome);
+
+        WebSocketManager.getInstance().connectWebSocket("ws://10.0.2.2:8080/chat/" + username);
+        WebSocketManager.getInstance().setWebSocketListener(UserHomeActivity.this);
+
         centerImage = findViewById(R.id.centerRestaurantImage);
         centerImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
         locationIcon = findViewById(R.id.locationIcon);
@@ -233,15 +242,10 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
 
         getRestaurants(queue);
 
-        Intent intent = getIntent();
-        String id = intent.getStringExtra("id");
-
         dislike.setOnClickListener(v -> populateScreen(queue,restaurants.indexOf(currentRestaurant) + 1));
-
         favorite.setOnClickListener(v -> populateScreen(queue,restaurants.indexOf(currentRestaurant) + 1));
-
         profile.setOnClickListener(v -> {
-            Intent profile = new Intent(UserHomeActivity.this, UserProfileActivity.class);
+            Intent profile = new Intent(UserHomeActivity.this, SocialActivity.class);
             profile.putExtra("id", id);
             startActivity(profile);
         });
