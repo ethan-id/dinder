@@ -41,4 +41,15 @@
     <string name="invite">Invite</string>
 
     <string name="logo_content_description">Logo For App</string>
+    <string name="matches">Matches</string>
+    <string name="match1" />
+    <string name="match2" />
+    <string name="match3" />
+    <string name="match4" />
+    <string name="match5" />
+    <string name="match6" />
+    <string name="match7" />
+    <string name="match8" />
+    <string name="match9" />
+    <string name="match10" />
 </resources>
