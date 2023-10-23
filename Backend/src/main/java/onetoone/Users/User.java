@@ -1,12 +1,9 @@
 package onetoone.Users;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import onetoone.Likes.Liked;
+
+import javax.persistence.*;
+import java.util.Set;
 
 /**
  *
@@ -17,10 +14,7 @@ import javax.persistence.OneToOne;
 @Entity
 public class User {
 
-     /* 
-     * The annotation @ID marks the field below as the primary key for the table created by springboot
-     * The @GeneratedValue generates a value if not already present, The strategy in this case is to start from 1 and increment for each table
-     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -30,6 +24,8 @@ public class User {
     private boolean vegan;
     private boolean vegitarian;
     private boolean halal;
+    @OneToMany(mappedBy="user")
+    private Set<Liked> likes;
 
     /*
      * @OneToOne creates a relation between the current entity/table(Laptop) with the entity/table defined below it(User)
@@ -47,6 +43,7 @@ public class User {
         this.vegan = false;
         this.vegitarian = false;
         this.halal = false;
+        this.likes = null;
     }
 
     public User() {
@@ -110,5 +107,7 @@ public class User {
         this.vegitarian = vegitarian;
     }
 
-
+    public Set<Liked> getLikes() {
+        return likes;
+    }
 }
