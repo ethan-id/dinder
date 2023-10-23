@@ -11,4 +11,7 @@
     <color name="light_gray">#a3a3a3</color>
     <color name="lighter_gray">#bcbcbc</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="maroon">#800000</color>
+
+
 </resources>
