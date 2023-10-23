@@ -28,6 +28,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+
 public class UserHomeActivity extends AppCompatActivity implements WebSocketListener {
 
     ImageView centerImage;
@@ -49,6 +52,8 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     Chip chip6;
     Chip chip7;
 
+    // Inside your activity or fragment
+    private GestureDetector gestureDetector;
     ArrayList<JSONObject> restaurants = new ArrayList<>();
     JSONObject currentRestaurant;
 
@@ -242,6 +247,41 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
 
         getRestaurants(queue);
 
+        gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                // This method will be called when a swipe gesture is detected
+                float diffX = e2.getX() - e1.getX();
+                float diffY = e2.getY() - e1.getY();
+
+                if (Math.abs(diffX) > Math.abs(diffY)) {
+                    // Horizontal swipe detected
+                    if (diffX > 0) {
+                        // Right swipe
+                        try {
+                            String code = currentRestaurant.getString("_code");
+                            WebSocketManager.getInstance().sendMessage("like@" + code);
+                            populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                        return true;
+                    } else {
+                        // Left swipe
+                        try {
+                            String code = currentRestaurant.getString("_code");
+                            WebSocketManager.getInstance().sendMessage("dislike@" + code);
+                            populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                        return true;
+                    }
+                }
+                return super.onFling(e1, e2, velocityX, velocityY);
+            }
+        });
+
         dislike.setOnClickListener(v -> {
             try {
                 String code = currentRestaurant.getString("_code");
@@ -265,6 +305,12 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             profile.putExtra("id", id);
             startActivity(profile);
         });
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        gestureDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
     }
 
     @Override
