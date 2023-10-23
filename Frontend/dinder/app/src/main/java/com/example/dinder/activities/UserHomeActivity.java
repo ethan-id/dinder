@@ -242,8 +242,24 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
 
         getRestaurants(queue);
 
-        dislike.setOnClickListener(v -> populateScreen(queue,restaurants.indexOf(currentRestaurant) + 1));
-        favorite.setOnClickListener(v -> populateScreen(queue,restaurants.indexOf(currentRestaurant) + 1));
+        dislike.setOnClickListener(v -> {
+            try {
+                String code = currentRestaurant.getString("_code");
+                WebSocketManager.getInstance().sendMessage("dislike@" + code);
+                populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        favorite.setOnClickListener(v -> {
+            try {
+                String code = currentRestaurant.getString("_code");
+                WebSocketManager.getInstance().sendMessage("like@" + code);
+                populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        });
         profile.setOnClickListener(v -> {
             Intent profile = new Intent(UserHomeActivity.this, SocialActivity.class);
             profile.putExtra("id", id);
