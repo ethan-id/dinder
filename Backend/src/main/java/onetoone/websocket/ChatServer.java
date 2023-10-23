@@ -1,5 +1,6 @@
 package onetoone.websocket;
 
+import onetoone.Likes.Liked;
 import onetoone.Users.User;
 import onetoone.Users.UserRepository;
 import org.slf4j.Logger;
@@ -11,6 +12,9 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.security.Key;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -39,8 +43,12 @@ public class ChatServer {
     private static Map < Session, String > sessionUsernameMap = new Hashtable < > ();
     private static Map < String, Session > usernameSessionMap = new Hashtable < > ();
 
-    private static Map < Session, String > sessionUserMap = new Hashtable < > ();
-    private static Map < String, Session > userSessionMap = new Hashtable < > ();
+    private static Map < Session, User > groupSessionUsernameMap = new Hashtable < > ();
+    private static Map < User, Session > groupUsernameSessionMap = new Hashtable < > ();
+
+//    private static ArrayList <SessionLikingList> groupSessionLikingList = new ArrayList<SessionLikingList>();
+
+     UserRepository userRepository;
 
     // server side logger
     private final Logger logger = LoggerFactory.getLogger(ChatServer.class);
@@ -162,6 +170,57 @@ public class ChatServer {
             usernameSessionMap.get(username).getBasicRemote().sendText(message);
         } catch (IOException e) {
             logger.info("[DM Exception] " + e.getMessage());
+        }
+        Session session = usernameSessionMap.get(username);
+        User user = userRepository.findByUsername(username);
+        if(message.contains("group")){
+            // map current group session with username
+            groupSessionUsernameMap.put(session, user);
+
+            // map current group username with session
+            groupUsernameSessionMap.put(user, session);
+            sendMessageToPArticularUser(username, "[Group " + username + "]: You are in a group " );
+        }
+        else { // Message to whole chat
+            broadcast(username + ": " + message);
+        }
+        /**
+         *  Jesse newly added here down ---> *Untested*
+         */
+        if (message.contains("@") && message.contains("like")) {
+            String[] a = message.split("@");
+            if (a[0].equals("like")) {
+                // groupSessionLikingList.add(new SessionLikingList(username, true, a[1]));
+                Liked c = new Liked(a[1]);
+                try {
+                    user.setNewLike(c);
+                }
+                catch (Exception e) {
+                    System.out.println("Could not find User by their Username");
+                }
+            }
+        }
+        int likecount = 0;
+        User userWithMostLikes = new User();
+        int numberOfLikes = 0;
+        for (Map.Entry<User, Session> barney: groupUsernameSessionMap.entrySet()) {
+            if (barney.getKey().getLikes().size() > likecount) {
+                userWithMostLikes = barney.getKey();
+            }
+        }
+        for (Liked name : userWithMostLikes.getLikes()) {
+            for (Map.Entry<User, Session> barney: groupUsernameSessionMap.entrySet()) {
+                if (barney.getKey().getLikes().contains(name)) {
+                    numberOfLikes++;
+                    if (numberOfLikes ==  groupUsernameSessionMap.size()) {
+                        break;
+                    }
+                }
+            }
+            if (numberOfLikes ==  groupUsernameSessionMap.size()) {
+                break;
+            }
+            numberOfLikes = 0;
         }
     }
 

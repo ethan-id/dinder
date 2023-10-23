@@ -20,11 +20,15 @@ public class Liked {
 
     }
 
-    public Liked(int id, String name){
-        this.id = id;
-        this.name=name;
+    public Liked(String name){
+//        this.id = id;
+        this.name = name;
     }
 
+    /**
+     * id is likeId
+     * @return
+     */
     public int getId() {
         return id;
     }
@@ -32,6 +36,11 @@ public class Liked {
     public void setId(int id) {
         this.id = id;
     }
+
+    /**
+     * name is restaurantId
+     * @return
+     */
 
     public String getName() {
         return name;
