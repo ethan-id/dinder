@@ -39,8 +39,8 @@ public class ChatServer {
     private static Map < Session, String > sessionUsernameMap = new Hashtable < > ();
     private static Map < String, Session > usernameSessionMap = new Hashtable < > ();
 
-    private static Map < Session, User > groupSessionUsernameMap = new Hashtable < > ();
-    private static Map < User, Session > groupUsernameSessionMap = new Hashtable < > ();
+    private static Map < Session, String > groupSessionUsernameMap = new Hashtable < > ();
+    private static Map < String, Session > groupUsernameSessionMap = new Hashtable < > ();
 
 //    private static ArrayList <SessionLikingList> groupSessionLikingList = new ArrayList<SessionLikingList>();
 
@@ -96,6 +96,27 @@ public class ChatServer {
         logger.info("[onMessage] " + username + ": " + message);
 
         // Direct message to a user using the format "@username <message>"
+        if(message.contains("invite@")){
+            if(!(groupUsernameSessionMap.containsKey(username))){
+                // map current group session with username
+                groupSessionUsernameMap.put(session, username);
+                // map current group username with session
+                groupUsernameSessionMap.put(username, session);
+            }
+            String usernameToAdd = message.substring(7);    //@username and get rid of @
+            if(!(groupUsernameSessionMap.containsKey(usernameToAdd))){
+                // map current group session with username
+                groupSessionUsernameMap.put(session, username);
+                // map current group username with session
+                groupUsernameSessionMap.put(username, session);
+                sendMessageToPArticularUser(usernameToAdd, "invitee@"+usernameToAdd);
+                sendMessageToPArticularUser(username, "invited@"+usernameToAdd);
+            }
+
+        }
+        else { // Message to whole chat
+            broadcast(username + ": " + message);
+        }
         if (message.startsWith("@")) {
 
             // split by space
@@ -129,14 +150,14 @@ public class ChatServer {
             int like_count = 0;
             User userWithMostLikes = new User();
             int numberOfLikes = 0;
-            for (Map.Entry<User, Session> barney : groupUsernameSessionMap.entrySet()) {
-                if (barney.getKey().getLikes().size() > like_count) {
-                    userWithMostLikes = barney.getKey();
+            for (Map.Entry<String, Session> barney : groupUsernameSessionMap.entrySet()) {
+                if (userRepository.findByUsername(barney.getKey()).getLikes().size() > like_count) {
+                    userWithMostLikes = userRepository.findByUsername(barney.getKey());
                 }
             }
             for (Liked name : userWithMostLikes.getLikes()) {
-                for (Map.Entry<User, Session> barney : groupUsernameSessionMap.entrySet()) {
-                    if (barney.getKey().getLikes().contains(name)) {
+                for (Map.Entry<String, Session> barney : groupUsernameSessionMap.entrySet()) {
+                    if (userRepository.findByUsername(barney.getKey()).getLikes().contains(name)) {
                         numberOfLikes++;
                         if (numberOfLikes == groupUsernameSessionMap.size()) {
                             break;
@@ -202,13 +223,12 @@ public class ChatServer {
             logger.info("[DM Exception] " + e.getMessage());
         }
         Session session = usernameSessionMap.get(username);
-        User user = userRepository.findByUsername(username);
         if (message.contains("group")) {
             // map current group session with username
-            groupSessionUsernameMap.put(session, user);
+            groupSessionUsernameMap.put(session, username);
 
             // map current group username with session
-            groupUsernameSessionMap.put(user, session);
+            groupUsernameSessionMap.put(username, session);
             sendMessageToPArticularUser(username, "[Group " + username + "]: You are in a group ");
         } else { // Message to whole chat
             broadcast(username + ": " + message);
