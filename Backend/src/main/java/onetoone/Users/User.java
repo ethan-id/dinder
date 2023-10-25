@@ -1,8 +1,10 @@
 package onetoone.Users;
 
 import onetoone.Likes.Liked;
+import onetoone.Restaurants.Restaurant;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -26,6 +28,14 @@ public class User {
     private boolean halal;
     @OneToMany(mappedBy="user")
     private Set<Liked> likes;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_restaurant_favorite",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "restaurant_id")
+    )
+    private Set<Restaurant> favoriteRestaurants = new HashSet<>();
 
     /*
      * @OneToOne creates a relation between the current entity/table(Laptop) with the entity/table defined below it(User)
