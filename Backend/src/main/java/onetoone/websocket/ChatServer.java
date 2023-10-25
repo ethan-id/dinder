@@ -1,10 +1,10 @@
 package onetoone.websocket;
 
+import onetoone.Likes.Liked;
 import onetoone.Users.User;
 import onetoone.Users.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -41,6 +41,10 @@ public class ChatServer {
 
     private static Map < Session, String > groupSessionUsernameMap = new Hashtable < > ();
     private static Map < String, Session > groupUsernameSessionMap = new Hashtable < > ();
+
+//    private static ArrayList <SessionLikingList> groupSessionLikingList = new ArrayList<SessionLikingList>();
+
+     UserRepository userRepository;
 
     // server side logger
     private final Logger logger = LoggerFactory.getLogger(ChatServer.class);
@@ -88,26 +92,10 @@ public class ChatServer {
 
         // get the username by session
         String username = sessionUsernameMap.get(session);
-
         // server side log
         logger.info("[onMessage] " + username + ": " + message);
 
         // Direct message to a user using the format "@username <message>"
-        if (message.startsWith("@")) {
-
-            // split by space
-            String[] split_msg =  message.split("\\s+");
-
-            // Combine the rest of message
-            StringBuilder actualMessageBuilder = new StringBuilder();
-            for (int i = 1; i < split_msg.length; i++) {
-                actualMessageBuilder.append(split_msg[i]).append(" ");
-            }
-            String destUserName = split_msg[0].substring(1);    //@username and get rid of @
-            String actualMessage = actualMessageBuilder.toString();
-            sendMessageToPArticularUser(destUserName, "[DM from " + username + "]: " + actualMessage);
-            sendMessageToPArticularUser(username, "[DM from " + username + "]: " + actualMessage);
-        }
         if(message.contains("invite@")){
             if(!(groupUsernameSessionMap.containsKey(username))){
                 // map current group session with username
@@ -128,6 +116,59 @@ public class ChatServer {
         }
         else { // Message to whole chat
             broadcast(username + ": " + message);
+        }
+        if (message.startsWith("@")) {
+
+            // split by space
+            String[] split_msg = message.split("\\s+");
+
+            // Combine the rest of message
+            StringBuilder actualMessageBuilder = new StringBuilder();
+            for (int i = 1; i < split_msg.length; i++) {
+                actualMessageBuilder.append(split_msg[i]).append(" ");
+            }
+            String destUserName = split_msg[0].substring(1);    //@username and get rid of @
+            String actualMessage = actualMessageBuilder.toString();
+            sendMessageToPArticularUser(destUserName, "[DM from " + username + "]: " + actualMessage);
+            sendMessageToPArticularUser(username, "[DM from " + username + "]: " + actualMessage);
+        }
+//        else { // Message to whole chat
+//            broadcast(username + ": " + message);
+//        }
+        User user = userRepository.findByUsername(username);
+        if (message.contains("@") && message.contains("like")) {
+            String[] a = message.split("@");
+            if (a[0].equals("like")) {
+                // groupSessionLikingList.add(new SessionLikingList(username, true, a[1]));
+                Liked c = new Liked(a[1]);
+                try {
+                    user.setNewLike(c);
+                } catch (Exception e) {
+                    System.out.println("Could not find User by their Username");
+                }
+            }
+            int like_count = 0;
+            User userWithMostLikes = new User();
+            int numberOfLikes = 0;
+            for (Map.Entry<String, Session> barney : groupUsernameSessionMap.entrySet()) {
+                if (userRepository.findByUsername(barney.getKey()).getLikes().size() > like_count) {
+                    userWithMostLikes = userRepository.findByUsername(barney.getKey());
+                }
+            }
+            for (Liked name : userWithMostLikes.getLikes()) {
+                for (Map.Entry<String, Session> barney : groupUsernameSessionMap.entrySet()) {
+                    if (userRepository.findByUsername(barney.getKey()).getLikes().contains(name)) {
+                        numberOfLikes++;
+                        if (numberOfLikes == groupUsernameSessionMap.size()) {
+                            break;
+                        }
+                    }
+                }
+                if (numberOfLikes == groupUsernameSessionMap.size()) {
+                    break;
+                }
+                numberOfLikes = 0;
+            }
         }
     }
 
@@ -181,7 +222,22 @@ public class ChatServer {
         } catch (IOException e) {
             logger.info("[DM Exception] " + e.getMessage());
         }
+        Session session = usernameSessionMap.get(username);
+        if (message.contains("group")) {
+            // map current group session with username
+            groupSessionUsernameMap.put(session, username);
+
+            // map current group username with session
+            groupUsernameSessionMap.put(username, session);
+            sendMessageToPArticularUser(username, "[Group " + username + "]: You are in a group ");
+        } else { // Message to whole chat
+            broadcast(username + ": " + message);
+        }
     }
+        /**
+         *  Jesse newly added here down ---> *Untested*
+         */
+
 
     /**
      * Broadcasts a message to all users in the chat.

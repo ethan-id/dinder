@@ -110,4 +110,5 @@ public class User {
     public Set<Liked> getLikes() {
         return likes;
     }
+    public void setNewLike(Liked like) { likes.add(like); }
 }

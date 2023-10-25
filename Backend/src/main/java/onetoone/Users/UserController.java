@@ -2,6 +2,7 @@ package onetoone.Users;
 
 import java.util.List;
 
+import onetoone.Likes.Liked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,8 +80,7 @@ public class UserController {
         user.setVegitarian(request.isVegitarian());
         userRepository.save(user);
         return userRepository.findById(id);
-    }   
-
+    }
 
 
     @DeleteMapping(path = "/users/{id}")
