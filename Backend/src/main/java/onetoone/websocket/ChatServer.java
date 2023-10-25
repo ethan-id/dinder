@@ -5,6 +5,7 @@ import onetoone.Users.User;
 import onetoone.Users.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -44,8 +45,20 @@ public class ChatServer {
 
 //    private static ArrayList <SessionLikingList> groupSessionLikingList = new ArrayList<SessionLikingList>();
 
-     UserRepository userRepository;
 
+    private static UserRepository userRepo;
+
+    /*
+     * Grabs the MessageRepository singleton from the Spring Application
+     * Context.  This works because of the @Controller annotation on this
+     * class and because the variable is declared as static.
+     * There are other ways to set this. However, this approach is
+     * easiest.
+     */
+    @Autowired
+    public void setUserRepository(UserRepository repo) {
+        userRepo = repo;
+    }
     // server side logger
     private final Logger logger = LoggerFactory.getLogger(ChatServer.class);
 
@@ -114,9 +127,9 @@ public class ChatServer {
             }
 
         }
-        else { // Message to whole chat
-            broadcast(username + ": " + message);
-        }
+//        else { // Message to whole chat
+//            broadcast(username + ": " + message);
+//        }
         if (message.startsWith("@")) {
 
             // split by space
@@ -135,40 +148,41 @@ public class ChatServer {
 //        else { // Message to whole chat
 //            broadcast(username + ": " + message);
 //        }
-        User user = userRepository.findByUsername(username);
+        User user = userRepo.findByUsername(username);
         if (message.contains("@") && message.contains("like")) {
             String[] a = message.split("@");
             if (a[0].equals("like")) {
                 // groupSessionLikingList.add(new SessionLikingList(username, true, a[1]));
-                Liked c = new Liked(a[1]);
+                Liked c = new Liked(a[1],user);
                 try {
                     user.setNewLike(c);
+                    logger.info("Set new like");
                 } catch (Exception e) {
                     System.out.println("Could not find User by their Username");
                 }
             }
-            int like_count = 0;
-            User userWithMostLikes = new User();
-            int numberOfLikes = 0;
-            for (Map.Entry<String, Session> barney : groupUsernameSessionMap.entrySet()) {
-                if (userRepository.findByUsername(barney.getKey()).getLikes().size() > like_count) {
-                    userWithMostLikes = userRepository.findByUsername(barney.getKey());
-                }
-            }
-            for (Liked name : userWithMostLikes.getLikes()) {
-                for (Map.Entry<String, Session> barney : groupUsernameSessionMap.entrySet()) {
-                    if (userRepository.findByUsername(barney.getKey()).getLikes().contains(name)) {
-                        numberOfLikes++;
-                        if (numberOfLikes == groupUsernameSessionMap.size()) {
-                            break;
-                        }
-                    }
-                }
-                if (numberOfLikes == groupUsernameSessionMap.size()) {
-                    break;
-                }
-                numberOfLikes = 0;
-            }
+//            int like_count = 0;
+//            User userWithMostLikes = new User();
+//            int numberOfLikes = 0;
+//            for (Map.Entry<String, Session> barney : groupUsernameSessionMap.entrySet()) {
+//                if (userRepo.findByUsername(barney.getKey()).getLikes().size() > like_count) {
+//                    userWithMostLikes = userRepo.findByUsername(barney.getKey());
+//                }
+//            }
+//            for (Liked name : userWithMostLikes.getLikes()) {
+//                for (Map.Entry<String, Session> barney : groupUsernameSessionMap.entrySet()) {
+//                    if (userRepo.findByUsername(barney.getKey()).getLikes().contains(name)) {
+//                        numberOfLikes++;
+//                        if (numberOfLikes == groupUsernameSessionMap.size()) {
+//                            break;
+//                        }
+//                    }
+//                }
+//                if (numberOfLikes == groupUsernameSessionMap.size()) {
+//                    break;
+//                }
+//                numberOfLikes = 0;
+//            }
         }
     }
 
