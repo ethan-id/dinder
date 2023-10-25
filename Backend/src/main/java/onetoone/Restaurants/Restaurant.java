@@ -1,10 +1,11 @@
 package onetoone.Restaurants;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import onetoone.Users.User;
+
+import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -38,6 +39,9 @@ public class Restaurant {
     private String address;
     private String distance;
     private String phone_number;
+
+    @ManyToMany(mappedBy = "favoriteRestaurants")
+    private Set<User> favoritedByUsers = new HashSet<>();
 
     ArrayList<String> title = new ArrayList<String>();
 

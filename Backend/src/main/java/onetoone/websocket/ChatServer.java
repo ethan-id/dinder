@@ -39,8 +39,8 @@ public class ChatServer {
     private static Map < Session, String > sessionUsernameMap = new Hashtable < > ();
     private static Map < String, Session > usernameSessionMap = new Hashtable < > ();
 
-    private static Map < Session, String > sessionUserMap = new Hashtable < > ();
-    private static Map < String, Session > userSessionMap = new Hashtable < > ();
+    private static Map < Session, String > groupSessionUsernameMap = new Hashtable < > ();
+    private static Map < String, Session > groupUsernameSessionMap = new Hashtable < > ();
 
     // server side logger
     private final Logger logger = LoggerFactory.getLogger(ChatServer.class);
@@ -108,9 +108,27 @@ public class ChatServer {
             sendMessageToPArticularUser(destUserName, "[DM from " + username + "]: " + actualMessage);
             sendMessageToPArticularUser(username, "[DM from " + username + "]: " + actualMessage);
         }
-//        else { // Message to whole chat
-//            broadcast(username + ": " + message);
-//        }
+        if(message.contains("invite@")){
+            if(!(groupUsernameSessionMap.containsKey(username))){
+                // map current group session with username
+                groupSessionUsernameMap.put(session, username);
+                // map current group username with session
+                groupUsernameSessionMap.put(username, session);
+            }
+            String usernameToAdd = message.substring(7);    //@username and get rid of @
+            if(!(groupUsernameSessionMap.containsKey(usernameToAdd))){
+                // map current group session with username
+                groupSessionUsernameMap.put(session, username);
+                // map current group username with session
+                groupUsernameSessionMap.put(username, session);
+                sendMessageToPArticularUser(usernameToAdd, "invitee@"+usernameToAdd);
+                sendMessageToPArticularUser(username, "invited@"+usernameToAdd);
+            }
+
+        }
+        else { // Message to whole chat
+            broadcast(username + ": " + message);
+        }
     }
 
     /**
