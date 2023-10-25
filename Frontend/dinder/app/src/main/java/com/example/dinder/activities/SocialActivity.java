@@ -23,6 +23,20 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
     ImageButton back;
     RecyclerView friendsRecyclerView;
 
+    /**
+     * Initializes the SocialActivity. This method:
+     * <ul>
+     *     <li>Sets the content view layout.</li>
+     *     <li>Initializes UI components including the search bar and friends' RecyclerView.</li>
+     *     <li>Populates the friends' RecyclerView with a static list of friend names.</li>
+     *     <li>Retrieves user ID from the intent.</li>
+     *     <li>Handles the back button click event, which navigates to the UserHomeActivity and passes the user ID to it.</li>
+     * </ul>
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     * previously being shut down, this Bundle contains the data it most recently
+     * supplied in {@link #onSaveInstanceState}. Otherwise, it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -37,6 +37,17 @@ public class UserProfileActivity extends AppCompatActivity {
 
     JSONObject user;
 
+    /**
+     * Fetches the user data from the server based on the given user ID.
+     * <p>
+     * This method sends a GET request to retrieve the user's JSON data from the server using the provided ID.
+     * Upon a successful response, the user's data is stored in the 'user' variable and the updateRestrictions()
+     * method is invoked to update the user's settings or restrictions accordingly. If there's an error in
+     * the network request, the stack trace is printed.
+     * </p>
+     *
+     * @param id The unique identifier of the user to fetch data for.
+     */
     private void getUser(String id) {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
         String url = "http://10.0.2.2:8080/users/" + id;
@@ -51,6 +62,14 @@ public class UserProfileActivity extends AppCompatActivity {
         ));
     }
 
+    /**
+     * Checks if any dietary preference checkboxes have been modified.
+     * <p>
+     * This method compares the current states of the dietary preference checkboxes (vegan, vegetarian, and halal)
+     * against their original states. If any checkbox state has changed, it enables the save button to allow
+     * the user to save the updated preferences.
+     * </p>
+     */
     private void checkForPreferenceChanges() {
         if (ogVegan != veganCheck.isChecked() || ogVegetarian != vegetarianCheck.isChecked() || ogHalal != halalCheck.isChecked()) {
             runOnUiThread(() -> {
@@ -59,6 +78,15 @@ public class UserProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Updates the UI to reflect the user's dietary restrictions.
+     * <p>
+     * This method retrieves the user's dietary preferences (vegan, vegetarian, and halal) from the
+     * 'user' JSONObject. It then updates the respective checkboxes on the UI thread to reflect these
+     * preferences.
+     * </p>
+     * @throws RuntimeException if there's an issue parsing the 'user' JSONObject.
+     */
     private void updateRestrictions() {
         runOnUiThread(() -> {
             try {
@@ -74,6 +102,15 @@ public class UserProfileActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Saves the user's updated dietary preferences.
+     * <p>
+     * This method updates the 'user' JSONObject with the current values from the dietary preferences
+     * checkboxes (vegan, vegetarian, and halal). A PUT request is then made to the server to save these
+     * updated preferences.
+     * </p>
+     * @throws JSONException if there's an issue accessing or updating the 'user' JSONObject.
+     */
     private void saveUserPreferences() throws JSONException {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
         String url = "http://10.0.2.2:8080/users/" + user.getInt("id");
@@ -91,6 +128,19 @@ public class UserProfileActivity extends AppCompatActivity {
         ));
     }
 
+    /**
+     * Initializes the UserProfileActivity screen.
+     * <p>
+     * This method sets up the user profile screen where users can view and edit their
+     * personal details and dietary preferences. It fetches the user details based on
+     * the provided user ID, initializes UI components, and sets up event listeners
+     * for the buttons and checkboxes on the screen.
+     * </p>
+     * @param savedInstanceState If the activity is being re-initialized after previously
+     *                           being shut down then this Bundle contains the data it
+     *                           most recently supplied in onSaveInstanceState.
+     *                           <b>Note:</b> Otherwise it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
