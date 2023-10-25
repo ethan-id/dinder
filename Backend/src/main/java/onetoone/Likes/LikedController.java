@@ -9,15 +9,4 @@ import org.springframework.web.bind.annotation.*;
 public class LikedController {
     @Autowired
     LikeRepository likeRepository;
-
-    @PutMapping(path="/liked")
-    public User findingwhatwasliked() {
-        User user = new User();
-        user.setNewLike(new Liked("Cornbread"));
-        user.setNewLike(new Liked("Aztecas"));
-        user.setNewLike(new Liked("Tropical Smoothie Cafe"));
-        return user;
-    }
-
-
 }

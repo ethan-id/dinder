@@ -82,14 +82,6 @@ public class UserController {
         return userRepository.findById(id);
     }
 
-    @GetMapping(path="/liked/{username}")
-    public User findingwhatwasliked(@PathVariable String username) {
-       User user = userRepository.findByUsername(username);
-        user.setNewLike(new Liked("Cornbread"));
-        user.setNewLike(new Liked("Aztecas"));
-        user.setNewLike(new Liked("Tropical Smoothie Cafe"));
-        return user;
-    }
 
     @DeleteMapping(path = "/users/{id}")
     String deleteUser(@PathVariable int id){
