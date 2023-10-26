@@ -25,17 +25,60 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * The Sign-Up screen; The user can enter their account information here and request to sign-up to Dinder
+ */
 public class SignUpActivity extends AppCompatActivity {
+    /**
+     * Button used to send a POST request to sign-up the user
+     */
     Button signUpBtn;
+    /**
+     * Button used to take the user back to the login screen
+     */
     Button backBtn;
+    /**
+     * Text field where the user can enter their email
+     */
     EditText email;
+    /**
+     * Text field where the user can enter their username
+     */
     EditText username;
+    /**
+     * Text field where the user can enter their password
+     */
     EditText password;
+    /**
+     * Text field where the user has to confirm their entered password
+     */
     EditText confirmPassword;
+    /**
+     * Checkbox for the user to accept Dinder's terms of service
+     */
     CheckBox terms;
+    /**
+     * Checkbox for the user to voluntarily accept Dinder's usage of their data
+     */
     CheckBox data;
+    /**
+     * ImageView for the Dinder logo to be displayed
+     */
     ImageView logo;
 
+    /**
+     * Constructs a JSONObject representing a user with the given parameters.
+     * <p>
+     * This method creates a JSONObject with fields for name, username, and password
+     * using the provided arguments. If any JSON errors occur during the object creation,
+     * they are caught and printed to the standard error stream.
+     * </p>
+     *
+     * @param name     The name of the user.
+     * @param username The username for the user.
+     * @param password The password for the user.
+     * @return A {@link JSONObject} representing a user with the specified details.
+     */
     private JSONObject makeUserJson(String name, String username, String password) {
         JSONObject userJson = new JSONObject();
         try {
@@ -48,6 +91,17 @@ public class SignUpActivity extends AppCompatActivity {
         return userJson;
     }
 
+    /**
+     * Sends a POST request to create a new user using the provided user information.
+     * <p>
+     * This method sends a POST request to a specified endpoint with the provided user information
+     * in JSON format. On successful request, it logs the server's response. If there's an error,
+     * the error details are printed to the standard error stream.
+     * </p>
+     *
+     * @param queue    The {@link RequestQueue} to which the request will be added.
+     * @param userJson The {@link JSONObject} containing user details to be sent in the request body.
+     */
     private void sendRequestToMakeUser(RequestQueue queue, JSONObject userJson) {
         // Handle error
         StringRequest postRequest = new StringRequest(Request.Method.POST, "http://10.0.2.2:8080/users",
@@ -73,6 +127,18 @@ public class SignUpActivity extends AppCompatActivity {
         queue.add(postRequest);
     }
 
+    /**
+     * Initializes the SignUpActivity screen, setting up UI components and user interaction.
+     * <p>
+     * This method sets the content view for the activity, initializes all necessary UI elements,
+     * and sets up their corresponding behaviors. It makes use of the Volley library to handle
+     * network requests. When the "Sign Up" button is clicked, it checks if the terms checkbox is
+     * ticked and if the passwords entered match. If these conditions are met, a new user is created
+     * by sending a POST request with the user's details. After successful registration, the user is
+     * navigated back to the login screen. Additionally, there's a "Back" button which simply navigates
+     * the user back to the login screen.
+     * </p>
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

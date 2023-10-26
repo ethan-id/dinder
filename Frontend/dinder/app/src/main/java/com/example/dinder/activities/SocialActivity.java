@@ -18,11 +18,38 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The Social Screen displays the user's friends list, allows the user to invite friends to their group, and allows
+ * the user to send friend requests to other users.
+ */
 public class SocialActivity extends AppCompatActivity implements WebSocketListener {
+    /**
+     * Search bar used for the user to send friend requests
+     */
     SearchView searchBar;
+    /**
+     * Button used for the user to go back to the home screen
+     */
     ImageButton back;
+    /**
+     * RecyclerView used to dynamically display the user's friends
+     */
     RecyclerView friendsRecyclerView;
 
+    /**
+     * Initializes the SocialActivity. This method:
+     * <ul>
+     *     <li>Sets the content view layout.</li>
+     *     <li>Initializes UI components including the search bar and friends' RecyclerView.</li>
+     *     <li>Populates the friends' RecyclerView with a static list of friend names.</li>
+     *     <li>Retrieves user ID from the intent.</li>
+     *     <li>Handles the back button click event, which navigates to the UserHomeActivity and passes the user ID to it.</li>
+     * </ul>
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     * previously being shut down, this Bundle contains the data it most recently
+     * supplied in {@link #onSaveInstanceState}. Otherwise, it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

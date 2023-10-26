@@ -31,33 +31,107 @@ import java.util.ArrayList;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
+/**
+ * The Home Screen is considered the default location of the app. On this screen the user can swipe
+ * through restaurants, liking or disliking them. The user can also tap on any restaurant to take them
+ * to the restaurant profile where they can see more information about the restaurant.
+ */
 public class UserHomeActivity extends AppCompatActivity implements WebSocketListener {
-
+    /**
+     * Large image displayed in the center of the screen used to show the restaurant's food
+     */
     ImageView centerImage;
+    /**
+     * Logo displayed in the top left of the screen belonging to the restaurant
+     */
     ImageView logo;
+    /**
+     * Icon displayed to provide context to the restaurant's address (displayed next to it)
+     */
     ImageView locationIcon;
+    /**
+     * Star icon displayed next to the restaurnt's x out of 5 star rating
+     */
     ImageView ratingIcon;
+    /**
+     * The name of the restaurant displayed at the top of the screen
+     */
     TextView restaurantName;
+    /**
+     * X out of 5 star rating of the restaurant
+     */
     TextView rating;
+    /**
+     * The number of rating/reviews the restaurant has received
+     */
     TextView ratingCount;
+    /**
+     * The restaurant's address
+     */
     TextView address;
+    /**
+     * A button for the user to dislike the restaurant
+     */
     ImageButton dislike;
+    /**
+     * A button for the user to like/favorite the restaurant
+     */
     ImageButton favorite;
+    /**
+     * A button that takes the user to their user profile
+     */
     ImageButton profile;
+    /**
+     * A chip used to display price information about the restaurant such as "$", "$$", or "$$$"
+     */
     Chip chip1;
+    /**
+     * A chip used to display a snippet of contextual information about the restaurant
+     */
     Chip chip2;
+    /**
+     * A chip used to display a snippet of contextual information about the restaurant
+     */
     Chip chip3;
+    /**
+     * A chip used to display a snippet of contextual information about the restaurant
+     */
     Chip chip4;
+    /**
+     * A chip used to display a snippet of contextual information about the restaurant
+     */
     Chip chip5;
+    /**
+     * A chip used to display a snippet of contextual information about the restaurant
+     */
     Chip chip6;
+    /**
+     * A chip used to display a snippet of contextual information about the restaurant
+     */
     Chip chip7;
 
-    // Inside your activity or fragment
+    /**
+     * A GestureDetector used to recognize when the user swipes left or right on the restaurant
+     */
     private GestureDetector gestureDetector;
+    /**
+     * A list of JSONObjects representing restaurants used to display restaurants to the user
+     */
     ArrayList<JSONObject> restaurants = new ArrayList<>();
+    /**
+     * The current restaurant being displayed to the user
+     */
     JSONObject currentRestaurant;
 
-    // Helper method for populating chip tags dynamically based on number of tags provided
+    /**
+     * Sets the text content for a specific chip based on its index and ensures its visibility.
+     * The method takes in an index corresponding to a chip position and a tag to set as the
+     * chip's text content. UI operations are executed on the main thread to ensure
+     * that the user interface updates smoothly.
+     *
+     * @param index the position of the chip to update, starting from 0
+     * @param tag the text content to set for the specified chip
+     */
     private void setChip(int index, String tag) {
         switch(index) {
             case 0:
@@ -99,6 +173,12 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         }
     }
 
+    /**
+     * Checks each chip's text content and hides those that are empty. This method ensures
+     * that only chips with valid content are displayed to the user. UI operations are
+     * performed on the main thread to ensure smooth user experience.
+     */
+
     private void hideEmptyChips() {
         runOnUiThread(() -> {
             if (chip1.getText().toString().equals("")) {
@@ -125,6 +205,15 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         });
     }
 
+    /**
+     * Populates the user interface with information about a restaurant at a specified index
+     * from the `restaurants` list. This method fetches the restaurant data, sets the UI elements
+     * with the appropriate values, and handles any JSON exceptions that might arise. If there
+     * are no restaurants at the given index, the user is informed that there are no more restaurants.
+     *
+     * @param queue The request queue to which any necessary requests (e.g., image fetching) will be added.
+     * @param index The index of the restaurant in the `restaurants` list that should be displayed on the screen.
+     */
     private void populateScreen(RequestQueue queue, int index) {
         if (index < restaurants.size()) {
             currentRestaurant = restaurants.get(index);
@@ -176,6 +265,12 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         }
     }
 
+    /**
+     * Fetches the list of restaurants from the server and populates the `restaurants` list.
+     * If the list is not empty, it triggers the `populateScreen` method to display the content.
+     *
+     * @param queue The request queue to which the JSON array request will be added.
+     */
     private void getRestaurants(RequestQueue queue) {
         queue.add(new JsonArrayRequest(
             Request.Method.GET,
@@ -200,6 +295,12 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         ));
     }
 
+    /**
+     * Sends a request to fetch the image to be displayed in the center of the screen on the home screen.
+     *
+     * @param imageUrl The URL of the image to be fetched.
+     * @param queue    The request queue to which the image request will be added.
+     */
     private void sendCenterImageRequest(String imageUrl, RequestQueue queue) {
         queue.add(new ImageRequest(
             imageUrl,
@@ -210,6 +311,22 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         ));
     }
 
+    /**
+     * Initializes the UserHomeActivity. This method:
+     * <ul>
+     *     <li>Sets the content view layout.</li>
+     *     <li>Retrieves user ID and username from the intent.</li>
+     *     <li>Establishes a WebSocket connection for real-time chat.</li>
+     *     <li>Initializes UI components and sets their properties.</li>
+     *     <li>Fetches restaurants and populates the UI.</li>
+     *     <li>Handles swipe gestures for liking and disliking restaurants.</li>
+     *     <li>Handles button click events for liking, disliking, and accessing the user profile.</li>
+     * </ul>
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     * previously being shut down, this Bundle contains the data it most recently
+     * supplied in {@link #onSaveInstanceState}. Otherwise, it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -307,6 +424,13 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         });
     }
 
+    /**
+     * Set's the gestureDetector defined in onCreate to call it's onTouchEvent()
+     *
+     * @param event The touch screen event being processed.
+     *
+     * @return event The touch screen event being processed.
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         gestureDetector.onTouchEvent(event);
