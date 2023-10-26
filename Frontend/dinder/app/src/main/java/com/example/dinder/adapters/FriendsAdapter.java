@@ -15,10 +15,22 @@ import com.example.dinder.websocket.WebSocketManager;
 
 import java.util.List;
 
+/**
+ * Adapter for the RecyclerView used on the Social Screen to display the user's
+ * list of friends
+ */
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendViewHolder> {
 
+    /**
+     * A list of strings containing the user's friends
+     */
     private List<String> friendsList;
 
+    /**
+     * Constructor that instantiates a FriendsAdapter; takes a list of strings as a friends list to use
+     *
+     * @param friendsList       A List of Strings representing a list of friends' names
+     */
     public FriendsAdapter(List<String> friendsList) {
         this.friendsList = friendsList;
     }
@@ -40,16 +52,39 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         });
     }
 
+    /**
+     * Gets the size of the user's friends list
+     *
+     * @return The size of the user's friends list as an integer
+     */
     @Override
     public int getItemCount() {
         return friendsList.size();
     }
 
+    /**
+     * A FriendViewHolder used to populate the friends list
+     */
     class FriendViewHolder extends RecyclerView.ViewHolder {
+        /**
+         * TextView used to hold the friend's name
+         */
         TextView friendName;
+
+        /**
+         * ImageView used to hold the friend's profile picture/icon
+         */
         ImageView friendImage;
+
+        /**
+         * A Button for sending an invite to the friend to join the user's group
+         */
         Button invite;
 
+        /**
+         * Constructor for a FriendViewHolder that takes in a View to populate the FriendViewHolder
+         * @param itemView      A View containing the elements to be used in the FriendViewHolder
+         */
         public FriendViewHolder(@NonNull View itemView) {
             super(itemView);
             friendName = itemView.findViewById(R.id.friendName);

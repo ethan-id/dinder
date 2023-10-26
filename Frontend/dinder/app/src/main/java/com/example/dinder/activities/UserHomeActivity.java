@@ -31,29 +31,96 @@ import java.util.ArrayList;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
+/**
+ * The Home Screen is considered the default location of the app. On this screen the user can swipe
+ * through restaurants, liking or disliking them. The user can also tap on any restaurant to take them
+ * to the restaurant profile where they can see more information about the restaurant.
+ */
 public class UserHomeActivity extends AppCompatActivity implements WebSocketListener {
-
+    /**
+     * Large image displayed in the center of the screen used to show the restaurant's food
+     */
     ImageView centerImage;
+    /**
+     * Logo displayed in the top left of the screen belonging to the restaurant
+     */
     ImageView logo;
+    /**
+     * Icon displayed to provide context to the restaurant's address (displayed next to it)
+     */
     ImageView locationIcon;
+    /**
+     * Star icon displayed next to the restaurnt's x out of 5 star rating
+     */
     ImageView ratingIcon;
+    /**
+     * The name of the restaurant displayed at the top of the screen
+     */
     TextView restaurantName;
+    /**
+     * X out of 5 star rating of the restaurant
+     */
     TextView rating;
+    /**
+     * The number of rating/reviews the restaurant has received
+     */
     TextView ratingCount;
+    /**
+     * The restaurant's address
+     */
     TextView address;
+    /**
+     * A button for the user to dislike the restaurant
+     */
     ImageButton dislike;
+    /**
+     * A button for the user to like/favorite the restaurant
+     */
     ImageButton favorite;
+    /**
+     * A button that takes the user to their user profile
+     */
     ImageButton profile;
+    /**
+     * A chip used to display price information about the restaurant such as "$", "$$", or "$$$"
+     */
     Chip chip1;
+    /**
+     * A chip used to display a snippet of contextual information about the restaurant
+     */
     Chip chip2;
+    /**
+     * A chip used to display a snippet of contextual information about the restaurant
+     */
     Chip chip3;
+    /**
+     * A chip used to display a snippet of contextual information about the restaurant
+     */
     Chip chip4;
+    /**
+     * A chip used to display a snippet of contextual information about the restaurant
+     */
     Chip chip5;
+    /**
+     * A chip used to display a snippet of contextual information about the restaurant
+     */
     Chip chip6;
+    /**
+     * A chip used to display a snippet of contextual information about the restaurant
+     */
     Chip chip7;
 
+    /**
+     * A GestureDetector used to recognize when the user swipes left or right on the restaurant
+     */
     private GestureDetector gestureDetector;
+    /**
+     * A list of JSONObjects representing restaurants used to display restaurants to the user
+     */
     ArrayList<JSONObject> restaurants = new ArrayList<>();
+    /**
+     * The current restaurant being displayed to the user
+     */
     JSONObject currentRestaurant;
 
     /**

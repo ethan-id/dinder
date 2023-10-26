@@ -18,9 +18,22 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The Social Screen displays the user's friends list, allows the user to invite friends to their group, and allows
+ * the user to send friend requests to other users.
+ */
 public class SocialActivity extends AppCompatActivity implements WebSocketListener {
+    /**
+     * Search bar used for the user to send friend requests
+     */
     SearchView searchBar;
+    /**
+     * Button used for the user to go back to the home screen
+     */
     ImageButton back;
+    /**
+     * RecyclerView used to dynamically display the user's friends
+     */
     RecyclerView friendsRecyclerView;
 
     /**

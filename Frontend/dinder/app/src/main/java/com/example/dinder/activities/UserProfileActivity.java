@@ -20,21 +20,62 @@ import com.example.dinder.VolleySingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * The User Profile screen, used to display the user's information and allow them
+ * to modify their dietary preferences and other settings affecting the rest of the
+ * app.
+ */
 public class UserProfileActivity extends AppCompatActivity {
-
+    /**
+     * The User's profile picture
+     */
     ImageView profilePic;
+    /**
+     * A button allowing the user to return to the home screen
+     */
     ImageButton backBtn;
+    /**
+     * A "Save" button allowing the user to save any changes they make to their profile or preferences
+     */
     Button saveBtn;
+    /**
+     * The user's name
+     */
     TextView name;
+    /**
+     * A Header indicating the checkboxes beneath it represent the user's dietary restrictions
+     */
     TextView dietRestrictions;
+    /**
+     * A checkbox for the user to select if they are vegetarian
+     */
     CheckBox vegetarianCheck;
+    /**
+     * A checkbox for the user to select if they are vegan
+     */
     CheckBox veganCheck;
+    /**
+     * A checkbox for the user to select if they are halal
+     */
     CheckBox halalCheck;
-
+    /**
+     * A boolean value storing the value of the user's vegetarian status when they open the profile screen.
+     * This is used to enable or disable the save button if there are differences or not.
+     */
     Boolean ogVegetarian;
+    /**
+     * A boolean value storing the value of the user's vegan status when they open the profile screen.
+     * This is used to enable or disable the save button if there are differences or not.
+     */
     Boolean ogVegan;
+    /**
+     * A boolean value storing the value of the user's halal status when they open the profile screen.
+     * This is used to enable or disable the save button if there are differences or not.
+     */
     Boolean ogHalal;
-
+    /**
+     * A JSONObject containing all the user's information
+     */
     JSONObject user;
 
     /**

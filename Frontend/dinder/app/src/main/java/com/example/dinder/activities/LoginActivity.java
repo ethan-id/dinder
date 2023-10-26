@@ -17,11 +17,30 @@ import org.json.JSONException;
 
 import java.util.Objects;
 
+/**
+ * An activity class for the Login Screen, used to handle logic so the user can enter their login
+ * information and attempt to login.
+ */
 public class LoginActivity extends AppCompatActivity {
+    /**
+     * A Button that send's an HTTP request requesting the user be logged in when it is clicked
+     */
     Button loginBtn;
+    /**
+     * A Button that takes the user to the sign-up screen
+     */
     Button signUpBtn;
+    /**
+     * A text field allowing the user to enter their username
+     */
     EditText username;
+    /**
+     * A text field allowing the user to enter their password
+     */
     EditText password;
+    /**
+     * The logo displayed at the top of the login screen
+     */
     ImageView logo;
 
     /**

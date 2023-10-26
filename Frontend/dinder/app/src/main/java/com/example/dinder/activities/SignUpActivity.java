@@ -25,15 +25,45 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * The Sign-Up screen; The user can enter their account information here and request to sign-up to Dinder
+ */
 public class SignUpActivity extends AppCompatActivity {
+    /**
+     * Button used to send a POST request to sign-up the user
+     */
     Button signUpBtn;
+    /**
+     * Button used to take the user back to the login screen
+     */
     Button backBtn;
+    /**
+     * Text field where the user can enter their email
+     */
     EditText email;
+    /**
+     * Text field where the user can enter their username
+     */
     EditText username;
+    /**
+     * Text field where the user can enter their password
+     */
     EditText password;
+    /**
+     * Text field where the user has to confirm their entered password
+     */
     EditText confirmPassword;
+    /**
+     * Checkbox for the user to accept Dinder's terms of service
+     */
     CheckBox terms;
+    /**
+     * Checkbox for the user to voluntarily accept Dinder's usage of their data
+     */
     CheckBox data;
+    /**
+     * ImageView for the Dinder logo to be displayed
+     */
     ImageView logo;
 
     /**

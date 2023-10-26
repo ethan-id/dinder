@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dinder.R;
 
+/**
+ * The screen used to display the restaurants the user has been matched with
+ */
 public class MatchesScreen extends AppCompatActivity {
 
     @Override
