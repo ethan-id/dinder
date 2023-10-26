@@ -28,6 +28,42 @@ android {
     namespace 'com.example.dinder'
 }
 
+task javadoc(type: Javadoc) {
+    // First, compute the boot classpath
+    def sdkDir = project.extensions.getByType(com.android.build.gradle.BaseExtension).sdkDirectory
+    def bootClasspath = new File(sdkDir, "platforms/android-33/android.jar")
+
+    doFirst {
+        configurations.implementation
+                .filter { it.name.endsWith('.aar') }
+                .each { aar ->
+                    copy {
+                        from zipTree(aar)
+                        include "**/classes.jar"
+                        into "$buildDir/tmp/aarsToJars/${aar.name.replace('.aar', '')}/"
+                    }
+                }
+    }
+
+    configurations.implementation.setCanBeResolved(true)
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(bootClasspath)  // Use the computed boot classpath
+    classpath += configurations.implementation
+    classpath += fileTree(dir: "$buildDir/tmp/aarsToJars/")
+
+    android.applicationVariants.all { variant ->
+        if (variant.name == 'release') {
+            owner.classpath += variant.javaCompileProvider.get().classpath
+        }
+    }
+
+    destinationDir = file("${project.buildDir}/outputs/javadoc/")
+    options.memberLevel = JavadocMemberLevel.PRIVATE
+    failOnError false
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
+}
+
 dependencies {
 
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
