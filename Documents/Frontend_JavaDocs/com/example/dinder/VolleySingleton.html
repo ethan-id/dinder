@@ -77,6 +77,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">VolleySingleton</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">VolleySingleton using Android Volley to manage HTTP Requests being sent to and from the Springboot Server</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -91,16 +92,24 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>private static android.content.Context</code></div>
 <div class="col-second even-row-color"><code><a href="#ctx" class="member-name-link">ctx</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Static context provided to the Singleton on instantiation</div>
+</div>
 <div class="col-first odd-row-color"><code>private com.android.volley.toolbox.ImageLoader</code></div>
 <div class="col-second odd-row-color"><code><a href="#imageLoader" class="member-name-link">imageLoader</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">The ImageLoader used by Volley to load images</div>
+</div>
 <div class="col-first even-row-color"><code>private static <a href="VolleySingleton.html" title="class in com.example.dinder">VolleySingleton</a></code></div>
 <div class="col-second even-row-color"><code><a href="#instance" class="member-name-link">instance</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">The instance of the VolleySingleton class; Static so that there are not more than one instances within the app</div>
+</div>
 <div class="col-first odd-row-color"><code>private com.android.volley.RequestQueue</code></div>
 <div class="col-second odd-row-color"><code><a href="#requestQueue" class="member-name-link">requestQueue</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">The RequestQueue used by Volley to execute requests added to it</div>
+</div>
 </div>
 </section>
 </li>
@@ -115,7 +124,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>private </code></div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(android.content.Context)" class="member-name-link">VolleySingleton</a><wbr>(android.content.Context&nbsp;context)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructor used to instantiate the VolleySingleton class</div>
+</div>
 </div>
 </section>
 </li>
@@ -132,16 +143,24 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addToRequestQueue(com.android.volley.Request)" class="member-name-link">addToRequestQueue</a><wbr>(com.android.volley.Request&lt;T&gt;&nbsp;req)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Adds a given request to the request queue for execution.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.android.volley.toolbox.ImageLoader</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getImageLoader()" class="member-name-link">getImageLoader</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Retrieves the image loader used for loading and caching images.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="VolleySingleton.html" title="class in com.example.dinder">VolleySingleton</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getInstance(android.content.Context)" class="member-name-link">getInstance</a><wbr>(android.content.Context&nbsp;context)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Retrieves the singleton instance of the VolleySingleton class, initializing it if necessary.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.android.volley.RequestQueue</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRequestQueue()" class="member-name-link">getRequestQueue</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Retrieves the request queue for handling network requests.</div>
+</div>
 </div>
 </div>
 </div>
@@ -163,24 +182,28 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="instance">
 <h3>instance</h3>
 <div class="member-signature"><span class="modifiers">private static</span>&nbsp;<span class="return-type"><a href="VolleySingleton.html" title="class in com.example.dinder">VolleySingleton</a></span>&nbsp;<span class="element-name">instance</span></div>
+<div class="block">The instance of the VolleySingleton class; Static so that there are not more than one instances within the app</div>
 </section>
 </li>
 <li>
 <section class="detail" id="requestQueue">
 <h3>requestQueue</h3>
 <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.android.volley.RequestQueue</span>&nbsp;<span class="element-name">requestQueue</span></div>
+<div class="block">The RequestQueue used by Volley to execute requests added to it</div>
 </section>
 </li>
 <li>
 <section class="detail" id="imageLoader">
 <h3>imageLoader</h3>
 <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.android.volley.toolbox.ImageLoader</span>&nbsp;<span class="element-name">imageLoader</span></div>
+<div class="block">The ImageLoader used by Volley to load images</div>
 </section>
 </li>
 <li>
 <section class="detail" id="ctx">
 <h3>ctx</h3>
 <div class="member-signature"><span class="modifiers">private static</span>&nbsp;<span class="return-type">android.content.Context</span>&nbsp;<span class="element-name">ctx</span></div>
+<div class="block">Static context provided to the Singleton on instantiation</div>
 </section>
 </li>
 </ul>
@@ -195,6 +218,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(android.content.Context)">
 <h3>VolleySingleton</h3>
 <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="element-name">VolleySingleton</span><wbr><span class="parameters">(android.content.Context&nbsp;context)</span></div>
+<div class="block">Constructor used to instantiate the VolleySingleton class</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>context</code> - Conetext of the Android Application</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -209,24 +237,49 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getInstance(android.content.Context)">
 <h3>getInstance</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="VolleySingleton.html" title="class in com.example.dinder">VolleySingleton</a></span>&nbsp;<span class="element-name">getInstance</span><wbr><span class="parameters">(android.content.Context&nbsp;context)</span></div>
+<div class="block">Retrieves the singleton instance of the VolleySingleton class, initializing it if necessary.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>context</code> - The application's context, used for initializing the VolleySingleton if needed.</dd>
+<dt>Returns:</dt>
+<dd>The singleton instance of the VolleySingleton class.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getRequestQueue()">
 <h3>getRequestQueue</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.android.volley.RequestQueue</span>&nbsp;<span class="element-name">getRequestQueue</span>()</div>
+<div class="block">Retrieves the request queue for handling network requests. If the request queue is not initialized,
+ it creates a new one using the application's context.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The request queue used for handling network requests.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="addToRequestQueue(com.android.volley.Request)">
 <h3>addToRequestQueue</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addToRequestQueue</span><wbr><span class="parameters">(com.android.volley.Request&lt;T&gt;&nbsp;req)</span></div>
+<div class="block">Adds a given request to the request queue for execution.</div>
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - The type of the parsed response this request expects.</dd>
+<dt>Parameters:</dt>
+<dd><code>req</code> - The request to be executed.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getImageLoader()">
 <h3>getImageLoader</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.android.volley.toolbox.ImageLoader</span>&nbsp;<span class="element-name">getImageLoader</span>()</div>
+<div class="block">Retrieves the image loader used for loading and caching images.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The image loader instance.</dd>
+</dl>
 </section>
 </li>
 </ul>

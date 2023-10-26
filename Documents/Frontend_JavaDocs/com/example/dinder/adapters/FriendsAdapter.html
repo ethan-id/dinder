@@ -79,6 +79,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">FriendsAdapter</span>
 <span class="extends-implements">extends androidx.recyclerview.widget.RecyclerView.Adapter&lt;<a href="FriendsAdapter.FriendViewHolder.html" title="class in com.example.dinder.adapters">FriendsAdapter.FriendViewHolder</a>&gt;</span></div>
+<div class="block">Adapter for the RecyclerView used on the Social Screen to display the user's
+ list of friends</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -93,7 +95,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>(package private) class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="FriendsAdapter.FriendViewHolder.html" class="type-name-link" title="class in com.example.dinder.adapters">FriendsAdapter.FriendViewHolder</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">A FriendViewHolder used to populate the friends list</div>
+</div>
 </div>
 <div class="inherited-list">
 <h2 id="nested-classes-inherited-from-class-androidx.recyclerview.widget.RecyclerView.Adapter">Nested classes/interfaces inherited from class&nbsp;androidx.recyclerview.widget.RecyclerView.Adapter</h2>
@@ -111,7 +115,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>private <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#friendsList" class="member-name-link">friendsList</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">A list of strings containing the user's friends</div>
+</div>
 </div>
 </section>
 </li>
@@ -124,7 +130,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.List)" class="member-name-link">FriendsAdapter</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;friendsList)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructor that instantiates a FriendsAdapter; takes a list of strings as a friends list to use</div>
+</div>
 </div>
 </section>
 </li>
@@ -141,7 +149,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getItemCount()" class="member-name-link">getItemCount</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the size of the user's friends list</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onBindViewHolder(com.example.dinder.adapters.FriendsAdapter.FriendViewHolder,int)" class="member-name-link">onBindViewHolder</a><wbr>(<a href="FriendsAdapter.FriendViewHolder.html" title="class in com.example.dinder.adapters">FriendsAdapter.FriendViewHolder</a>&nbsp;holder,
  int&nbsp;position)</code></div>
@@ -174,6 +184,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="friendsList">
 <h3>friendsList</h3>
 <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">friendsList</span></div>
+<div class="block">A list of strings containing the user's friends</div>
 </section>
 </li>
 </ul>
@@ -188,6 +199,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(java.util.List)">
 <h3>FriendsAdapter</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">FriendsAdapter</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;friendsList)</span></div>
+<div class="block">Constructor that instantiates a FriendsAdapter; takes a list of strings as a friends list to use</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>friendsList</code> - A List of Strings representing a list of friends' names</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -227,9 +243,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getItemCount()">
 <h3>getItemCount</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getItemCount</span>()</div>
+<div class="block">Gets the size of the user's friends list</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>getItemCount</code>&nbsp;in class&nbsp;<code>androidx.recyclerview.widget.RecyclerView.Adapter&lt;<a href="FriendsAdapter.FriendViewHolder.html" title="class in com.example.dinder.adapters">FriendsAdapter.FriendViewHolder</a>&gt;</code></dd>
+<dt>Returns:</dt>
+<dd>The size of the user's friends list as an integer</dd>
 </dl>
 </section>
 </li>

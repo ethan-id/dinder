@@ -98,6 +98,9 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">UserHomeActivity</span>
 <span class="extends-implements">extends androidx.appcompat.app.AppCompatActivity
 implements <a href="../websocket/WebSocketListener.html" title="interface in com.example.dinder.websocket">WebSocketListener</a></span></div>
+<div class="block">The Home Screen is considered the default location of the app. On this screen the user can swipe
+ through restaurants, liking or disliking them. The user can also tap on any restaurant to take them
+ to the restaurant profile where they can see more information about the restaurant.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -121,67 +124,109 @@ implements <a href="../websocket/WebSocketListener.html" title="interface in com
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>(package private) android.widget.TextView</code></div>
 <div class="col-second even-row-color"><code><a href="#address" class="member-name-link">address</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">The restaurant's address</div>
+</div>
 <div class="col-first odd-row-color"><code>(package private) android.widget.ImageView</code></div>
 <div class="col-second odd-row-color"><code><a href="#centerImage" class="member-name-link">centerImage</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Large image displayed in the center of the screen used to show the restaurant's food</div>
+</div>
 <div class="col-first even-row-color"><code>(package private) com.google.android.material.chip.Chip</code></div>
 <div class="col-second even-row-color"><code><a href="#chip1" class="member-name-link">chip1</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">A chip used to display price information about the restaurant such as "$", "$$", or "$$$"</div>
+</div>
 <div class="col-first odd-row-color"><code>(package private) com.google.android.material.chip.Chip</code></div>
 <div class="col-second odd-row-color"><code><a href="#chip2" class="member-name-link">chip2</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">A chip used to display a snippet of contextual information about the restaurant</div>
+</div>
 <div class="col-first even-row-color"><code>(package private) com.google.android.material.chip.Chip</code></div>
 <div class="col-second even-row-color"><code><a href="#chip3" class="member-name-link">chip3</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">A chip used to display a snippet of contextual information about the restaurant</div>
+</div>
 <div class="col-first odd-row-color"><code>(package private) com.google.android.material.chip.Chip</code></div>
 <div class="col-second odd-row-color"><code><a href="#chip4" class="member-name-link">chip4</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">A chip used to display a snippet of contextual information about the restaurant</div>
+</div>
 <div class="col-first even-row-color"><code>(package private) com.google.android.material.chip.Chip</code></div>
 <div class="col-second even-row-color"><code><a href="#chip5" class="member-name-link">chip5</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">A chip used to display a snippet of contextual information about the restaurant</div>
+</div>
 <div class="col-first odd-row-color"><code>(package private) com.google.android.material.chip.Chip</code></div>
 <div class="col-second odd-row-color"><code><a href="#chip6" class="member-name-link">chip6</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">A chip used to display a snippet of contextual information about the restaurant</div>
+</div>
 <div class="col-first even-row-color"><code>(package private) com.google.android.material.chip.Chip</code></div>
 <div class="col-second even-row-color"><code><a href="#chip7" class="member-name-link">chip7</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">A chip used to display a snippet of contextual information about the restaurant</div>
+</div>
 <div class="col-first odd-row-color"><code>(package private) org.json.JSONObject</code></div>
 <div class="col-second odd-row-color"><code><a href="#currentRestaurant" class="member-name-link">currentRestaurant</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">The current restaurant being displayed to the user</div>
+</div>
 <div class="col-first even-row-color"><code>(package private) android.widget.ImageButton</code></div>
 <div class="col-second even-row-color"><code><a href="#dislike" class="member-name-link">dislike</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">A button for the user to dislike the restaurant</div>
+</div>
 <div class="col-first odd-row-color"><code>(package private) android.widget.ImageButton</code></div>
 <div class="col-second odd-row-color"><code><a href="#favorite" class="member-name-link">favorite</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">A button for the user to like/favorite the restaurant</div>
+</div>
 <div class="col-first even-row-color"><code>private android.view.GestureDetector</code></div>
 <div class="col-second even-row-color"><code><a href="#gestureDetector" class="member-name-link">gestureDetector</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">A GestureDetector used to recognize when the user swipes left or right on the restaurant</div>
+</div>
 <div class="col-first odd-row-color"><code>(package private) android.widget.ImageView</code></div>
 <div class="col-second odd-row-color"><code><a href="#locationIcon" class="member-name-link">locationIcon</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Icon displayed to provide context to the restaurant's address (displayed next to it)</div>
+</div>
 <div class="col-first even-row-color"><code>(package private) android.widget.ImageView</code></div>
 <div class="col-second even-row-color"><code><a href="#logo" class="member-name-link">logo</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Logo displayed in the top left of the screen belonging to the restaurant</div>
+</div>
 <div class="col-first odd-row-color"><code>(package private) android.widget.ImageButton</code></div>
 <div class="col-second odd-row-color"><code><a href="#profile" class="member-name-link">profile</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">A button that takes the user to their user profile</div>
+</div>
 <div class="col-first even-row-color"><code>(package private) android.widget.TextView</code></div>
 <div class="col-second even-row-color"><code><a href="#rating" class="member-name-link">rating</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">X out of 5 star rating of the restaurant</div>
+</div>
 <div class="col-first odd-row-color"><code>(package private) android.widget.TextView</code></div>
 <div class="col-second odd-row-color"><code><a href="#ratingCount" class="member-name-link">ratingCount</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">The number of rating/reviews the restaurant has received</div>
+</div>
 <div class="col-first even-row-color"><code>(package private) android.widget.ImageView</code></div>
 <div class="col-second even-row-color"><code><a href="#ratingIcon" class="member-name-link">ratingIcon</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Star icon displayed next to the restaurnt's x out of 5 star rating</div>
+</div>
 <div class="col-first odd-row-color"><code>(package private) android.widget.TextView</code></div>
 <div class="col-second odd-row-color"><code><a href="#restaurantName" class="member-name-link">restaurantName</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">The name of the restaurant displayed at the top of the screen</div>
+</div>
 <div class="col-first even-row-color"><code>(package private) <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;org.json.JSONObject&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#restaurants" class="member-name-link">restaurants</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">A list of JSONObjects representing restaurants used to display restaurants to the user</div>
+</div>
 </div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-android.app.Activity">Fields inherited from class&nbsp;android.app.Activity</h3>
@@ -327,126 +372,147 @@ implements <a href="../websocket/WebSocketListener.html" title="interface in com
 <section class="detail" id="centerImage">
 <h3>centerImage</h3>
 <div class="member-signature"><span class="return-type">android.widget.ImageView</span>&nbsp;<span class="element-name">centerImage</span></div>
+<div class="block">Large image displayed in the center of the screen used to show the restaurant's food</div>
 </section>
 </li>
 <li>
 <section class="detail" id="logo">
 <h3>logo</h3>
 <div class="member-signature"><span class="return-type">android.widget.ImageView</span>&nbsp;<span class="element-name">logo</span></div>
+<div class="block">Logo displayed in the top left of the screen belonging to the restaurant</div>
 </section>
 </li>
 <li>
 <section class="detail" id="locationIcon">
 <h3>locationIcon</h3>
 <div class="member-signature"><span class="return-type">android.widget.ImageView</span>&nbsp;<span class="element-name">locationIcon</span></div>
+<div class="block">Icon displayed to provide context to the restaurant's address (displayed next to it)</div>
 </section>
 </li>
 <li>
 <section class="detail" id="ratingIcon">
 <h3>ratingIcon</h3>
 <div class="member-signature"><span class="return-type">android.widget.ImageView</span>&nbsp;<span class="element-name">ratingIcon</span></div>
+<div class="block">Star icon displayed next to the restaurnt's x out of 5 star rating</div>
 </section>
 </li>
 <li>
 <section class="detail" id="restaurantName">
 <h3>restaurantName</h3>
 <div class="member-signature"><span class="return-type">android.widget.TextView</span>&nbsp;<span class="element-name">restaurantName</span></div>
+<div class="block">The name of the restaurant displayed at the top of the screen</div>
 </section>
 </li>
 <li>
 <section class="detail" id="rating">
 <h3>rating</h3>
 <div class="member-signature"><span class="return-type">android.widget.TextView</span>&nbsp;<span class="element-name">rating</span></div>
+<div class="block">X out of 5 star rating of the restaurant</div>
 </section>
 </li>
 <li>
 <section class="detail" id="ratingCount">
 <h3>ratingCount</h3>
 <div class="member-signature"><span class="return-type">android.widget.TextView</span>&nbsp;<span class="element-name">ratingCount</span></div>
+<div class="block">The number of rating/reviews the restaurant has received</div>
 </section>
 </li>
 <li>
 <section class="detail" id="address">
 <h3>address</h3>
 <div class="member-signature"><span class="return-type">android.widget.TextView</span>&nbsp;<span class="element-name">address</span></div>
+<div class="block">The restaurant's address</div>
 </section>
 </li>
 <li>
 <section class="detail" id="dislike">
 <h3>dislike</h3>
 <div class="member-signature"><span class="return-type">android.widget.ImageButton</span>&nbsp;<span class="element-name">dislike</span></div>
+<div class="block">A button for the user to dislike the restaurant</div>
 </section>
 </li>
 <li>
 <section class="detail" id="favorite">
 <h3>favorite</h3>
 <div class="member-signature"><span class="return-type">android.widget.ImageButton</span>&nbsp;<span class="element-name">favorite</span></div>
+<div class="block">A button for the user to like/favorite the restaurant</div>
 </section>
 </li>
 <li>
 <section class="detail" id="profile">
 <h3>profile</h3>
 <div class="member-signature"><span class="return-type">android.widget.ImageButton</span>&nbsp;<span class="element-name">profile</span></div>
+<div class="block">A button that takes the user to their user profile</div>
 </section>
 </li>
 <li>
 <section class="detail" id="chip1">
 <h3>chip1</h3>
 <div class="member-signature"><span class="return-type">com.google.android.material.chip.Chip</span>&nbsp;<span class="element-name">chip1</span></div>
+<div class="block">A chip used to display price information about the restaurant such as "$", "$$", or "$$$"</div>
 </section>
 </li>
 <li>
 <section class="detail" id="chip2">
 <h3>chip2</h3>
 <div class="member-signature"><span class="return-type">com.google.android.material.chip.Chip</span>&nbsp;<span class="element-name">chip2</span></div>
+<div class="block">A chip used to display a snippet of contextual information about the restaurant</div>
 </section>
 </li>
 <li>
 <section class="detail" id="chip3">
 <h3>chip3</h3>
 <div class="member-signature"><span class="return-type">com.google.android.material.chip.Chip</span>&nbsp;<span class="element-name">chip3</span></div>
+<div class="block">A chip used to display a snippet of contextual information about the restaurant</div>
 </section>
 </li>
 <li>
 <section class="detail" id="chip4">
 <h3>chip4</h3>
 <div class="member-signature"><span class="return-type">com.google.android.material.chip.Chip</span>&nbsp;<span class="element-name">chip4</span></div>
+<div class="block">A chip used to display a snippet of contextual information about the restaurant</div>
 </section>
 </li>
 <li>
 <section class="detail" id="chip5">
 <h3>chip5</h3>
 <div class="member-signature"><span class="return-type">com.google.android.material.chip.Chip</span>&nbsp;<span class="element-name">chip5</span></div>
+<div class="block">A chip used to display a snippet of contextual information about the restaurant</div>
 </section>
 </li>
 <li>
 <section class="detail" id="chip6">
 <h3>chip6</h3>
 <div class="member-signature"><span class="return-type">com.google.android.material.chip.Chip</span>&nbsp;<span class="element-name">chip6</span></div>
+<div class="block">A chip used to display a snippet of contextual information about the restaurant</div>
 </section>
 </li>
 <li>
 <section class="detail" id="chip7">
 <h3>chip7</h3>
 <div class="member-signature"><span class="return-type">com.google.android.material.chip.Chip</span>&nbsp;<span class="element-name">chip7</span></div>
+<div class="block">A chip used to display a snippet of contextual information about the restaurant</div>
 </section>
 </li>
 <li>
 <section class="detail" id="gestureDetector">
 <h3>gestureDetector</h3>
 <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">android.view.GestureDetector</span>&nbsp;<span class="element-name">gestureDetector</span></div>
+<div class="block">A GestureDetector used to recognize when the user swipes left or right on the restaurant</div>
 </section>
 </li>
 <li>
 <section class="detail" id="restaurants">
 <h3>restaurants</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;org.json.JSONObject&gt;</span>&nbsp;<span class="element-name">restaurants</span></div>
+<div class="block">A list of JSONObjects representing restaurants used to display restaurants to the user</div>
 </section>
 </li>
 <li>
 <section class="detail" id="currentRestaurant">
 <h3>currentRestaurant</h3>
 <div class="member-signature"><span class="return-type">org.json.JSONObject</span>&nbsp;<span class="element-name">currentRestaurant</span></div>
+<div class="block">The current restaurant being displayed to the user</div>
 </section>
 </li>
 </ul>
