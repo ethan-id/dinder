@@ -49,5 +49,7 @@ public class Liked {
     public void setName(String name) {
         this.name = name;
     }
+    public void setUser(User user) { this.user = user; }
+
 
 }

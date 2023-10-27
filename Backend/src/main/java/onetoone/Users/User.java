@@ -26,7 +26,7 @@ public class User {
     private boolean vegan;
     private boolean vegitarian;
     private boolean halal;
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
     private Set<Liked> likes;
 
     @ManyToMany
@@ -35,7 +35,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "restaurant_id")
     )
-    private Set<Restaurant> favoriteRestaurants = new HashSet<>();
+    private Set<Restaurant> favoriteRestaurants;
 
     /*
      * @OneToOne creates a relation between the current entity/table(Laptop) with the entity/table defined below it(User)
@@ -53,7 +53,8 @@ public class User {
         this.vegan = false;
         this.vegitarian = false;
         this.halal = false;
-        this.likes = null;
+        this.likes = new HashSet<Liked>();
+        this.favoriteRestaurants = new HashSet<Restaurant>();
     }
 
     public User() {
@@ -109,16 +110,12 @@ public class User {
         this.halal = halal;
     }
 
-    public boolean isVegitarian() {
-        return vegitarian;
-    }
+    public boolean isVegitarian() { return vegitarian; }
 
     public void setVegitarian(boolean vegitarian) {
         this.vegitarian = vegitarian;
     }
 
-    public Set<Liked> getLikes() {
-        return likes;
-    }
+    public Set<Liked> getLikes() { return likes; }
     public void setNewLike(Liked like) { likes.add(like); }
 }
