@@ -26,16 +26,16 @@ public class User {
     private boolean vegan;
     private boolean vegitarian;
     private boolean halal;
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy="user",fetch = FetchType.EAGER)
     private Set<Liked> likes;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_restaurant_favorite",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "restaurant_id")
-    )
-    private Set<Restaurant> favoriteRestaurants = new HashSet<>();
+//    @ManyToMany
+//    @JoinTable(
+//            name = "user_restaurant_favorite",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "restaurant_id")
+//    )
+//    private Set<Restaurant> favoriteRestaurants = new HashSet<>();
 
     /*
      * @OneToOne creates a relation between the current entity/table(Laptop) with the entity/table defined below it(User)
