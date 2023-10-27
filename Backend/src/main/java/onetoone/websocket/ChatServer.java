@@ -1,5 +1,6 @@
 package onetoone.websocket;
 
+import onetoone.Likes.LikeRepository;
 import onetoone.Likes.Liked;
 import onetoone.Restaurants.RestaurantRepository;
 import onetoone.Users.User;
@@ -8,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
@@ -48,6 +48,7 @@ public class ChatServer {
 
     private static UserRepository userRepository;
     private static RestaurantRepository restaurantRepository;
+    private static LikeRepository likeRepository;
 
     @Autowired
     public void setUserRepository(UserRepository repo) {
@@ -57,9 +58,10 @@ public class ChatServer {
     public void setRestaurantRepository(RestaurantRepository restrepo) {
         restaurantRepository = restrepo;
     }
-
-
-    private static UserRepository userRepo;
+    @Autowired
+    public void setLikeRepository(LikeRepository likeRepository) {
+        this.likeRepository = likeRepository;
+    }
 
     /*
      * Grabs the MessageRepository singleton from the Spring Application
@@ -68,10 +70,6 @@ public class ChatServer {
      * There are other ways to set this. However, this approach is
      * easiest.
      */
-    @Autowired
-    public void setUserRepository(UserRepository repo) {
-        userRepo = repo;
-    }
     // server side logger
     private final Logger logger = LoggerFactory.getLogger(ChatServer.class);
 
@@ -178,10 +176,11 @@ public class ChatServer {
                 Liked like = new Liked(newMessage[1]);
                 like.setUser(Objects.requireNonNull(user));
                 Objects.requireNonNull(user).setNewLike(like);
+                likeRepository.save(like);
+                userRepository.save(user);
             }
             int like_count = 0;
             User userWithMostLikes = new User();
-            int numberOfLikes = 0;
             if (groupUsernameSessionMap.size() >= 2) {
                 for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
                     if (userRepository.findByUsername(GroupMember.getKey()).getLikes().size() > like_count) {
@@ -189,16 +188,22 @@ public class ChatServer {
                     }
                 }
                 if (userWithMostLikes.getUsername() != null) {
-                    for (Liked name : userWithMostLikes.getLikes()) {
+                    for (Liked likedRestaurant : userWithMostLikes.getLikes()) {
+                        int numberOfLikes = 0;
                         for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
-                            if (userRepository.findByUsername(GroupMember.getKey()).getLikes().contains(name)) {
-                                numberOfLikes++;
-                                if (numberOfLikes == groupUsernameSessionMap.size()) {
-                                    break;
+                            for (Liked like : userRepository.findByUsername(GroupMember.getKey()).getLikes()) {
+                                if (like.getName().equals(likedRestaurant.getName())) {
+                                    numberOfLikes++;
+                                    if (numberOfLikes == groupUsernameSessionMap.size()) {
+                                        break;
+                                    }
                                 }
                             }
                         }
                         if (numberOfLikes == groupUsernameSessionMap.size()) {
+                            for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
+                                sendMessageToPArticularUser(GroupMember.getKey(), "Match@" +  newMessage[1]);
+                            }
                             break;
                         }
                         numberOfLikes = 0;
@@ -273,10 +278,6 @@ public class ChatServer {
             broadcast(username + ": " + message);
         }
     }
-    /**
-     *  Jesse newly added here down ---> *Untested*
-     */
-
 
     /**
      * Broadcasts a message to all users in the chat.
