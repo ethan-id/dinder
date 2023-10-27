@@ -20,9 +20,10 @@ public class Liked {
 
     }
 
-    public Liked(String name){
+    public Liked(String name,User user){
 //        this.id = id;
         this.name = name;
+        this.user = user;
     }
 
     /**

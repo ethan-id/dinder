@@ -59,6 +59,19 @@ public class ChatServer {
     }
 
 
+    private static UserRepository userRepo;
+
+    /*
+     * Grabs the MessageRepository singleton from the Spring Application
+     * Context.  This works because of the @Controller annotation on this
+     * class and because the variable is declared as static.
+     * There are other ways to set this. However, this approach is
+     * easiest.
+     */
+    @Autowired
+    public void setUserRepository(UserRepository repo) {
+        userRepo = repo;
+    }
     // server side logger
     private final Logger logger = LoggerFactory.getLogger(ChatServer.class);
 
@@ -131,9 +144,9 @@ public class ChatServer {
             sendMessageToPArticularUser(username, "invited@"+usernameToAdd);
 
         }
-        else { // Message to whole chat
-            broadcast(username + ": " + message);
-        }
+//        else { // Message to whole chat
+//            broadcast(username + ": " + message);
+//        }
         if (message.startsWith("@")) {
 
             // split by space

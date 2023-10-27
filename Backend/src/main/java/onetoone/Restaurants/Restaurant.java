@@ -41,8 +41,8 @@ public class Restaurant {
     private String distance;
     private String phone_number;
 
-    @ManyToMany(mappedBy = "favoriteRestaurants")
-    private Set<User> favoritedByUsers = new HashSet<>();
+//    @ManyToMany(mappedBy = "favoriteRestaurants")
+//    private Set<User> favoritedByUsers = new HashSet<>();
 
     ArrayList<String> title = new ArrayList<String>();
 
