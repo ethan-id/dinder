@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 
 /**
@@ -201,9 +202,11 @@ public class ChatServer {
                             }
                         }
                         if (numberOfLikes == groupUsernameSessionMap.size()) {
+
                             for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
                                 sendMessageToPArticularUser(GroupMember.getKey(), "Match@" +  newMessage[1]);
                             }
+                            reset();
                             break;
                         }
                         numberOfLikes = 0;
@@ -292,5 +295,24 @@ public class ChatServer {
                 logger.info("[Broadcast Exception] " + e.getMessage());
             }
         });
+    }
+
+    private void groupBroadcast(String message) {
+        groupSessionUsernameMap.forEach((session, username) -> {
+            try {
+                session.getBasicRemote().sendText(message);
+            } catch (IOException e) {
+                logger.info("[Broadcast Exception] " + e.getMessage());
+            }
+        });
+    }
+    private void reset(){
+        for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
+            Set<Liked> userLikes = userRepository.findByUsername(GroupMember.getKey()).getLikes();
+            likeRepository.deleteAll(userLikes);
+            userLikes.clear();
+            userRepository.save(userRepository.findByUsername(GroupMember.getKey()));
+
+        }
     }
 }
