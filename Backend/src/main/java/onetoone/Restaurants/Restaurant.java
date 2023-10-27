@@ -27,6 +27,7 @@ public class Restaurant {
 
     private int id;
     private String name;
+    private String alias;
     private String code;
     private String rating;
     private String review_count;
@@ -52,11 +53,12 @@ public class Restaurant {
      * @JoinColumn defines the ownership of the foreign key i.e. the user table will have a field called laptop_id
      */
 
-    public Restaurant(int count, String name, String code, String is_closed, String rating, String review_count, String image_url,
+    public Restaurant(int count, String name, String alias, String code, String is_closed, String rating, String review_count, String image_url,
                       String url, String price, String longitude, String latitude, String address, String phone_number,
                       String distance, ArrayList<String> title) {
         this.count = count;
         this.name = name;
+        this.alias = alias;
         this.code = code;
         this.is_closed = is_closed;
         this.rating = rating;
@@ -81,6 +83,7 @@ public class Restaurant {
     public String get_name() {
         return this.name;
     }
+    public String get_alias() { return this.alias; }
 
     public String get_code() {
         return this.code;
@@ -136,6 +139,7 @@ public class Restaurant {
     public void set_name(String name) {
         this.name = name;
     }
+    public void set_alias(String alias) { this.alias = alias; }
 
     public void set_code(String code) {
         this.code = code;
@@ -180,10 +184,5 @@ public class Restaurant {
         this.distance = distance;
     }
     public void set_titles(ArrayList<String> title){this.title = title; }
-
-    public String printValues() {
-        return (count + "" + name + ", " + code + ", " + is_closed +", " + rating +", " + review_count +", " + url +", " + image_url +", " + price +", " + longitude +
-                ", " + latitude +", " + address +", " + phone_number +", " + distance);
-    }
 
 }

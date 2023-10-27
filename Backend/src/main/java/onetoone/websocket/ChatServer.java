@@ -1,6 +1,7 @@
 package onetoone.websocket;
 
 import onetoone.Likes.Liked;
+import onetoone.Restaurants.RestaurantRepository;
 import onetoone.Users.User;
 import onetoone.Users.UserRepository;
 import org.slf4j.Logger;
@@ -14,7 +15,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
-
+import java.util.Objects;
 
 
 /**
@@ -44,6 +45,18 @@ public class ChatServer {
     private static Map < String, Session > groupUsernameSessionMap = new Hashtable < > ();
 
 //    private static ArrayList <SessionLikingList> groupSessionLikingList = new ArrayList<SessionLikingList>();
+
+    private static UserRepository userRepository;
+    private static RestaurantRepository restaurantRepository;
+
+    @Autowired
+    public void setUserRepository(UserRepository repo) {
+        userRepository = repo;
+    }
+    @Autowired
+    public void setRestaurantRepository(RestaurantRepository restrepo) {
+        restaurantRepository = restrepo;
+    }
 
 
     private static UserRepository userRepo;
@@ -80,17 +93,17 @@ public class ChatServer {
 //            session.close();
 //        }
 
-            // map current session with username
-            sessionUsernameMap.put(session, username);
+        // map current session with username
+        sessionUsernameMap.put(session, username);
 
-            // map current username with session
-            usernameSessionMap.put(username, session);
+        // map current username with session
+        usernameSessionMap.put(username, session);
 
-            // send to the user joining in
+        // send to the user joining in
 //            sendMessageToPArticularUser(username, "Welcome to the chat server, "+username);
 //
-            // send to everyone in the chat
-            broadcast("User: " + username + " has Joined the Chat");
+        // send to everyone in the chat
+        broadcast("User: " + username + " has Joined the Chat");
 
     }
 
@@ -110,21 +123,25 @@ public class ChatServer {
 
         // Direct message to a user using the format "@username <message>"
         if(message.contains("invite@")){
-            if(!(groupUsernameSessionMap.containsKey(username))){
-                // map current group session with username
-                groupSessionUsernameMap.put(session, username);
-                // map current group username with session
-                groupUsernameSessionMap.put(username, session);
-            }
+            // map current group session with username
+            groupSessionUsernameMap.putIfAbsent(session, username);
+            // map current group username with session
+            groupUsernameSessionMap.putIfAbsent(username, session);
+            /**
+             * Note to morning Jesse:
+             * The groupUsernameSessionMap and the groupSessionUsernameMap do not increase in size
+             * I think the put method may overwrite the current user in it
+             * Otherwise it is not adding to the group
+             */
             String usernameToAdd = message.substring(7);    //@username and get rid of @
-            if(!(groupUsernameSessionMap.containsKey(usernameToAdd))){
-                // map current group session with username
-                groupSessionUsernameMap.put(session, username);
-                // map current group username with session
-                groupUsernameSessionMap.put(username, session);
-                sendMessageToPArticularUser(usernameToAdd, "invitee@"+usernameToAdd);
-                sendMessageToPArticularUser(username, "invited@"+usernameToAdd);
-            }
+            // map current group session with username
+            groupSessionUsernameMap.putIfAbsent(session, usernameToAdd);
+            // map current group username with session
+            groupUsernameSessionMap.putIfAbsent(usernameToAdd, session);
+            broadcast(""+groupSessionUsernameMap.size());
+            broadcast(""+groupUsernameSessionMap.size());
+            sendMessageToPArticularUser(usernameToAdd, "invitee@"+usernameToAdd);
+            sendMessageToPArticularUser(username, "invited@"+usernameToAdd);
 
         }
 //        else { // Message to whole chat
@@ -148,41 +165,49 @@ public class ChatServer {
 //        else { // Message to whole chat
 //            broadcast(username + ": " + message);
 //        }
-        User user = userRepo.findByUsername(username);
         if (message.contains("@") && message.contains("like")) {
-            String[] a = message.split("@");
-            if (a[0].equals("like")) {
-                // groupSessionLikingList.add(new SessionLikingList(username, true, a[1]));
-                Liked c = new Liked(a[1],user);
-                try {
-                    user.setNewLike(c);
-                    logger.info("Set new like");
-                } catch (Exception e) {
-                    System.out.println("Could not find User by their Username");
+            User user = new User();
+            try {
+                user = userRepository.findByUsername(username);
+            }
+            catch (Exception e) {
+                logger.info("[onError]" + username + ": " + "Could not find username in database");
+            }
+            String[] newMessage = message.split("@");
+            if (newMessage[0].equals("like")) {
+                Liked like = new Liked(newMessage[1]);
+                like.setUser(Objects.requireNonNull(user));
+                Objects.requireNonNull(user).setNewLike(like);
+            }
+            int like_count = 0;
+            User userWithMostLikes = new User();
+            int numberOfLikes = 0;
+            if (groupUsernameSessionMap.size() >= 2) {
+                for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
+                    if (userRepository.findByUsername(GroupMember.getKey()).getLikes().size() > like_count) {
+                        userWithMostLikes = userRepository.findByUsername(GroupMember.getKey());
+                    }
+                }
+                if (userWithMostLikes.getUsername() != null) {
+                    for (Liked name : userWithMostLikes.getLikes()) {
+                        for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
+                            if (userRepository.findByUsername(GroupMember.getKey()).getLikes().contains(name)) {
+                                numberOfLikes++;
+                                if (numberOfLikes == groupUsernameSessionMap.size()) {
+                                    break;
+                                }
+                            }
+                        }
+                        if (numberOfLikes == groupUsernameSessionMap.size()) {
+                            break;
+                        }
+                        numberOfLikes = 0;
+                    }
                 }
             }
-//            int like_count = 0;
-//            User userWithMostLikes = new User();
-//            int numberOfLikes = 0;
-//            for (Map.Entry<String, Session> barney : groupUsernameSessionMap.entrySet()) {
-//                if (userRepo.findByUsername(barney.getKey()).getLikes().size() > like_count) {
-//                    userWithMostLikes = userRepo.findByUsername(barney.getKey());
-//                }
-//            }
-//            for (Liked name : userWithMostLikes.getLikes()) {
-//                for (Map.Entry<String, Session> barney : groupUsernameSessionMap.entrySet()) {
-//                    if (userRepo.findByUsername(barney.getKey()).getLikes().contains(name)) {
-//                        numberOfLikes++;
-//                        if (numberOfLikes == groupUsernameSessionMap.size()) {
-//                            break;
-//                        }
-//                    }
-//                }
-//                if (numberOfLikes == groupUsernameSessionMap.size()) {
-//                    break;
-//                }
-//                numberOfLikes = 0;
-//            }
+            else {
+                broadcast("Match@" + newMessage[1]);
+            }
         }
     }
 
@@ -248,9 +273,9 @@ public class ChatServer {
             broadcast(username + ": " + message);
         }
     }
-        /**
-         *  Jesse newly added here down ---> *Untested*
-         */
+    /**
+     *  Jesse newly added here down ---> *Untested*
+     */
 
 
     /**
@@ -260,16 +285,6 @@ public class ChatServer {
      */
     private void broadcast(String message) {
         sessionUsernameMap.forEach((session, username) -> {
-            try {
-                session.getBasicRemote().sendText(message);
-            } catch (IOException e) {
-                logger.info("[Broadcast Exception] " + e.getMessage());
-            }
-        });
-    }
-
-    private void groupBroadcast(String message) {
-        groupSessionUsernameMap.forEach((session, username) -> {
             try {
                 session.getBasicRemote().sendText(message);
             } catch (IOException e) {
