@@ -2,6 +2,7 @@ package com.example.dinder.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -9,14 +10,15 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
-
+import android.view.MenuItem;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -94,12 +96,12 @@ public class UserProfileActivity extends AppCompatActivity {
         String url = "http://10.0.2.2:8080/users/" + id;
 
         queue.add(new JsonObjectRequest(
-            Request.Method.GET, url, null,
-            (Response.Listener<JSONObject>) response -> {
-                user = response;
-                updateRestrictions();
-            },
-            (Response.ErrorListener) Throwable::printStackTrace
+                Request.Method.GET, url, null,
+                (Response.Listener<JSONObject>) response -> {
+                    user = response;
+                    updateRestrictions();
+                },
+                (Response.ErrorListener) Throwable::printStackTrace
         ));
     }
 
@@ -161,11 +163,11 @@ public class UserProfileActivity extends AppCompatActivity {
         user.put("halal", halalCheck.isChecked());
 
         queue.add(new JsonObjectRequest(
-            Request.Method.PUT, url, user,
-            (Response.Listener<JSONObject>) response -> {
-                user = response;
-            },
-            (Response.ErrorListener) Throwable::printStackTrace
+                Request.Method.PUT, url, user,
+                (Response.Listener<JSONObject>) response -> {
+                    user = response;
+                },
+                (Response.ErrorListener) Throwable::printStackTrace
         ));
     }
 
@@ -185,8 +187,42 @@ public class UserProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_userprofile);
+
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
+        bottomNavigationView.setSelectedItemId(R.id.userprofile);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Intent intent;
+
+                int itemId = item.getItemId();
+
+                if (itemId == R.id.home) {
+                    // Start the HomeActivity
+                    intent = new Intent(UserProfileActivity.this, UserHomeActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    return true;
+                } else if (itemId == R.id.match) {
+                    // Start the MatchActivity
+                    intent = new Intent(UserProfileActivity.this, MatchesScreen.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    return true;
+                } else if (itemId == R.id.social) {
+                    // Start the SocialActivity
+                    intent = new Intent(UserProfileActivity.this, SocialActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    return true;
+                } else if (itemId == R.id.userprofile) {
+                    // You're already on this page, so no need to do anything here.
+                    return true;
+                }
+                return false;
+            }
+        });
 
         profilePic = findViewById(R.id.profilePicture);
         backBtn = findViewById(R.id.backBtn);

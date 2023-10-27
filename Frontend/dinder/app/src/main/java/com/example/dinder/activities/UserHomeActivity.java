@@ -1,7 +1,6 @@
 package com.example.dinder.activities;
-
+import static com.example.dinder.R.id.home;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +8,9 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.view.MenuItem;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -20,14 +21,11 @@ import com.example.dinder.VolleySingleton;
 import com.example.dinder.websocket.WebSocketListener;
 import com.example.dinder.websocket.WebSocketManager;
 import com.google.android.material.chip.Chip;
-
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -273,25 +271,25 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     private void getRestaurants(RequestQueue queue) {
         queue.add(new JsonArrayRequest(
-            Request.Method.GET,
-            "http://10.0.2.2:8080/restaurant/all",
-            null,
-            (Response.Listener<JSONArray>) response -> {
-                // Handle the JSON array response
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        JSONObject restaurantObject = response.getJSONObject(i);
-                        restaurants.add(restaurantObject);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                Request.Method.GET,
+                "http://10.0.2.2:8080/restaurant/all",
+                null,
+                (Response.Listener<JSONArray>) response -> {
+                    // Handle the JSON array response
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            JSONObject restaurantObject = response.getJSONObject(i);
+                            restaurants.add(restaurantObject);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
 
-                if (!restaurants.isEmpty()) {
-                    populateScreen(queue, 0);
-                }
-            },
-            (Response.ErrorListener) Throwable::printStackTrace
+                    if (!restaurants.isEmpty()) {
+                        populateScreen(queue, 0);
+                    }
+                },
+                (Response.ErrorListener) Throwable::printStackTrace
         ));
     }
 
@@ -303,11 +301,11 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     private void sendCenterImageRequest(String imageUrl, RequestQueue queue) {
         queue.add(new ImageRequest(
-            imageUrl,
-            response -> {
-                runOnUiThread(() -> centerImage.setImageBitmap(response));
-            }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,
-            Throwable::printStackTrace
+                imageUrl,
+                response -> {
+                    runOnUiThread(() -> centerImage.setImageBitmap(response));
+                }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,
+                Throwable::printStackTrace
         ));
     }
 
@@ -330,6 +328,46 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
+        bottomNavigationView.setSelectedItemId(R.id.userprofile);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Intent intent;
+
+                int itemId = item.getItemId(); // Get the selected item's ID
+
+                if (itemId == R.id.home) {
+                    // Start the HomeActivity
+                    intent = new Intent(UserHomeActivity.this, UserHomeActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    return true;
+                } else if (itemId == R.id.match) {
+                    // Start the MatchActivity
+                    intent = new Intent(UserHomeActivity.this, MatchesScreen.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    return true;
+                } else if (itemId == R.id.social) {
+                    // Start the SocialActivity
+                    intent = new Intent(UserHomeActivity.this, SocialActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    return true;
+                } else if (itemId == R.id.userprofile) {
+                    // You're already on this page, so no need to do anything here.
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+
+
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");

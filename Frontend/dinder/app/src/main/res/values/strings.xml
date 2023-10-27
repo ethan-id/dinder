@@ -52,4 +52,6 @@
     <string name="match8" />
     <string name="match9" />
     <string name="match10" />
+    <string name="home">home</string>
+    <string name="match">match</string>
 </resources>

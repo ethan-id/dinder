@@ -1,20 +1,20 @@
 package com.example.dinder.activities;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SearchView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import android.view.MenuItem;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.example.dinder.R;
 import com.example.dinder.adapters.FriendsAdapter;
 import com.example.dinder.websocket.WebSocketListener;
-
 import org.java_websocket.handshake.ServerHandshake;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,6 +35,7 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
      * RecyclerView used to dynamically display the user's friends
      */
     RecyclerView friendsRecyclerView;
+    private View bottomNavigationView;
 
     /**
      * Initializes the SocialActivity. This method:
@@ -50,10 +51,50 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
      * previously being shut down, this Bundle contains the data it most recently
      * supplied in {@link #onSaveInstanceState}. Otherwise, it is null.
      */
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social);
+
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
+        bottomNavigationView.setSelectedItemId(R.id.social);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Intent intent;
+
+                int itemId = item.getItemId();
+
+                if (itemId == R.id.home) {
+                    // Start the HomeActivity
+                    intent = new Intent(SocialActivity.this, UserHomeActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    return true;
+                } else if (itemId == R.id.match) {
+                    // Start the MatchActivity
+                    intent = new Intent(SocialActivity.this, MatchesScreen.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    return true;
+                } else if (itemId == R.id.social) {
+                    // You're already on this page, so no need to do anything here.
+                    return true;
+                } else if (itemId == R.id.userprofile) {
+                    // Start the UserProfileActivity
+                    intent = new Intent(SocialActivity.this, UserProfileActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
 
         searchBar = findViewById(R.id.search);
         back = findViewById(R.id.backBtn);
