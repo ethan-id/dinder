@@ -253,4 +253,14 @@ public class ChatServer {
             }
         });
     }
+
+    private void groupBroadcast(String message) {
+        groupSessionUsernameMap.forEach((session, username) -> {
+            try {
+                session.getBasicRemote().sendText(message);
+            } catch (IOException e) {
+                logger.info("[Broadcast Exception] " + e.getMessage());
+            }
+        });
+    }
 }
