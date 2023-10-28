@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/centerImage"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/centerImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/centerRestaurantImage"
@@ -198,19 +202,15 @@
         app:layout_constraintStart_toStartOf="@+id/ratingIcon"
         app:layout_constraintTop_toBottomOf="@+id/ratingIcon" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:layout_width="405dp"
-        android:layout_height="116dp"
-        tools:layout_editor_absoluteX="1dp"
-        android:id="@+id/bottom_navigator"
-        app:itemBackground="@color/maroon"
-        app:itemIconTint="@drawable/selector"
-        app:itemTextColor="@drawable/selector"
-        tools:layout_editor_absoluteY="774dp"
-        tools:ignore="MissingConstraints"
-        app:menu="@menu/bottom_nav">
-
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:itemBackground="@color/maroon"
+            app:itemIconTint="@drawable/selector"
+            app:itemTextColor="@drawable/selector"
+            app:menu="@menu/bottom_nav"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="MissingConstraints" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

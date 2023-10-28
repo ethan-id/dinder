@@ -1,119 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.MatchesScreen">
 
-    <!-- Single parent layout to hold both sections -->
-    <LinearLayout
+    <!-- Scroll View -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_navigator">
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="191dp"
-            android:orientation="vertical">
-
-            <!-- Logo Image -->
-
-            <ImageView
-                android:id="@+id/match"
-                android:layout_width="213dp"
-                android:layout_height="103dp"
-                android:layout_gravity="center"
-                android:importantForAccessibility="no"
-                android:padding="8dp"
-                android:src="@drawable/temporary_logo"
-                tools:ignore="DuplicateIds,MissingConstraints" />
-
-            <TextView
-                android:id="@+id/header_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="48sp"
-                android:textStyle="bold"
-                android:padding="16dp"
-                android:textColor="@color/maroon"
-                android:text="@string/matches" />
-
-        </LinearLayout>
-
-
+        <!-- Single parent layout to hold both sections -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <Button
-                android:layout_width="400dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:text="@string/match1" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="191dp"
+                android:orientation="vertical">
 
-            <Button
-                android:layout_width="400dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:text="@string/match2" />
+                <!-- Logo Image -->
+                <ImageView
+                    android:id="@+id/match"
+                    android:layout_width="213dp"
+                    android:layout_height="103dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    android:padding="8dp"
+                    android:src="@drawable/temporary_logo"
+                    tools:ignore="DuplicateIds,MissingConstraints" />
 
-            <Button
-                android:layout_width="400dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:text="@string/match3" />
+                <TextView
+                    android:id="@+id/header_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="48sp"
+                    android:textStyle="bold"
+                    android:padding="16dp"
+                    android:textColor="@color/maroon"
+                    android:text="@string/matches" />
 
+            </LinearLayout>
 
-            <Button
-                android:layout_width="400dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:text="@string/match4" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <Button
-                android:layout_width="400dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:text="@string/match5" />
+                <!-- Your buttons or content for the ScrollView goes here -->
+                <Button
+                    android:layout_width="400dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:text="@string/match1" />
 
+                <Button
+                    android:layout_width="400dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:text="@string/match2" />
 
-            <Button
-                android:layout_width="400dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:text="@string/match6" />
-
-            <Button
-                android:layout_width="400dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:text="@string/match7" />
-
-            <Button
-                android:layout_width="400dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:text="@string/match8" />
-
-            <Button
-                android:layout_width="400dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:text="@string/match9" />
-
-            <Button
-                android:layout_width="400dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:text="@string/match10" />
+                <Button
+                    android:layout_width="400dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:text="@string/match3" />
 
 
+                <Button
+                    android:layout_width="400dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:text="@string/match4" />
+
+                <Button
+                    android:layout_width="400dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:text="@string/match5" />
+
+
+                <Button
+                    android:layout_width="400dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:text="@string/match6" />
+
+                <Button
+                    android:layout_width="400dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:text="@string/match7" />
+
+                <Button
+                    android:layout_width="400dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:text="@string/match8" />
+
+                <Button
+                    android:layout_width="400dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:text="@string/match9" />
+
+                <Button
+                    android:layout_width="400dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:text="@string/match10" />
+
+
+                <!-- Add more buttons or content here as needed -->
+
+            </LinearLayout>
         </LinearLayout>
+    </ScrollView>
 
-    </LinearLayout>
 
-</ScrollView>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@color/maroon"
+        app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@drawable/selector"
+        app:menu="@menu/bottom_nav"
+        />
+
+</RelativeLayout>

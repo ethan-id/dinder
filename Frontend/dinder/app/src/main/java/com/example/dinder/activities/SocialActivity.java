@@ -51,12 +51,10 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
      * previously being shut down, this Bundle contains the data it most recently
      * supplied in {@link #onSaveInstanceState}. Otherwise, it is null.
      */
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social);
-
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
         bottomNavigationView.setSelectedItemId(R.id.social);
@@ -64,37 +62,37 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Intent intent;
-
                 int itemId = item.getItemId();
 
-                if (itemId == R.id.home) {
-                    // Start the HomeActivity
-                    intent = new Intent(SocialActivity.this, UserHomeActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    return true;
-                } else if (itemId == R.id.match) {
-                    // Start the MatchActivity
-                    intent = new Intent(SocialActivity.this, MatchesScreen.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    return true;
-                } else if (itemId == R.id.social) {
+                if (itemId == R.id.social) {
                     // You're already on this page, so no need to do anything here.
+                    return true;
+                } else if (itemId == R.id.home) {
+                    // Start the UserHomeActivity
+                    Intent intent = new Intent(SocialActivity.this, UserHomeActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    finish();
                     return true;
                 } else if (itemId == R.id.userprofile) {
                     // Start the UserProfileActivity
-                    intent = new Intent(SocialActivity.this, UserProfileActivity.class);
+                    Intent intent = new Intent(SocialActivity.this, UserProfileActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    finish();
+                    return true;
+                } else if (itemId == R.id.match) {
+                    // Start the MatchesScreenActivity
+                    Intent intent = new Intent(SocialActivity.this, MatchesScreen.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    finish();
                     return true;
                 }
+
                 return false;
             }
         });
-
-
 
         searchBar = findViewById(R.id.search);
         back = findViewById(R.id.backBtn);

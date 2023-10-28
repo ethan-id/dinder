@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:state_selected="true"
-        android:drawable="@color/maroon"
-        android:color="@android:color/white"/>
+    <!-- Selected item text color (white) -->
+    <item android:color="#FFFFFFFF" android:state_checked="true" />
 
-    <item
-        android:state_selected="false"
-        android:color = "@android:color/black" />
-
+    <!-- Unselected item text color (black) -->
+    <item android:color="#FF000000" />
 </selector>

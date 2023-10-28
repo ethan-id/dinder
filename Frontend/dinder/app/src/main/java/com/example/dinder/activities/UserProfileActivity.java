@@ -189,37 +189,40 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userprofile);
 
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
         bottomNavigationView.setSelectedItemId(R.id.userprofile);
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Intent intent;
-
                 int itemId = item.getItemId();
 
-                if (itemId == R.id.home) {
-                    // Start the HomeActivity
-                    intent = new Intent(UserProfileActivity.this, UserHomeActivity.class);
+                if (itemId == R.id.userprofile) {
+                    // You're already on this page, so no need to do anything here.
+                    return true;
+                } else if (itemId == R.id.home) {
+                    // Start the UserHomeActivity
+                    Intent intent = new Intent(UserProfileActivity.this, UserHomeActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    finish();
                     return true;
                 } else if (itemId == R.id.match) {
-                    // Start the MatchActivity
-                    intent = new Intent(UserProfileActivity.this, MatchesScreen.class);
+                    // Start the MatchesScreenActivity
+                    Intent intent = new Intent(UserProfileActivity.this, MatchesScreen.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    finish();
                     return true;
                 } else if (itemId == R.id.social) {
                     // Start the SocialActivity
-                    intent = new Intent(UserProfileActivity.this, SocialActivity.class);
+                    Intent intent = new Intent(UserProfileActivity.this, SocialActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    return true;
-                } else if (itemId == R.id.userprofile) {
-                    // You're already on this page, so no need to do anything here.
+                    finish();
                     return true;
                 }
+
                 return false;
             }
         });

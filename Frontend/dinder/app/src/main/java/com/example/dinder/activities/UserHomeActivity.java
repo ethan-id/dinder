@@ -1,6 +1,8 @@
 package com.example.dinder.activities;
 import static com.example.dinder.R.id.home;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +37,8 @@ import android.view.MotionEvent;
  * to the restaurant profile where they can see more information about the restaurant.
  */
 public class UserHomeActivity extends AppCompatActivity implements WebSocketListener {
+
+    BottomNavigationView bottomNavigationView;
     /**
      * Large image displayed in the center of the screen used to show the restaurant's food
      */
@@ -48,7 +52,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     ImageView locationIcon;
     /**
-     * Star icon displayed next to the restaurnt's x out of 5 star rating
+     * Star icon displayed next to the restaurant's x out of 5 star rating
      */
     ImageView ratingIcon;
     /**
@@ -328,48 +332,47 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_userhome);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
-        bottomNavigationView.setSelectedItemId(R.id.userprofile);
+        bottomNavigationView.setSelectedItemId(R.id.home);
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Intent intent;
-
-                int itemId = item.getItemId(); // Get the selected item's ID
+                int itemId = item.getItemId();
 
                 if (itemId == R.id.home) {
-                    // Start the HomeActivity
-                    intent = new Intent(UserHomeActivity.this, UserHomeActivity.class);
+                    // You're already on this page, so no need to do anything here.
+                    return true;
+                } else if (itemId == R.id.userprofile) {
+                    // Start the UserProfileActivity
+                    Intent intent = new Intent(UserHomeActivity.this, UserProfileActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    finish();
                     return true;
                 } else if (itemId == R.id.match) {
-                    // Start the MatchActivity
-                    intent = new Intent(UserHomeActivity.this, MatchesScreen.class);
+                    // Start the MatchesScreenActivity
+                    Intent intent = new Intent(UserHomeActivity.this, MatchesScreen.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    finish();
                     return true;
                 } else if (itemId == R.id.social) {
                     // Start the SocialActivity
-                    intent = new Intent(UserHomeActivity.this, SocialActivity.class);
+                    Intent intent = new Intent(UserHomeActivity.this, SocialActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    return true;
-                } else if (itemId == R.id.userprofile) {
-                    // You're already on this page, so no need to do anything here.
+                    finish();
                     return true;
                 }
+
                 return false;
             }
         });
 
-
-
-
-
-        Intent intent = getIntent();
+    Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         String username = intent.getStringExtra("username");
         boolean connected = intent.getBooleanExtra("connected", false);
