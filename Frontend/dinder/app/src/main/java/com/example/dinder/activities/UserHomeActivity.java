@@ -1,8 +1,10 @@
 package com.example.dinder.activities;
-import static com.example.dinder.R.id.home;
-import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import android.os.Bundle;
+import android.view.MenuItem;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,9 +12,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.view.MenuItem;
-import androidx.annotation.NonNull;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -23,11 +23,14 @@ import com.example.dinder.VolleySingleton;
 import com.example.dinder.websocket.WebSocketListener;
 import com.example.dinder.websocket.WebSocketManager;
 import com.google.android.material.chip.Chip;
+
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
+
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -37,8 +40,6 @@ import android.view.MotionEvent;
  * to the restaurant profile where they can see more information about the restaurant.
  */
 public class UserHomeActivity extends AppCompatActivity implements WebSocketListener {
-
-    BottomNavigationView bottomNavigationView;
     /**
      * Large image displayed in the center of the screen used to show the restaurant's food
      */
@@ -52,7 +53,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     ImageView locationIcon;
     /**
-     * Star icon displayed next to the restaurant's x out of 5 star rating
+     * Star icon displayed next to the restaurnt's x out of 5 star rating
      */
     ImageView ratingIcon;
     /**
@@ -332,47 +333,8 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_userhome);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
-        bottomNavigationView.setSelectedItemId(R.id.home);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-
-                if (itemId == R.id.home) {
-                    // You're already on this page, so no need to do anything here.
-                    return true;
-                } else if (itemId == R.id.userprofile) {
-                    // Start the UserProfileActivity
-                    Intent intent = new Intent(UserHomeActivity.this, UserProfileActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    finish();
-                    return true;
-                } else if (itemId == R.id.match) {
-                    // Start the MatchesScreenActivity
-                    Intent intent = new Intent(UserHomeActivity.this, MatchesScreen.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    finish();
-                    return true;
-                } else if (itemId == R.id.social) {
-                    // Start the SocialActivity
-                    Intent intent = new Intent(UserHomeActivity.this, SocialActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    finish();
-                    return true;
-                }
-
-                return false;
-            }
-        });
-
-    Intent intent = getIntent();
+        Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         String username = intent.getStringExtra("username");
         boolean connected = intent.getBooleanExtra("connected", false);
@@ -407,6 +369,48 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         logo = findViewById(R.id.restLogo);
 
         getRestaurants(queue);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
+        bottomNavigationView.setSelectedItemId(R.id.home);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+
+                if (itemId == R.id.home) {
+                    // You are already on UserHomeActivity, no need to do anything here.
+                    return true;
+                } else if (itemId == R.id.match) {
+                    startMatchesScreen(); // Start the MatchesScreen activity
+                    return true;
+                } else if (itemId == R.id.social) {
+                    startSocialActivity(); // Start the SocialActivity
+                    return true;
+                } else if (itemId == R.id.userprofile) {
+                    startUserProfileActivity(); // Start the UserProfileActivity
+                    return true;
+                }
+                return false;
+            }
+
+            private void startMatchesScreen() {
+                Intent intent = new Intent(UserHomeActivity.this, MatchesScreen.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0); // No animation for this transition
+            }
+
+            private void startSocialActivity() {
+                Intent intent = new Intent(UserHomeActivity.this, SocialActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0); // No animation for this transition
+            }
+
+            private void startUserProfileActivity() {
+                Intent intent = new Intent(UserHomeActivity.this, UserProfileActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0); // No animation for this transition
+            }
+        });
 
         gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override

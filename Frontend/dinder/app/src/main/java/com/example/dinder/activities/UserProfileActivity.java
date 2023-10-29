@@ -128,6 +128,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * 'user' JSONObject. It then updates the respective checkboxes on the UI thread to reflect these
      * preferences.
      * </p>
+     *
      * @throws RuntimeException if there's an issue parsing the 'user' JSONObject.
      */
     private void updateRestrictions() {
@@ -152,6 +153,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * checkboxes (vegan, vegetarian, and halal). A PUT request is then made to the server to save these
      * updated preferences.
      * </p>
+     *
      * @throws JSONException if there's an issue accessing or updating the 'user' JSONObject.
      */
     private void saveUserPreferences() throws JSONException {
@@ -179,6 +181,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * the provided user ID, initializes UI components, and sets up event listeners
      * for the buttons and checkboxes on the screen.
      * </p>
+     *
      * @param savedInstanceState If the activity is being re-initialized after previously
      *                           being shut down then this Bundle contains the data it
      *                           most recently supplied in onSaveInstanceState.
@@ -195,31 +198,28 @@ public class UserProfileActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
+                int itemId = item.getItemId(); // Get the selected item's ID
 
-                if (itemId == R.id.userprofile) {
-                    // You're already on this page, so no need to do anything here.
-                    return true;
-                } else if (itemId == R.id.home) {
-                    // Start the UserHomeActivity
+                if (itemId == R.id.home) {
+                    // Start the UserHomeActivity without animation
                     Intent intent = new Intent(UserProfileActivity.this, UserHomeActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    finish();
+                    finish(); // Finish the current activity
                     return true;
                 } else if (itemId == R.id.match) {
-                    // Start the MatchesScreenActivity
+                    // Start the MatchesScreen without animation
                     Intent intent = new Intent(UserProfileActivity.this, MatchesScreen.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    finish();
+                    finish(); // Finish the current activity
                     return true;
                 } else if (itemId == R.id.social) {
-                    // Start the SocialActivity
+                    // Start the SocialActivity without animation
                     Intent intent = new Intent(UserProfileActivity.this, SocialActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    finish();
+                    finish(); // Finish the current activity
+                    return true;
+                } else if (itemId == R.id.userprofile) {
+                    // You're already on this page, so no need to do anything here.
                     return true;
                 }
 
@@ -227,7 +227,9 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
-        profilePic = findViewById(R.id.profilePicture);
+
+
+    profilePic = findViewById(R.id.profilePicture);
         backBtn = findViewById(R.id.backBtn);
         saveBtn = findViewById(R.id.saveBtn);
         name = findViewById(R.id.name);

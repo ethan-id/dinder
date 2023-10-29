@@ -1,35 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_navigator">
 
     <item
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/home"
         android:title="@string/home"
-        android:icon="@drawable/baseline_home_24"
-        app:showAsAction="ifRoom" />
+        android:icon="@drawable/baseline_home_24" />
 
     <item
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:title="@string/userProfile"
         android:id="@+id/userprofile"
-        android:icon="@drawable/baseline_person_24"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/userProfile"
+        android:icon="@drawable/baseline_person_24" />
+
     <item
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/match"
         android:title="@string/match"
-        android:id="@id/match"
-        android:icon="@drawable/favorite"
-        app:showAsAction="ifRoom"/>
+        android:icon="@drawable/favorite" />
+
     <item
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:title="@string/social"
         android:id="@+id/social"
-        android:icon="@drawable/baseline_group_24"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/social"
+        android:icon="@drawable/baseline_group_24" />
 </menu>

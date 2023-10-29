@@ -25,30 +25,30 @@ public class MatchesScreen extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
+                int itemId = item.getItemId(); // Get the selected item's ID
 
-                if (itemId == R.id.match) {
-                    // You're already on this page, so no need to do anything here.
-                    return true;
-                } else if (itemId == R.id.home) {
-                    // Start the UserHomeActivity
+                if (itemId == R.id.home) {
+                    // Start the UserHomeActivity without animation
                     Intent intent = new Intent(MatchesScreen.this, UserHomeActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    overridePendingTransition(0, 0); // No animation for this transition
+                    finish();
+                    return true;
+                } else if (itemId == R.id.match) {
+                    // You're already on this page, so no need to do anything here.
+                    return true;
+                } else if (itemId == R.id.social) {
+                    // Start the SocialActivity without animation
+                    Intent intent = new Intent(MatchesScreen.this, SocialActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0); // No animation for this transition
                     finish();
                     return true;
                 } else if (itemId == R.id.userprofile) {
-                    // Start the UserProfileActivity
+                    // Start the UserProfileActivity without animation
                     Intent intent = new Intent(MatchesScreen.this, UserProfileActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    finish();
-                    return true;
-                } else if (itemId == R.id.social) {
-                    // Start the SocialActivity
-                    Intent intent = new Intent(MatchesScreen.this, SocialActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    overridePendingTransition(0, 0); // No animation for this transition
                     finish();
                     return true;
                 }
@@ -56,26 +56,7 @@ public class MatchesScreen extends AppCompatActivity {
                 return false;
             }
         });
+
     }
-    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}

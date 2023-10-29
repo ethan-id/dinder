@@ -48,8 +48,8 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
      * </ul>
      *
      * @param savedInstanceState If the activity is being re-initialized after
-     * previously being shut down, this Bundle contains the data it most recently
-     * supplied in {@link #onSaveInstanceState}. Otherwise, it is null.
+     *                           previously being shut down, this Bundle contains the data it most recently
+     *                           supplied in {@link #onSaveInstanceState}. Otherwise, it is null.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,30 +62,30 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
+                int itemId = item.getItemId(); // Get the selected item's ID
 
-                if (itemId == R.id.social) {
-                    // You're already on this page, so no need to do anything here.
-                    return true;
-                } else if (itemId == R.id.home) {
+                if (itemId == R.id.home) {
                     // Start the UserHomeActivity
                     Intent intent = new Intent(SocialActivity.this, UserHomeActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    overridePendingTransition(0, 0); // No animation for this transition
                     finish();
+                    return true;
+                } else if (itemId == R.id.match) {
+                    // Start the MatchesScreen
+                    Intent intent = new Intent(SocialActivity.this, MatchesScreen.class);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0); // No animation for this transition
+                    finish();
+                    return true;
+                } else if (itemId == R.id.social) {
+                    // You're already on this page, so no need to do anything here.
                     return true;
                 } else if (itemId == R.id.userprofile) {
                     // Start the UserProfileActivity
                     Intent intent = new Intent(SocialActivity.this, UserProfileActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    finish();
-                    return true;
-                } else if (itemId == R.id.match) {
-                    // Start the MatchesScreenActivity
-                    Intent intent = new Intent(SocialActivity.this, MatchesScreen.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    overridePendingTransition(0, 0); // No animation for this transition
                     finish();
                     return true;
                 }
