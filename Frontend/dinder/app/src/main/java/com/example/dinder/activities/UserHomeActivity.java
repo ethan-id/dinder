@@ -331,10 +331,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState != null) {
-            Log.d("Connected to WebSocket", String.valueOf(savedInstanceState.getBoolean("WebSocket")));
-        }
-
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         String username = intent.getStringExtra("username");
