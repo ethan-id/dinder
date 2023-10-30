@@ -1,9 +1,14 @@
 package com.example.dinder.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -43,6 +48,8 @@ public class LoginActivity extends AppCompatActivity {
      */
     ImageView logo;
 
+    private Dialog loadingDialog;
+
     /**
      * Creates a JSON Object request to login a user.
      * <p>
@@ -62,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         return new JsonObjectRequest(url,
             response -> {
                 // Handle response
+                hideLoadingDialog();
                 Log.d("Response", response.toString());
 
                 // Eventually check the user type here and then we can either start the default home page,
@@ -112,6 +120,7 @@ public class LoginActivity extends AppCompatActivity {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
 
         setContentView(R.layout.activity_main);
+        setupLoadingDialog();
 
         loginBtn = findViewById(R.id.signUpBtn);
         signUpBtn = findViewById(R.id.backToLoginBtn);
@@ -123,6 +132,7 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(v -> {
             if (validLogin(username.getText().toString(), password.getText().toString())) {
                 JsonObjectRequest loginRequest = createUserLoginRequest(username.getText().toString(), password.getText().toString());
+                showLoadingDialog();
                 queue.add(loginRequest);
             }
 
@@ -134,5 +144,28 @@ public class LoginActivity extends AppCompatActivity {
             Intent signUpScreen = new Intent(LoginActivity.this, SignUpActivity.class);
             startActivity(signUpScreen);
         });
+    }
+
+    // Initialize the dialog in onCreate or wherever appropriate
+    private void setupLoadingDialog() {
+        loadingDialog = new Dialog(this);
+        loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        loadingDialog.setContentView(R.layout.loading);
+        loadingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        loadingDialog.setCancelable(false); // prevents users from cancelling the dialog
+    }
+
+    // Show the dialog
+    private void showLoadingDialog() {
+        if (loadingDialog != null && !loadingDialog.isShowing()) {
+            loadingDialog.show();
+        }
+    }
+
+    // Hide the dialog
+    private void hideLoadingDialog() {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+            loadingDialog.dismiss();
+        }
     }
 }
