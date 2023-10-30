@@ -208,6 +208,7 @@ public class UserProfileActivity extends AppCompatActivity {
         backBtn.setOnClickListener(v -> {
             Intent homeScreen = new Intent(UserProfileActivity.this, UserHomeActivity.class);
             homeScreen.putExtra("id", id);
+            homeScreen.putExtra("connected", true);
             startActivity(homeScreen);
         });
 

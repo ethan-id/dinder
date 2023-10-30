@@ -331,16 +331,23 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if(savedInstanceState != null) {
+            Log.d("Connected to WebSocket", String.valueOf(savedInstanceState.getBoolean("WebSocket")));
+        }
+
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         String username = intent.getStringExtra("username");
+        boolean connected = intent.getBooleanExtra("connected", false);
 
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
 
         setContentView(R.layout.activity_userhome);
 
-        WebSocketManager.getInstance().connectWebSocket("ws://10.0.2.2:8080/chat/" + username);
-        WebSocketManager.getInstance().setWebSocketListener(UserHomeActivity.this);
+        if (!connected) {
+            WebSocketManager.getInstance().connectWebSocket("ws://10.0.2.2:8080/chat/" + username);
+            WebSocketManager.getInstance().setWebSocketListener(UserHomeActivity.this);
+        }
 
         centerImage = findViewById(R.id.centerRestaurantImage);
         centerImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
