@@ -422,6 +422,16 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             profile.putExtra("id", id);
             startActivity(profile);
         });
+
+        centerImage.setOnClickListener(v -> {
+            try {
+                Intent restaurant = new Intent(UserHomeActivity.this, RestaurantProfileActivity.class);
+                restaurant.putExtra("code", currentRestaurant.getString("_code"));
+                startActivity(restaurant);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     /**

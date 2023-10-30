@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Dinder"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activities.RestaurantProfileActivity"
+            android:exported="true" />
+        <activity
             android:name=".activities.MatchesScreen"
             android:exported="false" />
         <activity
