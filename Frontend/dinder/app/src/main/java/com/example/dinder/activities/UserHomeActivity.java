@@ -1,27 +1,29 @@
 package com.example.dinder.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.annotation.NonNull;
-import android.os.Bundle;
-import android.view.MenuItem;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
 import com.example.dinder.websocket.WebSocketListener;
 import com.example.dinder.websocket.WebSocketManager;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 
 import org.java_websocket.handshake.ServerHandshake;
@@ -30,9 +32,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 
 /**
  * The Home Screen is considered the default location of the app. On this screen the user can swipe
@@ -358,7 +357,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         address = findViewById(R.id.address);
         dislike = findViewById(R.id.dislikeBtn);
         favorite = findViewById(R.id.heartBtn);
-        profile = findViewById(R.id.profileBtn);
         chip1 = findViewById(R.id.chip);
         chip2 = findViewById(R.id.chip2);
         chip3 = findViewById(R.id.chip3);

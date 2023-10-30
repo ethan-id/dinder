@@ -1,20 +1,23 @@
 package com.example.dinder.activities;
-import android.annotation.SuppressLint;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.SearchView;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.MenuItem;
-import androidx.annotation.NonNull;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import com.example.dinder.R;
 import com.example.dinder.adapters.FriendsAdapter;
 import com.example.dinder.websocket.WebSocketListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import org.java_websocket.handshake.ServerHandshake;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,10 +30,6 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
      * Search bar used for the user to send friend requests
      */
     SearchView searchBar;
-    /**
-     * Button used for the user to go back to the home screen
-     */
-    ImageButton back;
     /**
      * RecyclerView used to dynamically display the user's friends
      */
@@ -95,8 +94,6 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         });
 
         searchBar = findViewById(R.id.search);
-        back = findViewById(R.id.backBtn);
-
         friendsRecyclerView = findViewById(R.id.friendsRecyclerView);
         friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -106,13 +103,6 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
-
-        back.setOnClickListener(v -> {
-            Intent homeScreen = new Intent(SocialActivity.this, UserHomeActivity.class);
-            homeScreen.putExtra("id", id);
-            homeScreen.putExtra("connected", true);
-            startActivity(homeScreen);
-        });
     }
 
     @Override
