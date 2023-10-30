@@ -41,4 +41,74 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/account_circle" />
 
+    <TextView
+        android:id="@+id/restaurantAddress"
+        android:layout_width="250dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="33dp"
+        android:maxLines="1"
+        android:textSize="18sp"
+        app:flow_verticalAlign="center"
+        app:layout_constraintStart_toEndOf="@+id/locIcon"
+        app:layout_constraintTop_toBottomOf="@+id/restaurantName" />
+
+    <TextView
+        android:id="@+id/likeCount"
+        android:layout_width="100dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="28dp"
+        android:maxLines="1"
+        android:textSize="18sp"
+        app:flow_verticalAlign="center"
+        app:layout_constraintStart_toEndOf="@+id/likeIcon"
+        app:layout_constraintTop_toBottomOf="@+id/restaurantAddress" />
+
+    <TextView
+        android:id="@+id/restRating"
+        android:layout_width="100dp"
+        android:layout_height="31dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="8dp"
+        android:maxLines="1"
+        android:textAlignment="viewEnd"
+        android:textSize="18sp"
+        app:flow_verticalAlign="center"
+        app:layout_constraintEnd_toStartOf="@+id/star"
+        app:layout_constraintTop_toBottomOf="@+id/restaurantAddress" />
+
+    <ImageView
+        android:id="@+id/locIcon"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="17dp"
+        android:contentDescription="@string/location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/restaurantLogo"
+        app:srcCompat="@drawable/location_on" />
+
+    <ImageView
+        android:id="@+id/likeIcon"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="14dp"
+        android:contentDescription="@string/heart"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/locIcon"
+        app:srcCompat="@drawable/favorite" />
+
+    <ImageView
+        android:id="@+id/star"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="19dp"
+        android:layout_marginEnd="30dp"
+        android:contentDescription="@string/heart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/restaurantAddress"
+        app:srcCompat="@drawable/star" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
