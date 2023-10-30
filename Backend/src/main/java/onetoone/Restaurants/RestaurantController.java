@@ -34,35 +34,54 @@ public class RestaurantController {
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
 
-    @GetMapping(path = "/restaurant/all")
-    List<Restaurant> getAllRestaurant() {
-        return RestaurantRepository.findAll();
+    @GetMapping(path = "/restaurant/find/{code}")
+    @ResponseBody
+    JsonNode getRestaurantReviews(@PathVariable String code) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url("https://api.yelp.com/v3/businesses/" + code)
+                .addHeader("accept", "application/json")
+                .addHeader("Authorization", "Bearer MVfL5KGDWbaFAwn7beZaNIdCJZ95r8o09YFJgksy9pN8Q7bgqEhRbJKdtBdLPPmss6xv9mz3s3OTEAAu3oWaCJu5J838o1Aouy68aK2--ugkynfBSbLHKqqfVRr5ZHYx")
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                String responseBody = Objects.requireNonNull(response.body()).string();
+                ObjectMapper objectMapper = new ObjectMapper();
+                return objectMapper.readTree(responseBody);
+            } else {
+                return null;
+            }
+        }
+        catch (IOException e) {
+            System.out.println("Build unsuccessful");
+            return null;
+        }
     }
 
-    @GetMapping(path = "/restaurant/find/{code}")
-    Restaurant getRestaurantReviews(@PathVariable String code) {
-        return RestaurantRepository.findByCode(code);
-    }
 
     @GetMapping(path = "/restaurant/reviews/{code}")
     @ResponseBody
-    JsonNode getRestaurantByName(@PathVariable String code) throws IOException {
+    JsonNode getRestaurantByName(@PathVariable String code) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("https://api.yelp.com/v3/businesses/" + code + "/reviews")
                 .addHeader("accept", "application/json")
                 .addHeader("Authorization", "Bearer MVfL5KGDWbaFAwn7beZaNIdCJZ95r8o09YFJgksy9pN8Q7bgqEhRbJKdtBdLPPmss6xv9mz3s3OTEAAu3oWaCJu5J838o1Aouy68aK2--ugkynfBSbLHKqqfVRr5ZHYx")
                 .build();
-        try (Response response = client.newCall(request).execute()) {
+        try {
+            Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
-                assert response.body() != null;
-                String responseBody = response.body().string();
+                String responseBody = Objects.requireNonNull(response.body()).string();
                 ObjectMapper objectMapper = new ObjectMapper();
                 return objectMapper.readTree(responseBody);
             } else {
                 return null;
-
             }
+        }
+        catch (IOException e) {
+            System.out.println("Build unsuccessful");
+            return null;
         }
     }
 

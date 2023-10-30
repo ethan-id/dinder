@@ -88,4 +88,14 @@ public class UserController {
         userRepository.deleteById(id);
         return success;
     }
+
+    @GetMapping(path= "/users/add-friend/{username}")
+    String addFriend(@PathVariable String username) {
+        if (username == null || userRepository.findByUsername(username) == null) {
+            return failure;
+        }
+
+        return success;
+    }
+
 }

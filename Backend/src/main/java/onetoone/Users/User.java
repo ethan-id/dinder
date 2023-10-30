@@ -23,11 +23,20 @@ public class User {
     private String name;
     private String username;
     private String passkey;
+
     private boolean vegan;
     private boolean vegitarian;
     private boolean halal;
     @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
     private Set<Liked> likes;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_friends",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id")
+    )
+    private Set<User> friends;
 
     @ManyToMany
     @JoinTable(
@@ -123,4 +132,5 @@ public class User {
         getLikes().clear();
 
     }
+
 }
