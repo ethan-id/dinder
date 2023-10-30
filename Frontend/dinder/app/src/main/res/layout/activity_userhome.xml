@@ -61,19 +61,7 @@
         app:layout_constraintStart_toStartOf="@+id/centerRestaurantImage"
         app:srcCompat="@drawable/thumb_down" />
 
-    <ImageButton
-        android:id="@+id/profileBtn"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="812dp"
-        android:background="@drawable/rounded_icon_button_outlined"
-        android:contentDescription="@string/userProfile"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/account_circle" />
-
-    <ImageButton
+        <ImageButton
         android:id="@+id/heartBtn"
         android:layout_width="65dp"
         android:layout_height="65dp"
