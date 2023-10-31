@@ -71,6 +71,7 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         back.setOnClickListener(v -> {
             Intent homeScreen = new Intent(SocialActivity.this, UserHomeActivity.class);
             homeScreen.putExtra("id", id);
+            homeScreen.putExtra("connected", true);
             startActivity(homeScreen);
         });
     }

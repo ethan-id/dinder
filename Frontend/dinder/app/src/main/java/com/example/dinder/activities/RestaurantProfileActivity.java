@@ -122,6 +122,7 @@ public class RestaurantProfileActivity extends AppCompatActivity {
 
         backBtn.setOnClickListener(v -> {
             Intent homeScreen = new Intent(RestaurantProfileActivity.this, UserHomeActivity.class);
+            homeScreen.putExtra("connected", true);
             startActivity(homeScreen);
         });
     }
