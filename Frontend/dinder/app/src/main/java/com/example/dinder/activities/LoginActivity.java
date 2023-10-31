@@ -2,16 +2,20 @@ package com.example.dinder.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -28,7 +32,7 @@ import java.util.Objects;
  */
 public class LoginActivity extends AppCompatActivity {
     /**
-     * A Button that send's an HTTP request requesting the user be logged in when it is clicked
+     * A Button that sends an HTTP request requesting the user be logged in when it is clicked
      */
     Button loginBtn;
     /**
@@ -49,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     ImageView logo;
 
     private Dialog loadingDialog;
+    LinearLayout notificationContainer;
 
     /**
      * Creates a JSON Object request to login a user.
@@ -84,7 +89,11 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 startActivity(Homepage);
             },
-            Throwable::printStackTrace
+            error -> {
+                Log.e("Login Error", String.valueOf(error));
+                hideLoadingDialog();
+                showNotification();
+            }
         );
     }
 
@@ -123,6 +132,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setupLoadingDialog();
 
+        notificationContainer = findViewById(R.id.notification_layout);
         loginBtn = findViewById(R.id.signUpBtn);
         signUpBtn = findViewById(R.id.backToLoginBtn);
         username = findViewById(R.id.editTextUsername);
@@ -169,4 +179,32 @@ public class LoginActivity extends AppCompatActivity {
             loadingDialog.dismiss();
         }
     }
+
+    private void showNotification() {
+        // Fade in the notification
+        notificationContainer.animate()
+            .alpha(1f)
+            .setDuration(500) // 500ms
+            .setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    notificationContainer.setVisibility(View.VISIBLE);
+                }
+            });
+
+        // Hide the notification after 3 seconds
+        notificationContainer.postDelayed(() -> {
+            // Fade out the notification
+            notificationContainer.animate()
+                .alpha(0f)
+                .setDuration(500)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        notificationContainer.setVisibility(View.GONE);
+                    }
+                });
+        }, 3000); // 3 seconds
+    }
+
 }
