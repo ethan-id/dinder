@@ -82,9 +82,9 @@ public class RestaurantProfileActivity extends AppCompatActivity {
     private void populateRestaurantProfile() {
         runOnUiThread(() -> {
             try {
-                name.setText(restaurant.getString("_name"));
-                address.setText(restaurant.getString("_address"));
-                rating.setText(restaurant.getString("_rating"));
+                name.setText(restaurant.getString("name"));
+//                address.setText(restaurant.getString("address"));
+                rating.setText(restaurant.getString("rating"));
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }

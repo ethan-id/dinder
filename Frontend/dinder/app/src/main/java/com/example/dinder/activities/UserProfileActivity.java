@@ -2,6 +2,7 @@ package com.example.dinder.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -191,36 +192,39 @@ public class UserProfileActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
         bottomNavigationView.setSelectedItemId(R.id.userprofile);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId(); // Get the selected item's ID
+        Intent sentIntent = getIntent();
+        String id = sentIntent.getStringExtra("id");
 
-                if (itemId == R.id.home) {
-                    // Start the UserHomeActivity without animation
-                    Intent intent = new Intent(UserProfileActivity.this, UserHomeActivity.class);
-                    startActivity(intent);
-                    finish(); // Finish the current activity
-                    return true;
-                } else if (itemId == R.id.match) {
-                    // Start the MatchesScreen without animation
-                    Intent intent = new Intent(UserProfileActivity.this, MatchesScreen.class);
-                    startActivity(intent);
-                    finish(); // Finish the current activity
-                    return true;
-                } else if (itemId == R.id.social) {
-                    // Start the SocialActivity without animation
-                    Intent intent = new Intent(UserProfileActivity.this, SocialActivity.class);
-                    startActivity(intent);
-                    finish(); // Finish the current activity
-                    return true;
-                } else if (itemId == R.id.userprofile) {
-                    // You're already on this page, so no need to do anything here.
-                    return true;
-                }
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId(); // Get the selected item's ID
 
-                return false;
+            if (itemId == R.id.home) {
+                // Start the UserHomeActivity without animation
+                Intent intent = new Intent(UserProfileActivity.this, UserHomeActivity.class);
+                intent.putExtra("id", id);
+                startActivity(intent);
+                finish(); // Finish the current activity
+                return true;
+            } else if (itemId == R.id.match) {
+                // Start the MatchesScreen without animation
+                Intent intent = new Intent(UserProfileActivity.this, MatchesScreen.class);
+                intent.putExtra("id", id);
+                startActivity(intent);
+                finish(); // Finish the current activity
+                return true;
+            } else if (itemId == R.id.social) {
+                // Start the SocialActivity without animation
+                Intent intent = new Intent(UserProfileActivity.this, SocialActivity.class);
+                intent.putExtra("id", id);
+                startActivity(intent);
+                finish(); // Finish the current activity
+                return true;
+            } else if (itemId == R.id.userprofile) {
+                // You're already on this page, so no need to do anything here.
+                return true;
             }
+
+            return false;
         });
 
 
@@ -232,9 +236,6 @@ public class UserProfileActivity extends AppCompatActivity {
         vegetarianCheck = findViewById(R.id.vegetarianCheck);
         veganCheck = findViewById(R.id.veganCheck);
         halalCheck = findViewById(R.id.halalCheck);
-
-        Intent sentIntent = getIntent();
-        String id = sentIntent.getStringExtra("id");
 
         getUser(id);
 

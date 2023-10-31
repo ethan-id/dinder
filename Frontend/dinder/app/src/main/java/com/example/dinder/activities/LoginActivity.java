@@ -83,7 +83,6 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     Homepage.putExtra("id", String.valueOf(response.getInt("id")));
                     Homepage.putExtra("username", response.getString("username"));
-                    Homepage.putExtra("connected", false);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }

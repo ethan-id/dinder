@@ -108,6 +108,8 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     Chip chip7;
 
+    static boolean connected = false;
+
     /**
      * A GestureDetector used to recognize when the user swipes left or right on the restaurant
      */
@@ -217,43 +219,38 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             currentRestaurant = restaurants.get(index);
             try {
                 // Populate screen with info about current restaurant
-                sendCenterImageRequest(currentRestaurant.getString("_url"), queue);
-                restaurantName.setText(currentRestaurant.getString("_name"));
-                address.setText(currentRestaurant.getString("_address"));
-                chip1.setText(currentRestaurant.getString("_price"));
-                rating.setText(currentRestaurant.getString("_rating"));
-                ratingCount.setText(String.format("(%s)", currentRestaurant.getString("_review_count")));
+                sendCenterImageRequest(currentRestaurant.getString("image_url"), queue);
                 runOnUiThread(() -> {
                     try {
-                        restaurantName.setText(currentRestaurant.getString("_name"));
+                        restaurantName.setText(currentRestaurant.getString("name"));
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+//                    try {
+//                        address.setText(currentRestaurant.getString("address"));
+//                    } catch (JSONException e) {
+//                        throw new RuntimeException(e);
+//                    }
+                    try {
+                        chip1.setText(currentRestaurant.getString("price"));
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
                     try {
-                        address.setText(currentRestaurant.getString("_address"));
+                        rating.setText(currentRestaurant.getString("rating"));
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
                     try {
-                        chip1.setText(currentRestaurant.getString("_price"));
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                    try {
-                        rating.setText(currentRestaurant.getString("_rating"));
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                    try {
-                        ratingCount.setText(String.format("(%s)", currentRestaurant.getString("_review_count")));
+                        ratingCount.setText(String.format("(%s)", currentRestaurant.getString("review_count")));
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
                 });
-                JSONArray titles = currentRestaurant.getJSONArray("_titles");
-                for (int i = 0; i < titles.length(); i++) {
-                    setChip(i, titles.get(i).toString());
-                }
+//                JSONArray titles = currentRestaurant.getJSONArray("_titles");
+//                for (int i = 0; i < titles.length(); i++) {
+//                    setChip(i, titles.get(i).toString());
+//                }
                 hideEmptyChips();
             } catch (JSONException e) {
                 throw new RuntimeException(e);
@@ -272,13 +269,21 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     private void getRestaurants(RequestQueue queue) {
         queue.add(new JsonArrayRequest(
                 Request.Method.GET,
-                "http://10.0.2.2:8080/restaurant/all",
+                "http://10.0.2.2:8080/home/nyc/2/food/wifi_free",
                 null,
-                (Response.Listener<JSONArray>) response -> {
+                response -> {
+                    Log.d("Response", response.toString());
+                    JSONArray receivedRestaurants;
+                    try {
+                        receivedRestaurants = response.getJSONObject(0).getJSONArray("businesses");
+                        Log.d("rest", receivedRestaurants.toString());
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
                     // Handle the JSON array response
-                    for (int i = 0; i < response.length(); i++) {
+                    for (int i = 0; i < receivedRestaurants.length(); i++) {
                         try {
-                            JSONObject restaurantObject = response.getJSONObject(i);
+                            JSONObject restaurantObject = receivedRestaurants.getJSONObject(i);
                             restaurants.add(restaurantObject);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -289,7 +294,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
                         populateScreen(queue, 0);
                     }
                 },
-                (Response.ErrorListener) Throwable::printStackTrace
+                Throwable::printStackTrace
         ));
     }
 
@@ -332,7 +337,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         String username = intent.getStringExtra("username");
-        boolean connected = intent.getBooleanExtra("connected", false);
 
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
 
@@ -341,6 +345,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         if (!connected) {
             WebSocketManager.getInstance().connectWebSocket("ws://10.0.2.2:8080/chat/" + username);
             WebSocketManager.getInstance().setWebSocketListener(UserHomeActivity.this);
+            connected = true;
         }
 
         centerImage = findViewById(R.id.centerRestaurantImage);
@@ -389,18 +394,21 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
 
             private void startMatchesScreen() {
                 Intent intent = new Intent(UserHomeActivity.this, MatchesScreen.class);
+                intent.putExtra("id", id);
                 startActivity(intent);
                 overridePendingTransition(0, 0); // No animation for this transition
             }
 
             private void startSocialActivity() {
                 Intent intent = new Intent(UserHomeActivity.this, SocialActivity.class);
+                intent.putExtra("id", id);
                 startActivity(intent);
                 overridePendingTransition(0, 0); // No animation for this transition
             }
 
             private void startUserProfileActivity() {
                 Intent intent = new Intent(UserHomeActivity.this, UserProfileActivity.class);
+                intent.putExtra("id", id);
                 startActivity(intent);
                 overridePendingTransition(0, 0); // No animation for this transition
             }
@@ -418,7 +426,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
                     if (diffX > 0) {
                         // Right swipe
                         try {
-                            String code = currentRestaurant.getString("_code");
+                            String code = currentRestaurant.getString("id");
                             WebSocketManager.getInstance().sendMessage("like@" + code);
                             populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
                         } catch (JSONException e) {
@@ -428,7 +436,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
                     } else {
                         // Left swipe
                         try {
-                            String code = currentRestaurant.getString("_code");
+                            String code = currentRestaurant.getString("id");
                             WebSocketManager.getInstance().sendMessage("dislike@" + code);
                             populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
                         } catch (JSONException e) {
@@ -443,7 +451,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
 
         dislike.setOnClickListener(v -> {
             try {
-                String code = currentRestaurant.getString("_code");
+                String code = currentRestaurant.getString("id");
                 WebSocketManager.getInstance().sendMessage("dislike@" + code);
                 populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
             } catch (JSONException e) {
@@ -452,7 +460,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         });
         favorite.setOnClickListener(v -> {
             try {
-                String code = currentRestaurant.getString("_code");
+                String code = currentRestaurant.getString("id");
                 WebSocketManager.getInstance().sendMessage("like@" + code);
                 populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
             } catch (JSONException e) {
@@ -463,7 +471,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         centerImage.setOnClickListener(v -> {
             try {
                 Intent restaurant = new Intent(UserHomeActivity.this, RestaurantProfileActivity.class);
-                restaurant.putExtra("code", currentRestaurant.getString("_code"));
+                restaurant.putExtra("code", currentRestaurant.getString("id"));
                 startActivity(restaurant);
             } catch (JSONException e) {
                 throw new RuntimeException(e);
