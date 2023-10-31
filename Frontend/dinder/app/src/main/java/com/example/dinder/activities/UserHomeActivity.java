@@ -1,12 +1,16 @@
 package com.example.dinder.activities;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -122,6 +126,10 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      * The current restaurant being displayed to the user
      */
     JSONObject currentRestaurant;
+    /**
+     * Dialog used to display loading symbol while the restaurant's are being fetched
+     */
+    private Dialog loadingDialog;
 
     /**
      * Sets the text content for a specific chip based on its index and ensures its visibility.
@@ -267,11 +275,13 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      * @param queue The request queue to which the JSON array request will be added.
      */
     private void getRestaurants(RequestQueue queue) {
+        showLoadingDialog();
         queue.add(new JsonArrayRequest(
                 Request.Method.GET,
                 "http://10.0.2.2:8080/home/nyc/2/food/wifi_free",
                 null,
                 response -> {
+                    hideLoadingDialog();
                     Log.d("Response", response.toString());
                     JSONArray receivedRestaurants;
                     try {
@@ -294,7 +304,10 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
                         populateScreen(queue, 0);
                     }
                 },
-                Throwable::printStackTrace
+                error -> {
+                    Log.e("Error", String.valueOf(error));
+                    hideLoadingDialog();
+                }
         ));
     }
 
@@ -341,6 +354,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
 
         setContentView(R.layout.activity_userhome);
+        setupLoadingDialog();
 
         if (!connected) {
             WebSocketManager.getInstance().connectWebSocket("ws://10.0.2.2:8080/chat/" + username);
@@ -514,5 +528,28 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     public void onWebSocketError(Exception ex) {
         // Show notification to user informing them of the error
         Log.e("WebSocketError", ex.toString());
+    }
+
+    // Initialize the dialog in onCreate or wherever appropriate
+    private void setupLoadingDialog() {
+        loadingDialog = new Dialog(this);
+        loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        loadingDialog.setContentView(R.layout.loading);
+        loadingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        loadingDialog.setCancelable(false); // prevents users from cancelling the dialog
+    }
+
+    // Show the dialog
+    private void showLoadingDialog() {
+        if (loadingDialog != null && !loadingDialog.isShowing()) {
+            loadingDialog.show();
+        }
+    }
+
+    // Hide the dialog
+    private void hideLoadingDialog() {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+            loadingDialog.dismiss();
+        }
     }
 }
