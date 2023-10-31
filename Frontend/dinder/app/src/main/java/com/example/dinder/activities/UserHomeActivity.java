@@ -485,6 +485,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         centerImage.setOnClickListener(v -> {
             try {
                 Intent restaurant = new Intent(UserHomeActivity.this, RestaurantProfileActivity.class);
+                restaurant.putExtra("id", id);
                 restaurant.putExtra("code", currentRestaurant.getString("id"));
                 startActivity(restaurant);
             } catch (JSONException e) {
