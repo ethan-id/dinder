@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/centerImage"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/centerImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/centerRestaurantImage"
@@ -57,19 +61,7 @@
         app:layout_constraintStart_toStartOf="@+id/centerRestaurantImage"
         app:srcCompat="@drawable/thumb_down" />
 
-    <ImageButton
-        android:id="@+id/profileBtn"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/rounded_icon_button_outlined"
-        android:contentDescription="@string/userProfile"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/account_circle" />
-
-    <ImageButton
+        <ImageButton
         android:id="@+id/heartBtn"
         android:layout_width="65dp"
         android:layout_height="65dp"
@@ -198,4 +190,14 @@
         app:layout_constraintStart_toStartOf="@+id/ratingIcon"
         app:layout_constraintTop_toBottomOf="@+id/ratingIcon" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:itemBackground="@color/maroon"
+            app:itemIconTint="@drawable/selector"
+            app:itemTextColor="@drawable/selector"
+            app:menu="@menu/bottom_nav"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

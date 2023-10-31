@@ -1,24 +1,29 @@
 package com.example.dinder.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
 import com.example.dinder.websocket.WebSocketListener;
 import com.example.dinder.websocket.WebSocketManager;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 
 import org.java_websocket.handshake.ServerHandshake;
@@ -27,9 +32,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 
 /**
  * The Home Screen is considered the default location of the app. On this screen the user can swipe
@@ -77,10 +79,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      * A button for the user to like/favorite the restaurant
      */
     ImageButton favorite;
-    /**
-     * A button that takes the user to their user profile
-     */
-    ImageButton profile;
     /**
      * A chip used to display price information about the restaurant such as "$", "$$", or "$$$"
      */
@@ -273,25 +271,25 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     private void getRestaurants(RequestQueue queue) {
         queue.add(new JsonArrayRequest(
-            Request.Method.GET,
-            "http://10.0.2.2:8080/restaurant/all",
-            null,
-            (Response.Listener<JSONArray>) response -> {
-                // Handle the JSON array response
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        JSONObject restaurantObject = response.getJSONObject(i);
-                        restaurants.add(restaurantObject);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                Request.Method.GET,
+                "http://10.0.2.2:8080/restaurant/all",
+                null,
+                (Response.Listener<JSONArray>) response -> {
+                    // Handle the JSON array response
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            JSONObject restaurantObject = response.getJSONObject(i);
+                            restaurants.add(restaurantObject);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
 
-                if (!restaurants.isEmpty()) {
-                    populateScreen(queue, 0);
-                }
-            },
-            (Response.ErrorListener) Throwable::printStackTrace
+                    if (!restaurants.isEmpty()) {
+                        populateScreen(queue, 0);
+                    }
+                },
+                (Response.ErrorListener) Throwable::printStackTrace
         ));
     }
 
@@ -303,11 +301,11 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     private void sendCenterImageRequest(String imageUrl, RequestQueue queue) {
         queue.add(new ImageRequest(
-            imageUrl,
-            response -> {
-                runOnUiThread(() -> centerImage.setImageBitmap(response));
-            }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,
-            Throwable::printStackTrace
+                imageUrl,
+                response -> {
+                    runOnUiThread(() -> centerImage.setImageBitmap(response));
+                }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,
+                Throwable::printStackTrace
         ));
     }
 
@@ -355,7 +353,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         address = findViewById(R.id.address);
         dislike = findViewById(R.id.dislikeBtn);
         favorite = findViewById(R.id.heartBtn);
-        profile = findViewById(R.id.profileBtn);
         chip1 = findViewById(R.id.chip);
         chip2 = findViewById(R.id.chip2);
         chip3 = findViewById(R.id.chip3);
@@ -366,6 +363,48 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         logo = findViewById(R.id.restLogo);
 
         getRestaurants(queue);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
+        bottomNavigationView.setSelectedItemId(R.id.home);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+
+                if (itemId == R.id.home) {
+                    // You are already on UserHomeActivity, no need to do anything here.
+                    return true;
+                } else if (itemId == R.id.match) {
+                    startMatchesScreen(); // Start the MatchesScreen activity
+                    return true;
+                } else if (itemId == R.id.social) {
+                    startSocialActivity(); // Start the SocialActivity
+                    return true;
+                } else if (itemId == R.id.userprofile) {
+                    startUserProfileActivity(); // Start the UserProfileActivity
+                    return true;
+                }
+                return false;
+            }
+
+            private void startMatchesScreen() {
+                Intent intent = new Intent(UserHomeActivity.this, MatchesScreen.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0); // No animation for this transition
+            }
+
+            private void startSocialActivity() {
+                Intent intent = new Intent(UserHomeActivity.this, SocialActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0); // No animation for this transition
+            }
+
+            private void startUserProfileActivity() {
+                Intent intent = new Intent(UserHomeActivity.this, UserProfileActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0); // No animation for this transition
+            }
+        });
 
         gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
@@ -419,11 +458,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
-        });
-        profile.setOnClickListener(v -> {
-            Intent profile = new Intent(UserHomeActivity.this, SocialActivity.class);
-            profile.putExtra("id", id);
-            startActivity(profile);
         });
 
         centerImage.setOnClickListener(v -> {

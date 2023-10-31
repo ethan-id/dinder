@@ -1,96 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/saveBtn"
-        style="@style/Button.Secondary"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/centerImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Replace these UI elements with your own layout -->
+        <Button
+            android:id="@+id/saveBtn"
+            style="@style/Button.Secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="28dp"
+            android:layout_marginBottom="92dp"
+            android:text="@string/save"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="308dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="46dp"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/profilePicture"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/profilePicture"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="28dp"
+            android:contentDescription="@string/profileIcon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/account_circle" />
+
+        <TextView
+            android:id="@+id/dietRestrict"
+            android:layout_width="301dp"
+            android:layout_height="101dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/dietRest"
+            android:textSize="40sp"
+            app:layout_constraintStart_toStartOf="@+id/profilePicture"
+            app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
+
+        <CheckBox
+            android:id="@+id/veganCheck"
+            android:layout_width="233dp"
+            android:layout_height="51dp"
+            android:text="@string/vegan"
+            app:layout_constraintBottom_toTopOf="@+id/halalCheck"
+            app:layout_constraintStart_toStartOf="@+id/vegetarianCheck"
+            app:layout_constraintTop_toBottomOf="@+id/vegetarianCheck" />
+
+        <CheckBox
+            android:id="@+id/vegetarianCheck"
+            android:layout_width="233dp"
+            android:layout_height="51dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="9dp"
+            android:text="@string/vegetarian"
+            app:layout_constraintStart_toStartOf="@+id/dietRestrict"
+            app:layout_constraintTop_toBottomOf="@+id/dietRestrict" />
+
+        <CheckBox
+            android:id="@+id/halalCheck"
+            android:layout_width="233dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="51dp"
+            android:text="@string/halal"
+            app:layout_constraintStart_toStartOf="@+id/veganCheck"
+            app:layout_constraintTop_toBottomOf="@+id/vegetarianCheck" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Bottom Navigation View -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigator"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="30dp"
-        android:text="@string/save"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:itemBackground="@color/maroon"
+        app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@drawable/selector"
+        app:menu="@menu/bottom_nav"
+        android:layout_alignParentBottom="true"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="837dp"
+        tools:ignore="MissingConstraints" />
 
-    <ImageButton
-        android:id="@+id/backBtn"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="328dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/rounded_icon_button_outlined"
-        android:contentDescription="@string/userProfile"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/arrow_back" />
-
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="308dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="46dp"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/profilePicture"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/profilePicture"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="28dp"
-        android:contentDescription="@string/profileIcon"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/account_circle" />
-
-    <TextView
-        android:id="@+id/dietRestrict"
-        android:layout_width="301dp"
-        android:layout_height="101dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="18dp"
-        android:text="@string/dietRest"
-        android:textSize="40sp"
-        app:layout_constraintStart_toStartOf="@+id/profilePicture"
-        app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
-
-    <CheckBox
-        android:id="@+id/veganCheck"
-        android:layout_width="233dp"
-        android:layout_height="51dp"
-        android:text="@string/vegan"
-        app:layout_constraintBottom_toTopOf="@+id/halalCheck"
-        app:layout_constraintStart_toStartOf="@+id/vegetarianCheck"
-        app:layout_constraintTop_toBottomOf="@+id/vegetarianCheck" />
-
-    <CheckBox
-        android:id="@+id/vegetarianCheck"
-        android:layout_width="233dp"
-        android:layout_height="51dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="9dp"
-        android:text="@string/vegetarian"
-        app:layout_constraintStart_toStartOf="@+id/dietRestrict"
-        app:layout_constraintTop_toBottomOf="@+id/dietRestrict" />
-
-    <CheckBox
-        android:id="@+id/halalCheck"
-        android:layout_width="233dp"
-        android:layout_height="51dp"
-        android:layout_marginTop="51dp"
-        android:text="@string/halal"
-        app:layout_constraintStart_toStartOf="@+id/veganCheck"
-        app:layout_constraintTop_toBottomOf="@+id/vegetarianCheck" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

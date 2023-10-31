@@ -2,9 +2,11 @@ package com.example.dinder.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageButton;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.dinder.R;
 import com.example.dinder.adapters.FriendsAdapter;
 import com.example.dinder.websocket.WebSocketListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -28,13 +31,10 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
      */
     SearchView searchBar;
     /**
-     * Button used for the user to go back to the home screen
-     */
-    ImageButton back;
-    /**
      * RecyclerView used to dynamically display the user's friends
      */
     RecyclerView friendsRecyclerView;
+    private View bottomNavigationView;
 
     /**
      * Initializes the SocialActivity. This method:
@@ -47,17 +47,53 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
      * </ul>
      *
      * @param savedInstanceState If the activity is being re-initialized after
-     * previously being shut down, this Bundle contains the data it most recently
-     * supplied in {@link #onSaveInstanceState}. Otherwise, it is null.
+     *                           previously being shut down, this Bundle contains the data it most recently
+     *                           supplied in {@link #onSaveInstanceState}. Otherwise, it is null.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social);
 
-        searchBar = findViewById(R.id.search);
-        back = findViewById(R.id.backBtn);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
+        bottomNavigationView.setSelectedItemId(R.id.social);
 
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId(); // Get the selected item's ID
+
+                if (itemId == R.id.home) {
+                    // Start the UserHomeActivity
+                    Intent intent = new Intent(SocialActivity.this, UserHomeActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0); // No animation for this transition
+                    finish();
+                    return true;
+                } else if (itemId == R.id.match) {
+                    // Start the MatchesScreen
+                    Intent intent = new Intent(SocialActivity.this, MatchesScreen.class);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0); // No animation for this transition
+                    finish();
+                    return true;
+                } else if (itemId == R.id.social) {
+                    // You're already on this page, so no need to do anything here.
+                    return true;
+                } else if (itemId == R.id.userprofile) {
+                    // Start the UserProfileActivity
+                    Intent intent = new Intent(SocialActivity.this, UserProfileActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0); // No animation for this transition
+                    finish();
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
+        searchBar = findViewById(R.id.search);
         friendsRecyclerView = findViewById(R.id.friendsRecyclerView);
         friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -67,13 +103,6 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
-
-        back.setOnClickListener(v -> {
-            Intent homeScreen = new Intent(SocialActivity.this, UserHomeActivity.class);
-            homeScreen.putExtra("id", id);
-            homeScreen.putExtra("connected", true);
-            startActivity(homeScreen);
-        });
     }
 
     @Override

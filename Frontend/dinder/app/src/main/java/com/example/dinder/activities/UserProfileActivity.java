@@ -1,14 +1,15 @@
 package com.example.dinder.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -16,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,10 +32,6 @@ public class UserProfileActivity extends AppCompatActivity {
      * The User's profile picture
      */
     ImageView profilePic;
-    /**
-     * A button allowing the user to return to the home screen
-     */
-    ImageButton backBtn;
     /**
      * A "Save" button allowing the user to save any changes they make to their profile or preferences
      */
@@ -94,12 +92,12 @@ public class UserProfileActivity extends AppCompatActivity {
         String url = "http://10.0.2.2:8080/users/" + id;
 
         queue.add(new JsonObjectRequest(
-            Request.Method.GET, url, null,
-            (Response.Listener<JSONObject>) response -> {
-                user = response;
-                updateRestrictions();
-            },
-            (Response.ErrorListener) Throwable::printStackTrace
+                Request.Method.GET, url, null,
+                (Response.Listener<JSONObject>) response -> {
+                    user = response;
+                    updateRestrictions();
+                },
+                (Response.ErrorListener) Throwable::printStackTrace
         ));
     }
 
@@ -126,6 +124,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * 'user' JSONObject. It then updates the respective checkboxes on the UI thread to reflect these
      * preferences.
      * </p>
+     *
      * @throws RuntimeException if there's an issue parsing the 'user' JSONObject.
      */
     private void updateRestrictions() {
@@ -150,6 +149,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * checkboxes (vegan, vegetarian, and halal). A PUT request is then made to the server to save these
      * updated preferences.
      * </p>
+     *
      * @throws JSONException if there's an issue accessing or updating the 'user' JSONObject.
      */
     private void saveUserPreferences() throws JSONException {
@@ -161,11 +161,11 @@ public class UserProfileActivity extends AppCompatActivity {
         user.put("halal", halalCheck.isChecked());
 
         queue.add(new JsonObjectRequest(
-            Request.Method.PUT, url, user,
-            (Response.Listener<JSONObject>) response -> {
-                user = response;
-            },
-            (Response.ErrorListener) Throwable::printStackTrace
+                Request.Method.PUT, url, user,
+                (Response.Listener<JSONObject>) response -> {
+                    user = response;
+                },
+                (Response.ErrorListener) Throwable::printStackTrace
         ));
     }
 
@@ -177,6 +177,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * the provided user ID, initializes UI components, and sets up event listeners
      * for the buttons and checkboxes on the screen.
      * </p>
+     *
      * @param savedInstanceState If the activity is being re-initialized after previously
      *                           being shut down then this Bundle contains the data it
      *                           most recently supplied in onSaveInstanceState.
@@ -185,11 +186,45 @@ public class UserProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_userprofile);
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
+        bottomNavigationView.setSelectedItemId(R.id.userprofile);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId(); // Get the selected item's ID
+
+                if (itemId == R.id.home) {
+                    // Start the UserHomeActivity without animation
+                    Intent intent = new Intent(UserProfileActivity.this, UserHomeActivity.class);
+                    startActivity(intent);
+                    finish(); // Finish the current activity
+                    return true;
+                } else if (itemId == R.id.match) {
+                    // Start the MatchesScreen without animation
+                    Intent intent = new Intent(UserProfileActivity.this, MatchesScreen.class);
+                    startActivity(intent);
+                    finish(); // Finish the current activity
+                    return true;
+                } else if (itemId == R.id.social) {
+                    // Start the SocialActivity without animation
+                    Intent intent = new Intent(UserProfileActivity.this, SocialActivity.class);
+                    startActivity(intent);
+                    finish(); // Finish the current activity
+                    return true;
+                } else if (itemId == R.id.userprofile) {
+                    // You're already on this page, so no need to do anything here.
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
+
         profilePic = findViewById(R.id.profilePicture);
-        backBtn = findViewById(R.id.backBtn);
         saveBtn = findViewById(R.id.saveBtn);
         name = findViewById(R.id.name);
         dietRestrictions = findViewById(R.id.dietRestrict);
@@ -204,13 +239,6 @@ public class UserProfileActivity extends AppCompatActivity {
         getUser(id);
 
         saveBtn.setEnabled(false);
-
-        backBtn.setOnClickListener(v -> {
-            Intent homeScreen = new Intent(UserProfileActivity.this, UserHomeActivity.class);
-            homeScreen.putExtra("id", id);
-            homeScreen.putExtra("connected", true);
-            startActivity(homeScreen);
-        });
 
         saveBtn.setOnClickListener(v -> {
             try {

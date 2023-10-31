@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="home" type="id" />
+    <item name="userprofile" type="id" />
+    <item name="match" type="id" />
+    <item name="social" type="id" />
+    <item name="bottom_navigator" type="id" />
+</resources>
