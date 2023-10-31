@@ -2,6 +2,7 @@ package com.example.dinder.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
@@ -55,42 +56,45 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social);
 
+        Intent intent = getIntent();
+        String id = intent.getStringExtra("id");
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
         bottomNavigationView.setSelectedItemId(R.id.social);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId(); // Get the selected item's ID
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId(); // Get the selected item's ID
 
-                if (itemId == R.id.home) {
-                    // Start the UserHomeActivity
-                    Intent intent = new Intent(SocialActivity.this, UserHomeActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(0, 0); // No animation for this transition
-                    finish();
-                    return true;
-                } else if (itemId == R.id.match) {
-                    // Start the MatchesScreen
-                    Intent intent = new Intent(SocialActivity.this, MatchesScreen.class);
-                    startActivity(intent);
-                    overridePendingTransition(0, 0); // No animation for this transition
-                    finish();
-                    return true;
-                } else if (itemId == R.id.social) {
-                    // You're already on this page, so no need to do anything here.
-                    return true;
-                } else if (itemId == R.id.userprofile) {
-                    // Start the UserProfileActivity
-                    Intent intent = new Intent(SocialActivity.this, UserProfileActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(0, 0); // No animation for this transition
-                    finish();
-                    return true;
-                }
-
-                return false;
+            if (itemId == R.id.home) {
+                // Start the UserHomeActivity
+                Intent intent1 = new Intent(SocialActivity.this, UserHomeActivity.class);
+                intent1.putExtra("id", id);
+                startActivity(intent1);
+                overridePendingTransition(0, 0); // No animation for this transition
+                finish();
+                return true;
+            } else if (itemId == R.id.match) {
+                // Start the MatchesScreen
+                Intent intent1 = new Intent(SocialActivity.this, MatchesScreen.class);
+                intent1.putExtra("id", id);
+                startActivity(intent1);
+                overridePendingTransition(0, 0); // No animation for this transition
+                finish();
+                return true;
+            } else if (itemId == R.id.social) {
+                // You're already on this page, so no need to do anything here.
+                return true;
+            } else if (itemId == R.id.userprofile) {
+                // Start the UserProfileActivity
+                Intent intent1 = new Intent(SocialActivity.this, UserProfileActivity.class);
+                intent1.putExtra("id", id);
+                startActivity(intent1);
+                overridePendingTransition(0, 0); // No animation for this transition
+                finish();
+                return true;
             }
+
+            return false;
         });
 
         searchBar = findViewById(R.id.search);
@@ -100,9 +104,6 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         List<String> friendsList = Arrays.asList("John", "Jane", "Doe", "Smith");
         FriendsAdapter adapter = new FriendsAdapter(friendsList);
         friendsRecyclerView.setAdapter(adapter);
-
-        Intent intent = getIntent();
-        String id = intent.getStringExtra("id");
     }
 
     @Override

@@ -82,9 +82,9 @@ public class RestaurantProfileActivity extends AppCompatActivity {
     private void populateRestaurantProfile() {
         runOnUiThread(() -> {
             try {
-                name.setText(restaurant.getString("_name"));
-                address.setText(restaurant.getString("_address"));
-                rating.setText(restaurant.getString("_rating"));
+                name.setText(restaurant.getString("name"));
+//                address.setText(restaurant.getString("address"));
+                rating.setText(restaurant.getString("rating"));
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
@@ -117,11 +117,13 @@ public class RestaurantProfileActivity extends AppCompatActivity {
 
         Intent sentIntent = getIntent();
         String code = sentIntent.getStringExtra("code");
+        String id = sentIntent.getStringExtra("id");
 
         getRestaurant(code);
 
         backBtn.setOnClickListener(v -> {
             Intent homeScreen = new Intent(RestaurantProfileActivity.this, UserHomeActivity.class);
+            homeScreen.putExtra("id", id);
             homeScreen.putExtra("connected", true);
             startActivity(homeScreen);
         });
