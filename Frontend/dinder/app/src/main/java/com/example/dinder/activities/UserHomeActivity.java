@@ -80,10 +80,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     ImageButton favorite;
     /**
-     * A button that takes the user to their user profile
-     */
-    ImageButton profile;
-    /**
      * A chip used to display price information about the restaurant such as "$", "$$", or "$$$"
      */
     Chip chip1;
@@ -462,11 +458,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
-        });
-        profile.setOnClickListener(v -> {
-            Intent profile = new Intent(UserHomeActivity.this, SocialActivity.class);
-            profile.putExtra("id", id);
-            startActivity(profile);
         });
 
         centerImage.setOnClickListener(v -> {
