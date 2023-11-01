@@ -280,7 +280,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
 
         JsonArrayRequest request = new JsonArrayRequest(
             Request.Method.GET,
-            "http://10.0.2.2:8080/home/nyc/2/food/wifi_free",
+            "http://10.0.2.2:8080/restaurant/Ames/all",
             null,
             response -> {
                 hideLoadingDialog();
