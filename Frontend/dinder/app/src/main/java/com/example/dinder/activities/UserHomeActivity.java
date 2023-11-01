@@ -3,8 +3,11 @@ package com.example.dinder.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.Manifest;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -21,6 +24,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -47,6 +53,9 @@ import java.util.ArrayList;
  * to the restaurant profile where they can see more information about the restaurant.
  */
 public class UserHomeActivity extends AppCompatActivity implements WebSocketListener {
+    public static final String MATCH_CHANNEL_ID = "Matches";
+    private static final int NOTIFICATION_ID = 1;
+
     /**
      * Large image displayed in the center of the screen used to show the restaurant's food
      */
@@ -147,10 +156,10 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      * that the user interface updates smoothly.
      *
      * @param index the position of the chip to update, starting from 0
-     * @param tag the text content to set for the specified chip
+     * @param tag   the text content to set for the specified chip
      */
     private void setChip(int index, String tag) {
-        switch(index) {
+        switch (index) {
             case 0:
                 runOnUiThread(() -> {
                     chip2.setText(tag);
@@ -357,8 +366,8 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      * </ul>
      *
      * @param savedInstanceState If the activity is being re-initialized after
-     * previously being shut down, this Bundle contains the data it most recently
-     * supplied in {@link #onSaveInstanceState}. Otherwise, it is null.
+     *                           previously being shut down, this Bundle contains the data it most recently
+     *                           supplied in {@link #onSaveInstanceState}. Otherwise, it is null.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -367,6 +376,10 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         String username = intent.getStringExtra("username");
+        ArrayList<String> receivedCodes = intent.getStringArrayListExtra("codes");
+        if (receivedCodes != null) {
+            matchCodes = receivedCodes;
+        }
 
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
 
@@ -427,6 +440,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             private void startMatchesScreen() {
                 Intent intent = new Intent(UserHomeActivity.this, MatchesScreen.class);
                 intent.putExtra("id", id);
+                intent.putStringArrayListExtra("codes", matchCodes);
                 startActivity(intent);
                 overridePendingTransition(0, 0); // No animation for this transition
             }
@@ -541,13 +555,10 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         }, 3000); // 3 seconds
     }
 
-
-
     /**
      * Set's the gestureDetector defined in onCreate to call it's onTouchEvent()
      *
      * @param event The touch screen event being processed.
-     *
      * @return event The touch screen event being processed.
      */
     @Override
@@ -564,9 +575,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
 
     @Override
     public void onWebSocketMessage(String message) {
-
         // If the message is an invitation show notification on screen, telling user who invited them to a group
-
         if (message.contains("Match")) {
             runOnUiThread(() -> {
                 showNotification();
@@ -574,7 +583,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             String code = message.split("@")[1];
             matchCodes.add(code);
             Log.d("Code", code);
-
         }
         Log.d("Message", message);
     }
@@ -614,8 +622,33 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         }
     }
 
+    public void displayMatchNotification(String matchInfo) {
+        Intent intent = new Intent(UserHomeActivity.this, MatchesScreen.class);
+        intent.putExtra("match_info", matchInfo);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Create the notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, MATCH_CHANNEL_ID)
+                .setSmallIcon(R.drawable.favorite)
+                .setContentTitle("New Match!")
+                .setContentText("You have a new match!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        // Show the notification
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
+
+    }
 }
-
-
-
-

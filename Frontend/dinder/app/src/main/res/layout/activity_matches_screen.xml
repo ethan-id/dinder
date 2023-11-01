@@ -8,9 +8,11 @@
 
     <!-- Scroll View -->
     <ScrollView
+        android:id="@+id/matches"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_navigator">
+        android:layout_above="@id/bottom_navigator"
+        android:layout_marginBottom="-2dp">
 
         <!-- Single parent layout to hold both sections -->
         <LinearLayout
@@ -39,11 +41,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textSize="48sp"
-                    android:textStyle="bold"
                     android:padding="16dp"
+                    android:text="@string/matches"
                     android:textColor="@color/maroon"
-                    android:text="@string/matches" />
+                    android:textSize="48sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -52,76 +54,57 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Your buttons or content for the ScrollView goes here -->
-                <Button
-                    android:layout_width="400dp"
-                    android:layout_height="200dp"
+
+                <TextView
+                    android:id="@+id/restName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
-                    android:text="@string/match1" />
+                    android:layout_marginTop="8dp"
+                    android:text="Restaurant Name"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
-                <Button
-                    android:layout_width="400dp"
-                    android:layout_height="200dp"
+                <ImageView
+                    android:id="@+id/centerRestaurantImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="@string/match2" />
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="16dp"
+                    android:background="#000000"
+                    android:contentDescription="@string/imageDescription"
+                    android:padding="1dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@tools:sample/avatars" />
 
-                <Button
-                    android:layout_width="400dp"
-                    android:layout_height="200dp"
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/centerRestaurantImage"
+                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
-                    android:text="@string/match3" />
+                    android:layout_marginTop="16dp"
+                    android:text="Location: Some Restaurant Address"
+                    android:textSize="18sp" />
 
-
-                <Button
-                    android:layout_width="400dp"
-                    android:layout_height="200dp"
-                    android:layout_gravity="center"
-                    android:text="@string/match4" />
-
-                <Button
-                    android:layout_width="400dp"
-                    android:layout_height="200dp"
-                    android:layout_gravity="center"
-                    android:text="@string/match5" />
-
-
-                <Button
-                    android:layout_width="400dp"
-                    android:layout_height="200dp"
-                    android:layout_gravity="center"
-                    android:text="@string/match6" />
-
-                <Button
-                    android:layout_width="400dp"
-                    android:layout_height="200dp"
-                    android:layout_gravity="center"
-                    android:text="@string/match7" />
-
-                <Button
-                    android:layout_width="400dp"
-                    android:layout_height="200dp"
-                    android:layout_gravity="center"
-                    android:text="@string/match8" />
-
-                <Button
-                    android:layout_width="400dp"
-                    android:layout_height="200dp"
-                    android:layout_gravity="center"
-                    android:text="@string/match9" />
-
-                <Button
-                    android:layout_width="400dp"
-                    android:layout_height="200dp"
-                    android:layout_gravity="center"
-                    android:text="@string/match10" />
-
-
-                <!-- Add more buttons or content here as needed -->
+                <ImageView
+                    android:id="@+id/ratingIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    app:srcCompat="@drawable/star" />
 
             </LinearLayout>
+
+            />
+
         </LinearLayout>
     </ScrollView>
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigator"
@@ -131,7 +114,6 @@
         app:itemBackground="@color/maroon"
         app:itemIconTint="@drawable/selector"
         app:itemTextColor="@drawable/selector"
-        app:menu="@menu/bottom_nav"
-        />
+        app:menu="@menu/bottom_nav" />
 
 </RelativeLayout>
