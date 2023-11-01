@@ -27,10 +27,10 @@ import org.springframework.web.client.RestTemplate;
  * @author Vivek Bengre
  *
  */
-
 @RestController
 public class RestaurantController {
-
+    String Elikey = "Bearer tBTnB2sqqEgwDw8eWPa3VoOhvXZAd-wCEQ6qKzocvrknlkmD4e-8wvQzDFWghKQKAWe1KGFyhL7j-6bb9JYjHpPJ9h2cApdhsSPdwMUZlOKHUjUhSaIL4RvR9sVCZXYx";
+    String Jessekey = "Bearer MVfL5KGDWbaFAwn7beZaNIdCJZ95r8o09YFJgksy9pN8Q7bgqEhRbJKdtBdLPPmss6xv9mz3s3OTEAAu3oWaCJu5J838o1Aouy68aK2--ugkynfBSbLHKqqfVRr5ZHYx";
     @Autowired
     RestaurantRepository RestaurantRepository;
 
@@ -45,18 +45,17 @@ public class RestaurantController {
 
     @GetMapping(path="/restaurant/{city}/all")
     @ResponseBody
-    ArrayList<JsonNode> getAllRestaurants(@PathVariable String city) {
+    ArrayList<JsonNode> getAllRestaurants(@PathVariable String city) throws IOException {
         ArrayList<JsonNode> restaurants = new ArrayList<JsonNode>();
         String url = ("https://api.yelp.com/v3/businesses/search?&limit=50&term=restaurants&location=" + city);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url(url + "&offset=" + i)
                     .addHeader("accept", "application/json")
-                    .addHeader("Authorization", "Bearer MVfL5KGDWbaFAwn7beZaNIdCJZ95r8o09YFJgksy9pN8Q7bgqEhRbJKdtBdLPPmss6xv9mz3s3OTEAAu3oWaCJu5J838o1Aouy68aK2--ugkynfBSbLHKqqfVRr5ZHYx")
+                    .addHeader("Authorization", Elikey)
                     .build();
-            try {
-                    Response response = client.newCall(request).execute();
+            try (Response response = client.newCall(request).execute()) {
                 if (response.isSuccessful()) {
                     String responseBody = Objects.requireNonNull(response.body()).string();
                     ObjectMapper objectMapper = new ObjectMapper();
@@ -64,9 +63,6 @@ public class RestaurantController {
                         restaurants.add(objectMapper.readTree(responseBody));
                     }
                 }
-            }
-            catch (IOException e) {
-                logger.info(Arrays.toString(e.getStackTrace()));
             }
         }
         return restaurants;
@@ -78,7 +74,7 @@ public class RestaurantController {
         Request request = new Request.Builder()
                 .url("https://api.yelp.com/v3/businesses/" + code)
                 .addHeader("accept", "application/json")
-                .addHeader("Authorization", "Bearer MVfL5KGDWbaFAwn7beZaNIdCJZ95r8o09YFJgksy9pN8Q7bgqEhRbJKdtBdLPPmss6xv9mz3s3OTEAAu3oWaCJu5J838o1Aouy68aK2--ugkynfBSbLHKqqfVRr5ZHYx")
+                .addHeader("Authorization", Elikey)
                 .build();
         try {
             Response response = client.newCall(request).execute();
@@ -105,7 +101,7 @@ public class RestaurantController {
         Request request = new Request.Builder()
                 .url("https://api.yelp.com/v3/businesses/" + code + "/reviews")
                 .addHeader("accept", "application/json")
-                .addHeader("Authorization", "Bearer MVfL5KGDWbaFAwn7beZaNIdCJZ95r8o09YFJgksy9pN8Q7bgqEhRbJKdtBdLPPmss6xv9mz3s3OTEAAu3oWaCJu5J838o1Aouy68aK2--ugkynfBSbLHKqqfVRr5ZHYx")
+                .addHeader("Authorization", Elikey)
                 .build();
         try {
             Response response = client.newCall(request).execute();
@@ -132,13 +128,12 @@ public class RestaurantController {
         categories = categories.replaceAll(",", "%2C");
         attributes = attributes.replaceAll(",", "%20");
         String url = ("https://api.yelp.com/v3/businesses/search?&limit=50&term=restaurants&categories=" + categories + "&attributes=" + attributes);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url(url + "&location=" + city + "&price=" + price + "&offset=" + i)
                     .addHeader("accept", "application/json")
-                    .addHeader("Authorization", "Bearer MVfL5KGDWbaFAwn7beZaNIdCJZ95r8o09YFJgksy9pN8Q7bgqEhRbJKdtBd" +
-                            "LPPmss6xv9mz3s3OTEAAu3oWaCJu5J838o1Aouy68aK2--ugkynfBSbLHKqqfVRr5ZHYx")
+                    .addHeader("Authorization", Elikey)
                     .build();
             try (Response response = client.newCall(request).execute()) {
                 if (response.isSuccessful()) {
