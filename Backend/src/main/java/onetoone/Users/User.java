@@ -1,5 +1,6 @@
 package onetoone.Users;
 
+import onetoone.Favorites.Favorite;
 import onetoone.Likes.Liked;
 import onetoone.Restaurants.Restaurant;
 
@@ -23,22 +24,13 @@ public class User {
     private String name;
     private String username;
     private String passkey;
-
     private boolean vegan;
     private boolean vegitarian;
     private boolean halal;
     @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
     private Set<Liked> likes;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_friends",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id")
-    )
-    private Set<User> friends;
-
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_restaurant_favorite",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -130,7 +122,15 @@ public class User {
 
     public void clearLikes(){
         getLikes().clear();
-
     }
 
+    public Set<Restaurant> getFavoriteRestaurants(){
+        return favoriteRestaurants;
+    }
+
+    public void addFavorite(Restaurant restaurant){
+        favoriteRestaurants.add(restaurant);
+    }
+
+//    public void setFavoriteRestaurants(Set<Restaurant> favorites){ this.favoriteRestaurants = favorites;}
 }

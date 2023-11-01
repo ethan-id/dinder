@@ -1,5 +1,6 @@
 package onetoone.Restaurants;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import onetoone.Users.User;
 
 import javax.persistence.*;
@@ -41,8 +42,9 @@ public class Restaurant {
     private String distance;
     private String phone_number;
 
-//    @ManyToMany(mappedBy = "favoriteRestaurants")
-//    private Set<User> favoritedByUsers = new HashSet<>();
+    @ManyToMany(mappedBy = "favoriteRestaurants", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<User> favoritedByUsers = new HashSet<>();
 
     ArrayList<String> title = new ArrayList<String>();
 
@@ -72,7 +74,7 @@ public class Restaurant {
         this.phone_number = phone_number;
         this.distance = distance;
         this.title = title;
-
+        this.favoritedByUsers = new HashSet<User>();
     }
 
     public Restaurant() {
@@ -185,4 +187,9 @@ public class Restaurant {
     }
     public void set_titles(ArrayList<String> title){this.title = title; }
 
+
+    public Set<User> getFavoritedByUsers(){
+        return favoritedByUsers;
+    }
+    public void addFavoritedByUsers(User user){favoritedByUsers.add(user);}
 }

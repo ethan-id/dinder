@@ -2,6 +2,7 @@ package onetoone.websocket;
 
 import onetoone.Likes.LikeRepository;
 import onetoone.Likes.Liked;
+import onetoone.Restaurants.Restaurant;
 import onetoone.Restaurants.RestaurantRepository;
 import onetoone.Users.User;
 import onetoone.Users.UserRepository;
@@ -206,6 +207,7 @@ public class ChatServer {
                             for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
                                 sendMessageToPArticularUser(GroupMember.getKey(), "Match@" +  newMessage[1]);
                             }
+                            addFavorite(newMessage[1]);
                             reset();
                             break;
                         }
@@ -252,7 +254,7 @@ public class ChatServer {
 
         // get the username from session-username mapping
         String username = sessionUsernameMap.get(session);
-
+        reset();
         // do error handling here
         logger.info("[onError]" + username + ": " + throwable.getMessage());
     }
@@ -314,5 +316,28 @@ public class ChatServer {
             userRepository.save(userRepository.findByUsername(GroupMember.getKey()));
 
         }
+    }
+
+    private void addFavorite(String match){
+        Restaurant restaurant = restaurantRepository.findByCode(match);
+        if (restaurant == null) {
+            // Log or throw an exception if the restaurant isn't found.
+            return;
+        }
+        for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
+            User user = userRepository.findByUsername(GroupMember.getKey());
+
+            if (user == null) {
+                // Log or throw an exception if the user isn't found.
+                continue;  // skip to the next iteration
+            }
+            user.addFavorite(restaurant);
+            restaurant.addFavoritedByUsers(user);
+            userRepository.save(user);
+            // Consider batching this save call if you have a large number of users to optimize further.
+        }
+
+        restaurantRepository.save(restaurant);
+        // You might want to move this outside the loop if every user is favoriting the same restaurant. This way, you only save once.
     }
 }
