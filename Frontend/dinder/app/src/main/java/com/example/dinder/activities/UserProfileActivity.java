@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,10 +20,16 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
+import com.example.dinder.adapters.RestaurantAdapter;
+import com.example.dinder.adapters.model.Restaurant;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The User Profile screen, used to display the user's information and allow them
@@ -76,6 +84,10 @@ public class UserProfileActivity extends AppCompatActivity {
      * A JSONObject containing all the user's information
      */
     JSONObject user;
+    /**
+     * A RecyclerView to render the user's likes
+     */
+    RecyclerView likeList;
 
     /**
      * Fetches the user data from the server based on the given user ID.
@@ -93,12 +105,61 @@ public class UserProfileActivity extends AppCompatActivity {
         String url = "http://10.0.2.2:8080/users/" + id;
 
         queue.add(new JsonObjectRequest(
-                Request.Method.GET, url, null,
-                (Response.Listener<JSONObject>) response -> {
-                    user = response;
-                    updateRestrictions();
-                },
-                (Response.ErrorListener) Throwable::printStackTrace
+            Request.Method.GET, url, null,
+            response -> {
+                user = response;
+                updateRestrictions();
+                likeList = findViewById(R.id.likeList);
+                likeList.setLayoutManager(new LinearLayoutManager(this));
+                JSONArray userLikesIds;
+                try {
+                    userLikesIds = user.getJSONArray("likes");
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+                List<Restaurant> restaurants = new ArrayList<>();
+
+                for (int i = 0; i < userLikesIds.length(); i++) {
+                    try {
+                        String restaurantId = userLikesIds.getJSONObject(i).getString("name");
+                        // Assuming getRestaurantUrl(id) is a function that returns the endpoint to get a restaurant's details
+                        String restUrl = "http://10.0.2.2:8080/restaurant/find/" + restaurantId;
+                        Log.d("URL", restUrl);
+
+                        // Make a GET request using Volley (you can use other libraries too)
+                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, restUrl, null,
+                                response2 -> {
+                                    Log.d("Like Request", "Response received: " + response2.toString());
+                                    // Convert the JSON response to a Restaurant object and add to the list
+                                    try {
+                                        Restaurant restaurant = new Restaurant();
+                                        restaurant.setName(response2.getString("name"));
+                                        restaurants.add(restaurant);
+                                    } catch (JSONException e) {
+                                        throw new RuntimeException(e);
+                                    }
+
+                                    // If we've fetched all restaurants' details, update the adapter
+                                    if (restaurants.size() % 5 == 0) {
+                                        RestaurantAdapter adapter = new RestaurantAdapter(restaurants);
+                                        likeList.setAdapter(adapter);
+                                    }
+                                },
+                                error -> {
+                                    // Handle the error
+                                    Log.e("Volley", "Error fetching restaurant details from URL: " + restUrl);
+                                    Log.e("Volley", "Error: " + error);
+                                }
+                        );
+
+                        // Assuming requestQueue is your Volley RequestQueue object
+                        queue.add(jsonObjectRequest);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            },
+            Throwable::printStackTrace
         ));
     }
 
@@ -163,10 +224,10 @@ public class UserProfileActivity extends AppCompatActivity {
 
         queue.add(new JsonObjectRequest(
                 Request.Method.PUT, url, user,
-                (Response.Listener<JSONObject>) response -> {
+                response -> {
                     user = response;
                 },
-                (Response.ErrorListener) Throwable::printStackTrace
+                Throwable::printStackTrace
         ));
     }
 
@@ -226,7 +287,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
             return false;
         });
-
 
         profilePic = findViewById(R.id.profilePicture);
         saveBtn = findViewById(R.id.saveBtn);

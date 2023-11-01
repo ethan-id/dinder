@@ -56,4 +56,5 @@
     <string name="match">match</string>
     <string name="social">social</string>
     <string name="incorrect_login">Username/password were incorrect</string>
+    <string name="recent_likes">Recent Likes</string>
 </resources>
