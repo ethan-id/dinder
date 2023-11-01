@@ -3,11 +3,17 @@ package onetoone.Restaurants;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
+import onetoone.websocket.ChatServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -31,12 +37,43 @@ public class RestaurantController {
     @Autowired
     RestTemplate template = new RestTemplate();
 
+    private final Logger logger = LoggerFactory.getLogger(RestaurantController.class);
+
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
 
+
+    @GetMapping(path="/restaurant/{city}/all")
+    @ResponseBody
+    ArrayList<JsonNode> getAllRestaurants(@PathVariable String city) {
+        ArrayList<JsonNode> restaurants = new ArrayList<JsonNode>();
+        String url = ("https://api.yelp.com/v3/businesses/search?&limit=50&term=restaurants&location=" + city);
+        for (int i = 0; i < 5; i++) {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(url + "&offset=" + i)
+                    .addHeader("accept", "application/json")
+                    .addHeader("Authorization", "Bearer MVfL5KGDWbaFAwn7beZaNIdCJZ95r8o09YFJgksy9pN8Q7bgqEhRbJKdtBdLPPmss6xv9mz3s3OTEAAu3oWaCJu5J838o1Aouy68aK2--ugkynfBSbLHKqqfVRr5ZHYx")
+                    .build();
+            try {
+                    Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    String responseBody = Objects.requireNonNull(response.body()).string();
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    if (!restaurants.contains(objectMapper.readTree(responseBody))) {
+                        restaurants.add(objectMapper.readTree(responseBody));
+                    }
+                }
+            }
+            catch (IOException e) {
+                logger.info(Arrays.toString(e.getStackTrace()));
+            }
+        }
+        return restaurants;
+    }
     @GetMapping(path = "/restaurant/find/{code}")
     @ResponseBody
-    JsonNode getRestaurantReviews(@PathVariable String code) {
+    JsonNode getRestaurantByName(@PathVariable String code) throws JsonProcessingException {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("https://api.yelp.com/v3/businesses/" + code)
@@ -50,19 +87,20 @@ public class RestaurantController {
                 ObjectMapper objectMapper = new ObjectMapper();
                 return objectMapper.readTree(responseBody);
             } else {
-                return null;
+                logger.info("Response was unsuccessful");
+                return new ObjectMapper().readTree("Response was unsuccessful");
             }
         }
         catch (IOException e) {
-            System.out.println("Build unsuccessful");
-            return null;
+            logger.info(Arrays.toString(e.getStackTrace()));
+            return new ObjectMapper().readTree("Build failed to execute");
         }
     }
 
 
     @GetMapping(path = "/restaurant/reviews/{code}")
     @ResponseBody
-    JsonNode getRestaurantByName(@PathVariable String code) {
+    JsonNode getRestaurantReviews(@PathVariable String code) throws JsonProcessingException {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("https://api.yelp.com/v3/businesses/" + code + "/reviews")
@@ -76,12 +114,13 @@ public class RestaurantController {
                 ObjectMapper objectMapper = new ObjectMapper();
                 return objectMapper.readTree(responseBody);
             } else {
-                return null;
+                logger.info("Response was unsuccessful");
+                return new ObjectMapper().readTree("Response was unsuccessful");
             }
         }
         catch (IOException e) {
-            System.out.println("Build unsuccessful");
-            return null;
+            logger.info(Arrays.toString(e.getStackTrace()));
+            return new ObjectMapper().readTree("Build failed to execute");
         }
     }
 
