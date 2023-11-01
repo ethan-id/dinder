@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,10 +20,16 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
+import com.example.dinder.adapters.RestaurantAdapter;
+import com.example.dinder.adapters.model.Restaurant;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The User Profile screen, used to display the user's information and allow them
@@ -76,6 +84,10 @@ public class UserProfileActivity extends AppCompatActivity {
      * A JSONObject containing all the user's information
      */
     JSONObject user;
+    /**
+     * A RecyclerView to render the user's likes
+     */
+    RecyclerView likeList;
 
     /**
      * Fetches the user data from the server based on the given user ID.
@@ -93,12 +105,17 @@ public class UserProfileActivity extends AppCompatActivity {
         String url = "http://10.0.2.2:8080/users/" + id;
 
         queue.add(new JsonObjectRequest(
-                Request.Method.GET, url, null,
-                (Response.Listener<JSONObject>) response -> {
-                    user = response;
-                    updateRestrictions();
-                },
-                (Response.ErrorListener) Throwable::printStackTrace
+            Request.Method.GET, url, null,
+            response -> {
+                user = response;
+                updateRestrictions();
+                likeList = findViewById(R.id.likeList);
+                likeList.setLayoutManager(new LinearLayoutManager(this));
+                List<Restaurant> userLikes = convertLikesToRestaurantList(user);
+                RestaurantAdapter adapter = new RestaurantAdapter(userLikes);
+                likeList.setAdapter(adapter);
+            },
+            Throwable::printStackTrace
         ));
     }
 
@@ -170,6 +187,27 @@ public class UserProfileActivity extends AppCompatActivity {
         ));
     }
 
+    public List<Restaurant> convertLikesToRestaurantList(JSONObject user) {
+        List<Restaurant> restaurantList = new ArrayList<>();
+
+        try {
+            JSONArray likesArray = user.getJSONArray("likes");
+            for (int i = 0; i < likesArray.length(); i++) {
+                JSONObject likeObject = likesArray.getJSONObject(i);
+                int id = likeObject.getInt("id");
+                String name = likeObject.getString("name");
+
+                Restaurant restaurant = new Restaurant(id, name);
+                restaurantList.add(restaurant);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return restaurantList;
+    }
+
+
     /**
      * Initializes the UserProfileActivity screen.
      * <p>
@@ -226,7 +264,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
             return false;
         });
-
 
         profilePic = findViewById(R.id.profilePicture);
         saveBtn = findViewById(R.id.saveBtn);
