@@ -138,8 +138,7 @@ public class ChatServer {
             groupSessionUsernameMap.putIfAbsent(session, usernameToAdd);
             // map current group username with session
             groupUsernameSessionMap.putIfAbsent(usernameToAdd, session);
-            broadcast(""+groupSessionUsernameMap.size());
-            broadcast(""+groupUsernameSessionMap.size());
+
             sendMessageToPArticularUser(usernameToAdd, "invitee@"+usernameToAdd);
             sendMessageToPArticularUser(username, "invited@"+usernameToAdd);
 
@@ -279,9 +278,9 @@ public class ChatServer {
             // map current group username with session
             groupUsernameSessionMap.put(username, session);
             sendMessageToPArticularUser(username, "[Group " + username + "]: You are in a group ");
-        } else { // Message to whole chat
-            broadcast(username + ": " + message);
-        }
+        } //else { // Message to whole chat
+//            broadcast(username + ": " + message);
+//        }
     }
 
     /**
