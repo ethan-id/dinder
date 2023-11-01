@@ -18,6 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -276,39 +277,47 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     private void getRestaurants(RequestQueue queue) {
         showLoadingDialog();
-        queue.add(new JsonArrayRequest(
-                Request.Method.GET,
-                "http://10.0.2.2:8080/home/nyc/2/food/wifi_free",
-                null,
-                response -> {
-                    hideLoadingDialog();
-                    Log.d("Response", response.toString());
-                    JSONArray receivedRestaurants;
-                    try {
-                        receivedRestaurants = response.getJSONObject(0).getJSONArray("businesses");
-                        Log.d("rest", receivedRestaurants.toString());
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                    // Handle the JSON array response
-                    for (int i = 0; i < receivedRestaurants.length(); i++) {
-                        try {
-                            JSONObject restaurantObject = receivedRestaurants.getJSONObject(i);
-                            restaurants.add(restaurantObject);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
 
-                    if (!restaurants.isEmpty()) {
-                        populateScreen(queue, 0);
-                    }
-                },
-                error -> {
-                    Log.e("Error", String.valueOf(error));
-                    hideLoadingDialog();
+        JsonArrayRequest request = new JsonArrayRequest(
+            Request.Method.GET,
+            "http://10.0.2.2:8080/home/nyc/2/food/wifi_free",
+            null,
+            response -> {
+                hideLoadingDialog();
+                Log.d("Response", response.toString());
+                JSONArray receivedRestaurants;
+                try {
+                    receivedRestaurants = response.getJSONObject(0).getJSONArray("businesses");
+                    Log.d("rest", receivedRestaurants.toString());
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
                 }
+                // Handle the JSON array response
+                for (int i = 0; i < receivedRestaurants.length(); i++) {
+                    try {
+                        JSONObject restaurantObject = receivedRestaurants.getJSONObject(i);
+                        restaurants.add(restaurantObject);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (!restaurants.isEmpty()) {
+                    populateScreen(queue, 0);
+                }
+            },
+            error -> {
+                Log.e("Error", String.valueOf(error));
+                hideLoadingDialog();
+            }
+        );
+
+        request.setRetryPolicy(new DefaultRetryPolicy(
+            5000, 3,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         ));
+
+        queue.add(request);
     }
 
     /**

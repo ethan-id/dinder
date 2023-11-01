@@ -140,7 +140,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                     }
 
                                     // If we've fetched all restaurants' details, update the adapter
-                                    if (restaurants.size() % 5 == 0) {
+                                    if (restaurants.size() % 2 == 0) {
                                         RestaurantAdapter adapter = new RestaurantAdapter(restaurants);
                                         likeList.setAdapter(adapter);
                                     }
