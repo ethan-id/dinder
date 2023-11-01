@@ -18,9 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UserController {
-
-    @Autowired
     UserRepository userRepository;
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
 
 //    private static FriendRepository friendRepository;
 //    @Autowired
@@ -92,33 +95,29 @@ public class UserController {
         return success;
     }
 
-    @GetMapping(path= "/users/{username}/add-friend/{friendUsername}")
-    String addFriend(@PathVariable String username, @PathVariable String friendUsername) {
-        User user =  userRepository.findByUsername(username);
-        User friend =  userRepository.findByUsername(friendUsername);
-        if (friendUsername == null || friend == null || username == null || user == null) {
+    @PutMapping(path= "/friend/{username}/add/{friend}")
+    String addFriend(@PathVariable String username, @PathVariable String friend) {
+        if (friend == null || userRepository.findByUsername(friend) == null || !userRepository.findByUsername(friend).getUsername().equals(friend) ||
+                username == null || userRepository.findByUsername(username) == null || !userRepository.findByUsername(username).getUsername().equals(username)) {
             return failure;
         }
-//        friendRepository.save(friend);
-        userRepository.save(user);
-        user.addFriend(friend);
+        userRepository.findByUsername(username).addFriend(userRepository.findByUsername(friend));
+        userRepository.save(userRepository.findByUsername(username));
         return success;
     }
 
-    @GetMapping(path= "/users/{username}/remove-friend/{friendUsername}")
-    String removeFriend(@PathVariable String username, @PathVariable String friendUsername) {
-        User user =  userRepository.findByUsername(username);
-        User friend =  userRepository.findByUsername(friendUsername);
-        if (friendUsername == null || friend == null || username == null || user == null) {
+    @PutMapping(path= "/friend/{username}/remove/{friend}")
+    String removeFriend(@PathVariable String username, @PathVariable String friend) {
+        if (friend == null || username == null || userRepository.findByUsername(username) == null || !userRepository.findByUsername(username).getUsername().equals(username)
+                || !userRepository.findByUsername(friend).getUsername().equals(friend)) {
             return failure;
         }
-        user.removeFriend(friendUsername);
-        userRepository.delete(user);
-//        friendRepository.delete(friend);
+        userRepository.findByUsername(username).removeFriend(friend);
+        userRepository.save(userRepository.findByUsername(username));
         return success;
     }
 
-    @GetMapping(path= "/users/{username}/getFriends/")
+    @GetMapping(path= "/friend/{username}/getAll/")
     Set<User> findAllFriends(@PathVariable String username) {
         if (username == null || userRepository.findByUsername(username) == null) {
             return null;
@@ -126,12 +125,13 @@ public class UserController {
         return userRepository.findByUsername(username).getFriends();
     }
 
-    @GetMapping(path= "/users/{username}/find-friend/{friendUsername}/")
-    User findAllFriends(@PathVariable String username, @PathVariable String friendUsername) {
-        if (username == null || userRepository.findByUsername(username) == null) {
+    @GetMapping(path= "/friend/{username}/find/{friend}/")
+    User findFriendByUsername(@PathVariable String username, @PathVariable String friend) {
+        if (username == null || userRepository.findByUsername(username) == null || !userRepository.findByUsername(username).getUsername().equals(username) ||
+                friend == null || userRepository.findByUsername(friend) == null || !userRepository.findByUsername(friend).getUsername().equals(friend)) {
             return null;
         }
-        return userRepository.findByUsername(username).findFriendByUsername(friendUsername);
+        return userRepository.findByUsername(username).findFriendByUsername(friend);
     }
 
 }
