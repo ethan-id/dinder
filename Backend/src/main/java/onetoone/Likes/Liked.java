@@ -21,7 +21,6 @@ public class Liked {
     }
 
     public Liked(String name){
-//        this.id = id;
         this.name = name;
     }
 
