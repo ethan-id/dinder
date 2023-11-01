@@ -1,7 +1,10 @@
 package onetoone.Users;
 
 import java.util.List;
+import java.util.Set;
 
+import onetoone.Friends.Friend;
+import onetoone.Friends.FriendRepository;
 import onetoone.Likes.Liked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +26,11 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-
+    private static FriendRepository friendRepository;
+    @Autowired
+    public void setFriendRepository(FriendRepository friendRepository) {
+        this.friendRepository = friendRepository;
+    }
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
     private String exists = "{\"message\":\"exists\"}";
@@ -89,13 +96,46 @@ public class UserController {
         return success;
     }
 
-    @GetMapping(path= "/users/add-friend/{username}")
-    String addFriend(@PathVariable String username) {
-        if (username == null || userRepository.findByUsername(username) == null) {
+    @GetMapping(path= "/users/{username}/add-friend/{friendUsername}")
+    String addFriend(@PathVariable String username, @PathVariable String friendUsername) {
+        User user =  userRepository.findByUsername(username);
+        User friend =  userRepository.findByUsername(friendUsername);
+        if (friendUsername == null || friend == null || username == null || user == null) {
             return failure;
         }
-
+        friendRepository.save(friend);
+        userRepository.save(user);
+        user.addFriend(friend);
         return success;
+    }
+
+    @GetMapping(path= "/users/{username}/remove-friend/{friendUsername}")
+    String removeFriend(@PathVariable String username, @PathVariable String friendUsername) {
+        User user =  userRepository.findByUsername(username);
+        User friend =  userRepository.findByUsername(friendUsername);
+        if (friendUsername == null || friend == null || username == null || user == null) {
+            return failure;
+        }
+        user.removeFriend(friendUsername);
+        userRepository.delete(user);
+        friendRepository.delete(friend);
+        return success;
+    }
+
+    @GetMapping(path= "/users/{username}/getFriends/")
+    Set<Friend> findAllFriends(@PathVariable String username) {
+        if (username == null || userRepository.findByUsername(username) == null) {
+            return null;
+        }
+        return userRepository.findByUsername(username).getFriends();
+    }
+
+    @GetMapping(path= "/users/{username}/find-friend/{friendUsername}/")
+    Friend findAllFriends(@PathVariable String username, @PathVariable String friendUsername) {
+        if (username == null || userRepository.findByUsername(username) == null) {
+            return null;
+        }
+        return userRepository.findByUsername(username).findFriendByUsername(friendUsername);
     }
 
 }

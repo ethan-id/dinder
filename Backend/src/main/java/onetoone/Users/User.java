@@ -1,7 +1,9 @@
 package onetoone.Users;
 
+import onetoone.Friends.Friend;
 import onetoone.Likes.Liked;
 import onetoone.Restaurants.Restaurant;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -15,28 +17,26 @@ import java.util.Set;
 
 @Entity
 public class User {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private int id;
     private String name;
     private String username;
     private String passkey;
-
     private boolean vegan;
     private boolean vegitarian;
     private boolean halal;
-    @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Liked> likes;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "user_friends",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id")
+        name = "user_friends",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "friend_id")
     )
-    private Set<User> friends;
+    private Set<Friend> friends;
 
     @ManyToMany
     @JoinTable(
@@ -64,6 +64,7 @@ public class User {
         this.halal = false;
         this.likes = new HashSet<Liked>();
         this.favoriteRestaurants = new HashSet<Restaurant>();
+        this.friends = new HashSet<Friend>();
     }
 
     public User() {
@@ -132,5 +133,29 @@ public class User {
         getLikes().clear();
 
     }
+    @Transactional
+    public void addFriend(User friend) { friends.add(new Friend(friend)); }
+    public void removeFriend(String username) {
+        if (!friends.isEmpty()) {
+            for (Friend user : friends) {
+                if (user.getFriend().getUsername().equals(username)) {
+                    friends.remove(user);
+                    return;
+                }
+            }
+        }
+    }
 
+    public Friend findFriendByUsername(String username) {
+        if (!friends.isEmpty()) {
+            for (Friend user : friends) {
+                if (user.getFriend().getUsername().equals(username)) {
+                    return user;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Set<Friend> getFriends() { return friends; }
 }
