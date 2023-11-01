@@ -1,6 +1,6 @@
 package onetoone.Users;
 
-import onetoone.Friends.Friend;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import onetoone.Likes.Liked;
 import onetoone.Restaurants.Restaurant;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +36,10 @@ public class User {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "friend_id")
     )
-    private Set<Friend> friends;
+    private Set<User> friends;
+    @ManyToMany(mappedBy = "friends")
+    @JsonIgnore
+    private Set<User> friendsOf;
 
     @ManyToMany
     @JoinTable(
@@ -64,7 +67,8 @@ public class User {
         this.halal = false;
         this.likes = new HashSet<Liked>();
         this.favoriteRestaurants = new HashSet<Restaurant>();
-        this.friends = new HashSet<Friend>();
+        this.friends = new HashSet<User>();
+        this.friendsOf = new HashSet<User>();
     }
 
     public User() {
@@ -134,11 +138,13 @@ public class User {
 
     }
     @Transactional
-    public void addFriend(User friend) { friends.add(new Friend(friend)); }
+    public void addFriend(User friend) { friends.add(friend); }
+
+    @Transactional
     public void removeFriend(String username) {
         if (!friends.isEmpty()) {
-            for (Friend user : friends) {
-                if (user.getFriend().getUsername().equals(username)) {
+            for (User user : friends) {
+                if (user.getUsername().equals(username)) {
                     friends.remove(user);
                     return;
                 }
@@ -146,10 +152,10 @@ public class User {
         }
     }
 
-    public Friend findFriendByUsername(String username) {
+    public User findFriendByUsername(String username) {
         if (!friends.isEmpty()) {
-            for (Friend user : friends) {
-                if (user.getFriend().getUsername().equals(username)) {
+            for (User user : friends) {
+                if (user.getUsername().equals(username)) {
                     return user;
                 }
             }
@@ -157,5 +163,5 @@ public class User {
         return null;
     }
 
-    public Set<Friend> getFriends() { return friends; }
+    public Set<User> getFriends() { return friends; }
 }
