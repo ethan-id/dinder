@@ -111,9 +111,53 @@ public class UserProfileActivity extends AppCompatActivity {
                 updateRestrictions();
                 likeList = findViewById(R.id.likeList);
                 likeList.setLayoutManager(new LinearLayoutManager(this));
-                List<Restaurant> userLikes = convertLikesToRestaurantList(user);
-                RestaurantAdapter adapter = new RestaurantAdapter(userLikes);
-                likeList.setAdapter(adapter);
+                JSONArray userLikesIds;
+                try {
+                    userLikesIds = user.getJSONArray("likes");
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+                List<Restaurant> restaurants = new ArrayList<>();
+
+                for (int i = 0; i < userLikesIds.length(); i++) {
+                    try {
+                        String restaurantId = userLikesIds.getJSONObject(i).getString("name");
+                        // Assuming getRestaurantUrl(id) is a function that returns the endpoint to get a restaurant's details
+                        String restUrl = "http://10.0.2.2:8080/restaurant/find/" + restaurantId;
+                        Log.d("URL", restUrl);
+
+                        // Make a GET request using Volley (you can use other libraries too)
+                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, restUrl, null,
+                                response2 -> {
+                                    Log.d("Like Request", "Response received: " + response2.toString());
+                                    // Convert the JSON response to a Restaurant object and add to the list
+                                    try {
+                                        Restaurant restaurant = new Restaurant();
+                                        restaurant.setName(response2.getString("name"));
+                                        restaurants.add(restaurant);
+                                    } catch (JSONException e) {
+                                        throw new RuntimeException(e);
+                                    }
+
+                                    // If we've fetched all restaurants' details, update the adapter
+                                    if (restaurants.size() % 5 == 0) {
+                                        RestaurantAdapter adapter = new RestaurantAdapter(restaurants);
+                                        likeList.setAdapter(adapter);
+                                    }
+                                },
+                                error -> {
+                                    // Handle the error
+                                    Log.e("Volley", "Error fetching restaurant details from URL: " + restUrl);
+                                    Log.e("Volley", "Error: " + error);
+                                }
+                        );
+
+                        // Assuming requestQueue is your Volley RequestQueue object
+                        queue.add(jsonObjectRequest);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             },
             Throwable::printStackTrace
         ));
@@ -180,33 +224,12 @@ public class UserProfileActivity extends AppCompatActivity {
 
         queue.add(new JsonObjectRequest(
                 Request.Method.PUT, url, user,
-                (Response.Listener<JSONObject>) response -> {
+                response -> {
                     user = response;
                 },
-                (Response.ErrorListener) Throwable::printStackTrace
+                Throwable::printStackTrace
         ));
     }
-
-    public List<Restaurant> convertLikesToRestaurantList(JSONObject user) {
-        List<Restaurant> restaurantList = new ArrayList<>();
-
-        try {
-            JSONArray likesArray = user.getJSONArray("likes");
-            for (int i = 0; i < likesArray.length(); i++) {
-                JSONObject likeObject = likesArray.getJSONObject(i);
-                int id = likeObject.getInt("id");
-                String name = likeObject.getString("name");
-
-                Restaurant restaurant = new Restaurant(id, name);
-                restaurantList.add(restaurant);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return restaurantList;
-    }
-
 
     /**
      * Initializes the UserProfileActivity screen.

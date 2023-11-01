@@ -1,5 +1,11 @@
 package com.example.dinder.adapters.model;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Restaurant {
@@ -20,6 +26,8 @@ public class Restaurant {
     private String displayPhone;
     private double distance;
 
+    public Restaurant() {}
+
     public Restaurant(int id, String name) {
         this.id = String.valueOf(id);
         this.name = name;
@@ -30,11 +38,21 @@ public class Restaurant {
     public static class Category {
         private String alias;
         private String title;
+
+        public Category(String alias, String title) {
+            this.alias = alias;
+            this.title = title;
+        }
     }
 
     public static class Coordinates {
         private double latitude;
         private double longitude;
+
+        public Coordinates(double latitude, double longitude) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
     }
 
     public static class Location {
@@ -46,9 +64,18 @@ public class Restaurant {
         private String country;
         private String state;
         private List<String> displayAddress;
-    }
 
-    // Add your getters and setters for each field
+        public Location(String address1, String address2, String address3, String city, String zipCode, String country, String state, List<String> displayAddress) {
+            this.address1 = address1;
+            this.address2 = address2;
+            this.address3 = address3;
+            this.city = city;
+            this.zipCode = zipCode;
+            this.country = country;
+            this.state = state;
+            this.displayAddress = displayAddress;
+        }
+    }
 
     public String getId() {
         return id;
