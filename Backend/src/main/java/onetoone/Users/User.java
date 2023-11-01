@@ -1,8 +1,9 @@
 package onetoone.Users;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import onetoone.Friends.Friend;
 import onetoone.Likes.Liked;
 import onetoone.Restaurants.Restaurant;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -16,10 +17,9 @@ import java.util.Set;
 
 @Entity
 public class User {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private int id;
     private String name;
     private String username;
@@ -27,28 +27,24 @@ public class User {
     private boolean vegan;
     private boolean vegitarian;
     private boolean halal;
-    @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Liked> likes;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+        name = "user_friends",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "friend_id")
+    )
+    private Set<Friend> friends;
+
+    @ManyToMany
     @JoinTable(
             name = "user_restaurant_favorite",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "restaurant_id")
     )
     private Set<Restaurant> favoriteRestaurants;
-
-    @ManyToMany(cascade={CascadeType.ALL})
-    @JoinTable(name="friends_with",
-            joinColumns={@JoinColumn(name="person_id")},
-            inverseJoinColumns={@JoinColumn(name="friend_id")})
-
-    private Set<User> friends = new HashSet<User>();
-
-    @ManyToMany(mappedBy="friends")
-    @JsonIgnore
-    private Set<User> friendsOf = new HashSet<User>();
-
 
     /*
      * @OneToOne creates a relation between the current entity/table(Laptop) with the entity/table defined below it(User)
@@ -68,8 +64,7 @@ public class User {
         this.halal = false;
         this.likes = new HashSet<Liked>();
         this.favoriteRestaurants = new HashSet<Restaurant>();
-        this.friends = new HashSet<User>();
-        this.friendsOf = new HashSet<User>();
+        this.friends = new HashSet<Friend>();
     }
 
     public User() {
@@ -136,23 +131,31 @@ public class User {
 
     public void clearLikes(){
         getLikes().clear();
+
+    }
+    @Transactional
+    public void addFriend(User friend) { friends.add(new Friend(friend)); }
+    public void removeFriend(String username) {
+        if (!friends.isEmpty()) {
+            for (Friend user : friends) {
+                if (user.getFriend().getUsername().equals(username)) {
+                    friends.remove(user);
+                    return;
+                }
+            }
+        }
     }
 
-    public Set<Restaurant> getFavoriteRestaurants(){
-        return favoriteRestaurants;
+    public Friend findFriendByUsername(String username) {
+        if (!friends.isEmpty()) {
+            for (Friend user : friends) {
+                if (user.getFriend().getUsername().equals(username)) {
+                    return user;
+                }
+            }
+        }
+        return null;
     }
 
-    public void addFavorite(Restaurant restaurant){
-        favoriteRestaurants.add(restaurant);
-    }
-
-    public Set<User> getFriends() {
-        return friends;
-    }
-
-    public void deleteFavorites(){
-        favoriteRestaurants.clear();
-    }
-
-    //    public void setFavoriteRestaurants(Set<Restaurant> favorites){ this.favoriteRestaurants = favorites;}
+    public Set<Friend> getFriends() { return friends; }
 }
