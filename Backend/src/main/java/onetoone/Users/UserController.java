@@ -2,10 +2,6 @@ package onetoone.Users;
 
 import java.util.List;
 import java.util.Set;
-
-import onetoone.Friends.Friend;
-import onetoone.Friends.FriendRepository;
-import onetoone.Likes.Liked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +22,11 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-    private static FriendRepository friendRepository;
-    @Autowired
-    public void setFriendRepository(FriendRepository friendRepository) {
-        this.friendRepository = friendRepository;
-    }
+//    private static FriendRepository friendRepository;
+//    @Autowired
+//    public void setFriendRepository(FriendRepository friendRepository) {
+//        this.friendRepository = friendRepository;
+//    }
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
     private String exists = "{\"message\":\"exists\"}";
@@ -103,7 +99,7 @@ public class UserController {
         if (friendUsername == null || friend == null || username == null || user == null) {
             return failure;
         }
-        friendRepository.save(friend);
+//        friendRepository.save(friend);
         userRepository.save(user);
         user.addFriend(friend);
         return success;
@@ -118,12 +114,12 @@ public class UserController {
         }
         user.removeFriend(friendUsername);
         userRepository.delete(user);
-        friendRepository.delete(friend);
+//        friendRepository.delete(friend);
         return success;
     }
 
     @GetMapping(path= "/users/{username}/getFriends/")
-    Set<Friend> findAllFriends(@PathVariable String username) {
+    Set<User> findAllFriends(@PathVariable String username) {
         if (username == null || userRepository.findByUsername(username) == null) {
             return null;
         }
@@ -131,7 +127,7 @@ public class UserController {
     }
 
     @GetMapping(path= "/users/{username}/find-friend/{friendUsername}/")
-    Friend findAllFriends(@PathVariable String username, @PathVariable String friendUsername) {
+    User findAllFriends(@PathVariable String username, @PathVariable String friendUsername) {
         if (username == null || userRepository.findByUsername(username) == null) {
             return null;
         }
