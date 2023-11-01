@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"onetoone.websocket", "onetoone.restaurants", "onetoone.users"})
+@ComponentScan(basePackages = {"onetoone.websocket", "onetoone.Restaurants", "onetoone.Users", "onetoone.Likes", "onetoone.Favorites"})
 //@EnableJpaRepositories
 class Main {
 
