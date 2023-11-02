@@ -1,5 +1,8 @@
 package com.example.dinder.activities;
 
+
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,7 +25,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.dinder.R;
@@ -131,6 +134,11 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      * Dialog used to display loading symbol while the restaurant's are being fetched
      */
     private Dialog loadingDialog;
+
+
+    ArrayList<String> matchCodes = new ArrayList<>();
+
+    LinearLayout notificationContainer;
 
     /**
      * Sets the text content for a specific chip based on its index and ensures its visibility.
@@ -389,6 +397,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         chip6 = findViewById(R.id.chip6);
         chip7 = findViewById(R.id.chip7);
         logo = findViewById(R.id.restLogo);
+        notificationContainer = findViewById(R.id.match_notif_layout);
 
         getRestaurants(queue);
 
@@ -503,6 +512,37 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         });
     }
 
+
+    private void showNotification() {
+        Log.d("Animation", "playing animation");
+        // Fade in the notification
+        notificationContainer.animate()
+                .alpha(1f)
+                .setDuration(500) // 500ms
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        notificationContainer.setVisibility(View.VISIBLE);
+                    }
+                });
+
+        // Hide the notification after 3 seconds
+        notificationContainer.postDelayed(() -> {
+            // Fade out the notification
+            notificationContainer.animate()
+                    .alpha(0f)
+                    .setDuration(500)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            notificationContainer.setVisibility(View.GONE);
+                        }
+                    });
+        }, 3000); // 3 seconds
+    }
+
+
+
     /**
      * Set's the gestureDetector defined in onCreate to call it's onTouchEvent()
      *
@@ -524,7 +564,18 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
 
     @Override
     public void onWebSocketMessage(String message) {
+
         // If the message is an invitation show notification on screen, telling user who invited them to a group
+
+        if (message.contains("Match")) {
+            runOnUiThread(() -> {
+                showNotification();
+            });
+            String code = message.split("@")[1];
+            matchCodes.add(code);
+            Log.d("Code", code);
+
+        }
         Log.d("Message", message);
     }
 
@@ -562,4 +613,9 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             loadingDialog.dismiss();
         }
     }
+
 }
+
+
+
+

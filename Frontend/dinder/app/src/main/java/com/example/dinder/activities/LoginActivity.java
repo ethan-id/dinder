@@ -205,5 +205,4 @@ public class LoginActivity extends AppCompatActivity {
                 });
         }, 3000); // 3 seconds
     }
-
 }
