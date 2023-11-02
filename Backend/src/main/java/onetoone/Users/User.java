@@ -151,5 +151,9 @@ public class User {
         return friends;
     }
 
+    public void deleteFavorites(){
+        favoriteRestaurants.clear();
+    }
+
     //    public void setFavoriteRestaurants(Set<Restaurant> favorites){ this.favoriteRestaurants = favorites;}
 }

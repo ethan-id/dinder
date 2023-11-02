@@ -105,4 +105,12 @@ public class UserController {
         return success;
     }
 
+    @PutMapping(path = "/users/favorites/{username}")
+    String deleteUserFavorite(@PathVariable String username){
+        User user = userRepository.findByUsername(username);
+        user.deleteFavorites();
+        userRepository.save(user);
+        return success;
+    }
+
 }
