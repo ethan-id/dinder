@@ -42,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * The Home Screen is considered the default location of the app. On this screen the user can swipe
@@ -243,27 +244,28 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
                     try {
                         restaurantName.setText(currentRestaurant.getString("name"));
                     } catch (JSONException e) {
-                        throw new RuntimeException(e);
+                        Log.e("Error", "Error populating restaurant data");
                     }
-//                    try {
-//                        address.setText(currentRestaurant.getString("address"));
-//                    } catch (JSONException e) {
-//                        throw new RuntimeException(e);
-//                    }
+                    try {
+                        JSONObject location = currentRestaurant.getJSONObject("location");
+                        address.setText(location.getString("address1"));
+                    } catch (JSONException e) {
+                        Log.e("Error", "Error populating restaurant data");
+                    }
                     try {
                         chip1.setText(currentRestaurant.getString("price"));
                     } catch (JSONException e) {
-                        throw new RuntimeException(e);
+
                     }
                     try {
                         rating.setText(currentRestaurant.getString("rating"));
                     } catch (JSONException e) {
-                        throw new RuntimeException(e);
+                        Log.e("Error", "Error populating restaurant data");
                     }
                     try {
                         ratingCount.setText(String.format("(%s)", currentRestaurant.getString("review_count")));
                     } catch (JSONException e) {
-                        throw new RuntimeException(e);
+                        Log.e("Error", "Error populating restaurant data");
                     }
                 });
 //                JSONArray titles = currentRestaurant.getJSONArray("_titles");
@@ -380,9 +382,10 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         setContentView(R.layout.activity_userhome);
         setupLoadingDialog();
 
+        WebSocketManager.getInstance().setWebSocketListener(UserHomeActivity.this);
+
         if (!connected) {
             WebSocketManager.getInstance().connectWebSocket("ws://coms-309-055.class.las.iastate.edu:8080/chat/" + username);
-            WebSocketManager.getInstance().setWebSocketListener(UserHomeActivity.this);
             connected = true;
         }
 
@@ -442,6 +445,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             private void startSocialActivity() {
                 Intent intent = new Intent(UserHomeActivity.this, SocialActivity.class);
                 intent.putExtra("id", id);
+                intent.putStringArrayListExtra("codes", matchCodes);
                 startActivity(intent);
                 overridePendingTransition(0, 0); // No animation for this transition
             }
@@ -449,8 +453,33 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             private void startUserProfileActivity() {
                 Intent intent = new Intent(UserHomeActivity.this, UserProfileActivity.class);
                 intent.putExtra("id", id);
+                intent.putStringArrayListExtra("codes", matchCodes);
                 startActivity(intent);
                 overridePendingTransition(0, 0); // No animation for this transition
+            }
+        });
+
+
+
+        dislike.setOnClickListener(v -> dislikeRestaurant());
+        favorite.setOnClickListener(v -> likeRestaurant());
+        centerImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent restaurant = new Intent(UserHomeActivity.this, RestaurantProfileActivity.class);
+                    restaurant.putExtra("id", id);
+                    restaurant.putExtra("code", currentRestaurant.getString("id"));
+                    startActivity(restaurant);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        centerImage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
             }
         });
 
@@ -465,61 +494,49 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
                     // Horizontal swipe detected
                     if (diffX > 0) {
                         // Right swipe
-                        try {
-                            String code = currentRestaurant.getString("id");
-                            WebSocketManager.getInstance().sendMessage("like@" + code);
-                            populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                        likeRestaurant();
                         return true;
                     } else {
                         // Left swipe
-                        try {
-                            String code = currentRestaurant.getString("id");
-                            WebSocketManager.getInstance().sendMessage("dislike@" + code);
-                            populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                        dislikeRestaurant();
                         return true;
                     }
                 }
                 return super.onFling(e1, e2, velocityX, velocityY);
             }
         });
+    }
 
-        dislike.setOnClickListener(v -> {
-            try {
-                String code = currentRestaurant.getString("id");
-                WebSocketManager.getInstance().sendMessage("dislike@" + code);
-                Log.d("Dislike", "dislike@" + code);
-                populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        favorite.setOnClickListener(v -> {
-            try {
-                String code = currentRestaurant.getString("id");
-                WebSocketManager.getInstance().sendMessage("like@" + code);
-                Log.d("Like", "like@" + code);
-                populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-        });
+    private void likeRestaurant() {
+        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+        try {
+            String code = currentRestaurant.getString("id");
+            sendLikeThroughWebSocket(code);
+            Log.d("Like", "like@" + code);
+            populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-        centerImage.setOnClickListener(v -> {
-            try {
-                Intent restaurant = new Intent(UserHomeActivity.this, RestaurantProfileActivity.class);
-                restaurant.putExtra("id", id);
-                restaurant.putExtra("code", currentRestaurant.getString("id"));
-                startActivity(restaurant);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-        });
+    private void dislikeRestaurant() {
+        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+        try {
+            String code = currentRestaurant.getString("id");
+            sendDislikeThroughWebSocket(code);
+            Log.d("Dislike", "dislike@" + code);
+            populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void sendLikeThroughWebSocket(String code) {
+        if (!Objects.equals(code, "") && code != null) WebSocketManager.getInstance().sendMessage("like@" + code);
+    }
+
+    private void sendDislikeThroughWebSocket(String code) {
+        if (!Objects.equals(code, "") && code != null) WebSocketManager.getInstance().sendMessage("dislike@" + code);
     }
 
 
@@ -559,8 +576,8 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        gestureDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
+        // Be sure to call the superclass implementation
+        return gestureDetector.onTouchEvent(event) || super.onTouchEvent(event);
     }
 
     @Override

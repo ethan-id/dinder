@@ -19,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.java_websocket.handshake.ServerHandshake;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
      * RecyclerView used to dynamically display the user's friends
      */
     RecyclerView friendsRecyclerView;
-    private View bottomNavigationView;
+    private BottomNavigationView bottomNavigationView;
 
     /**
      * Initializes the SocialActivity. This method:
@@ -58,8 +59,9 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
+        ArrayList<String> codes = intent.getStringArrayListExtra("codes");
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
+        bottomNavigationView = findViewById(R.id.bottom_navigator);
         bottomNavigationView.setSelectedItemId(R.id.social);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -69,6 +71,7 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
                 // Start the UserHomeActivity
                 Intent intent1 = new Intent(SocialActivity.this, UserHomeActivity.class);
                 intent1.putExtra("id", id);
+                intent.putStringArrayListExtra("codes", codes);
                 startActivity(intent1);
                 overridePendingTransition(0, 0); // No animation for this transition
                 finish();
@@ -77,6 +80,7 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
                 // Start the MatchesScreen
                 Intent intent1 = new Intent(SocialActivity.this, MatchesScreen.class);
                 intent1.putExtra("id", id);
+                intent.putStringArrayListExtra("codes", codes);
                 startActivity(intent1);
                 overridePendingTransition(0, 0); // No animation for this transition
                 finish();
@@ -88,6 +92,7 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
                 // Start the UserProfileActivity
                 Intent intent1 = new Intent(SocialActivity.this, UserProfileActivity.class);
                 intent1.putExtra("id", id);
+                intent.putStringArrayListExtra("codes", codes);
                 startActivity(intent1);
                 overridePendingTransition(0, 0); // No animation for this transition
                 finish();
@@ -101,7 +106,7 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         friendsRecyclerView = findViewById(R.id.friendsRecyclerView);
         friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<String> friendsList = Arrays.asList("John", "Jane", "Doe", "Smith");
+        List<String> friendsList = Arrays.asList("BigE", "Jane", "Doe", "Smith", "Jake", "Harry", "Kennedy");
         FriendsAdapter adapter = new FriendsAdapter(friendsList);
         friendsRecyclerView.setAdapter(adapter);
     }

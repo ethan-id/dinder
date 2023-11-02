@@ -54,20 +54,20 @@
         app:layout_constraintTop_toBottomOf="@+id/restaurantName" />
 
     <TextView
-        android:id="@+id/likeCount"
-        android:layout_width="100dp"
+        android:id="@+id/phone"
+        android:layout_width="160dp"
         android:layout_height="31dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="28dp"
         android:maxLines="1"
         android:textSize="18sp"
         app:flow_verticalAlign="center"
-        app:layout_constraintStart_toEndOf="@+id/likeIcon"
+        app:layout_constraintStart_toEndOf="@+id/phoneIcon"
         app:layout_constraintTop_toBottomOf="@+id/restaurantAddress" />
 
     <TextView
         android:id="@+id/restRating"
-        android:layout_width="100dp"
+        android:layout_width="60dp"
         android:layout_height="31dp"
         android:layout_marginTop="28dp"
         android:layout_marginEnd="8dp"
@@ -77,6 +77,18 @@
         app:flow_verticalAlign="center"
         app:layout_constraintEnd_toStartOf="@+id/star"
         app:layout_constraintTop_toBottomOf="@+id/restaurantAddress" />
+
+    <TextView
+        android:id="@+id/reviewCount"
+        android:layout_width="45dp"
+        android:layout_height="31dp"
+        android:layout_marginTop="3dp"
+        android:maxLines="1"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:flow_verticalAlign="center"
+        app:layout_constraintEnd_toEndOf="@+id/star"
+        app:layout_constraintTop_toBottomOf="@+id/star" />
 
     <ImageView
         android:id="@+id/locIcon"
@@ -90,15 +102,15 @@
         app:srcCompat="@drawable/location_on" />
 
     <ImageView
-        android:id="@+id/likeIcon"
+        android:id="@+id/phoneIcon"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="14dp"
-        android:contentDescription="@string/heart"
+        android:contentDescription="@string/phone_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/locIcon"
-        app:srcCompat="@drawable/favorite" />
+        app:srcCompat="@drawable/call_icon" />
 
     <ImageView
         android:id="@+id/star"

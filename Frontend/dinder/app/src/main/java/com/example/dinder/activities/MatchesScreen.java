@@ -54,8 +54,12 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
         ArrayList<String> codes = intent.getStringArrayListExtra("codes");
 
         if (codes.size() > 0) {
-            Log.d("code", codes.get(0));
-            getRestaurant(codes.get(0));
+            try {
+                Log.d("code", codes.get(0));
+                getRestaurant(codes.get(0));
+            } catch (Exception e) {
+                Log.e("Error:", String.valueOf(e));
+            }
         }
 
         centerRestaurantImage = findViewById(R.id.centerRestaurantImage);
@@ -86,6 +90,7 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
                 // Start the SocialActivity without animation
                 Intent intent1 = new Intent(MatchesScreen.this, SocialActivity.class);
                 intent1.putExtra("id", id);
+                intent1.putStringArrayListExtra("codes", codes);
                 startActivity(intent1);
                 overridePendingTransition(0, 0); // No animation for this transition
                 finish();
@@ -94,6 +99,7 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
                 // Start the UserProfileActivity without animation
                 Intent intent1 = new Intent(MatchesScreen.this, UserProfileActivity.class);
                 intent1.putExtra("id", id);
+                intent1.putStringArrayListExtra("codes", codes);
                 startActivity(intent1);
                 overridePendingTransition(0, 0); // No animation for this transition
                 finish();
