@@ -72,6 +72,14 @@ public class UserController {
         userRepository.save(user);
         return success;
     }
+    @PostMapping(path = "/users/{username}/{userid}/{passkey}")
+    String createANewUser(@PathVariable String username, @PathVariable String userid, @PathVariable String passkey){
+        if(userRepository.findByUsername(username) != null){
+            return "Already exists";
+        }
+        userRepository.save(new User(username, userid, passkey));
+        return success;
+    }
 
     @PutMapping("/users/{id}")
     User updateUser(@PathVariable int id, @RequestBody User request){
