@@ -1,5 +1,11 @@
 package com.example.dinder.activities;
 
+<<<<<<< Updated upstream
+=======
+import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+>>>>>>> Stashed changes
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,6 +19,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -132,6 +139,13 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     private Dialog loadingDialog;
 
+<<<<<<< Updated upstream
+=======
+    ArrayList<String> matchCodes = new ArrayList<>();
+
+    LinearLayout notificationContainer;
+
+>>>>>>> Stashed changes
     /**
      * Sets the text content for a specific chip based on its index and ensures its visibility.
      * The method takes in an index corresponding to a chip position and a tag to set as the
@@ -389,6 +403,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         chip6 = findViewById(R.id.chip6);
         chip7 = findViewById(R.id.chip7);
         logo = findViewById(R.id.restLogo);
+        notificationContainer = findViewById(R.id.match_notif_layout);
 
         getRestaurants(queue);
 
@@ -503,6 +518,38 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         });
     }
 
+<<<<<<< Updated upstream
+=======
+    private void showNotification() {
+        Log.d("Animation", "playing animation");
+        // Fade in the notification
+        notificationContainer.animate()
+                .alpha(1f)
+                .setDuration(500) // 500ms
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        notificationContainer.setVisibility(View.VISIBLE);
+                    }
+                });
+
+        // Hide the notification after 3 seconds
+        notificationContainer.postDelayed(() -> {
+            // Fade out the notification
+            notificationContainer.animate()
+                    .alpha(0f)
+                    .setDuration(500)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            notificationContainer.setVisibility(View.GONE);
+                        }
+                    });
+        }, 3000); // 3 seconds
+    }
+
+
+>>>>>>> Stashed changes
     /**
      * Set's the gestureDetector defined in onCreate to call it's onTouchEvent()
      *
@@ -524,7 +571,19 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
 
     @Override
     public void onWebSocketMessage(String message) {
+<<<<<<< Updated upstream
         // If the message is an invitation show notification on screen, telling user who invited them to a group
+=======
+        if (message.contains("Match")) {
+            runOnUiThread(() -> {
+                showNotification();
+            });
+            String code = message.split("@")[1];
+            matchCodes.add(code);
+            Log.d("Code", code);
+
+        }
+>>>>>>> Stashed changes
         Log.d("Message", message);
     }
 
@@ -562,4 +621,10 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             loadingDialog.dismiss();
         }
     }
+<<<<<<< Updated upstream
 }
+=======
+}
+
+
+>>>>>>> Stashed changes
