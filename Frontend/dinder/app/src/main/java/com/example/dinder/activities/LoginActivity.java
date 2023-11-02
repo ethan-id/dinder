@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
      * @return A JsonObjectRequest for user authentication.
      */
     private JsonObjectRequest createUserLoginRequest(String username, String password) {
-        String url = String.format("http://10.0.2.2:8080/users/login/%s,%s", username, password);
+        String url = String.format("http://coms-309-055.class.las.iastate.edu:8080/users/login/%s,%s", username, password);
 
         // Handle error
         return new JsonObjectRequest(url,

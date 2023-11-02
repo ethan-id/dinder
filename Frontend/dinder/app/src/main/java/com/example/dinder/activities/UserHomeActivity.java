@@ -280,7 +280,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
 
         JsonArrayRequest request = new JsonArrayRequest(
             Request.Method.GET,
-            "http://10.0.2.2:8080/restaurant/Ames/all",
+            "http://coms-309-055.class.las.iastate.edu:8080/restaurant/Ames/all",
             null,
             response -> {
                 hideLoadingDialog();
@@ -366,7 +366,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         setupLoadingDialog();
 
         if (!connected) {
-            WebSocketManager.getInstance().connectWebSocket("ws://10.0.2.2:8080/chat/" + username);
+            WebSocketManager.getInstance().connectWebSocket("ws://coms-309-055.class.las.iastate.edu:8080/chat/" + username);
             WebSocketManager.getInstance().setWebSocketListener(UserHomeActivity.this);
             connected = true;
         }
