@@ -1,11 +1,8 @@
 package com.example.dinder.activities;
 
-<<<<<<< Updated upstream
-=======
-import android.Manifest;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
->>>>>>> Stashed changes
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -28,7 +25,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.dinder.R;
@@ -139,13 +135,11 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     private Dialog loadingDialog;
 
-<<<<<<< Updated upstream
-=======
+
     ArrayList<String> matchCodes = new ArrayList<>();
 
     LinearLayout notificationContainer;
 
->>>>>>> Stashed changes
     /**
      * Sets the text content for a specific chip based on its index and ensures its visibility.
      * The method takes in an index corresponding to a chip position and a tag to set as the
@@ -518,8 +512,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         });
     }
 
-<<<<<<< Updated upstream
-=======
+
     private void showNotification() {
         Log.d("Animation", "playing animation");
         // Fade in the notification
@@ -549,7 +542,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     }
 
 
->>>>>>> Stashed changes
+
     /**
      * Set's the gestureDetector defined in onCreate to call it's onTouchEvent()
      *
@@ -571,9 +564,9 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
 
     @Override
     public void onWebSocketMessage(String message) {
-<<<<<<< Updated upstream
+
         // If the message is an invitation show notification on screen, telling user who invited them to a group
-=======
+
         if (message.contains("Match")) {
             runOnUiThread(() -> {
                 showNotification();
@@ -583,7 +576,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             Log.d("Code", code);
 
         }
->>>>>>> Stashed changes
         Log.d("Message", message);
     }
 
@@ -621,10 +613,9 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             loadingDialog.dismiss();
         }
     }
-<<<<<<< Updated upstream
-}
-=======
+
 }
 
 
->>>>>>> Stashed changes
+
+
