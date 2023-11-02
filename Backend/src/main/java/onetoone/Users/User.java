@@ -1,5 +1,6 @@
 package onetoone.Users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import onetoone.Favorites.Favorite;
 import onetoone.Likes.Liked;
 import onetoone.Restaurants.Restaurant;
@@ -38,6 +39,18 @@ public class User {
     )
     private Set<Restaurant> favoriteRestaurants;
 
+    @ManyToMany(cascade={CascadeType.ALL})
+    @JoinTable(name="friends_with",
+            joinColumns={@JoinColumn(name="person_id")},
+            inverseJoinColumns={@JoinColumn(name="friend_id")})
+
+    private Set<User> friends = new HashSet<User>();
+
+    @ManyToMany(mappedBy="friends")
+    @JsonIgnore
+    private Set<User> friendsOf = new HashSet<User>();
+
+
     /*
      * @OneToOne creates a relation between the current entity/table(Laptop) with the entity/table defined below it(User)
      * cascade is responsible propagating all changes, even to children of the class Eg: changes made to laptop within a user object will be reflected
@@ -56,6 +69,8 @@ public class User {
         this.halal = false;
         this.likes = new HashSet<Liked>();
         this.favoriteRestaurants = new HashSet<Restaurant>();
+        this.friends = new HashSet<User>();
+        this.friendsOf = new HashSet<User>();
     }
 
     public User() {
@@ -132,5 +147,9 @@ public class User {
         favoriteRestaurants.add(restaurant);
     }
 
-//    public void setFavoriteRestaurants(Set<Restaurant> favorites){ this.favoriteRestaurants = favorites;}
+    public Set<User> getFriends() {
+        return friends;
+    }
+
+    //    public void setFavoriteRestaurants(Set<Restaurant> favorites){ this.favoriteRestaurants = favorites;}
 }
