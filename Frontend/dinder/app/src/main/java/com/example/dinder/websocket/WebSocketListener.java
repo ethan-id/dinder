@@ -39,3 +39,4 @@ public interface WebSocketListener {
      */
     void onWebSocketError(Exception ex);
 }
+
