@@ -42,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * The Home Screen is considered the default location of the app. On this screen the user can swipe
@@ -454,6 +455,30 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             }
         });
 
+
+
+        dislike.setOnClickListener(v -> dislikeRestaurant());
+        favorite.setOnClickListener(v -> likeRestaurant());
+        centerImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent restaurant = new Intent(UserHomeActivity.this, RestaurantProfileActivity.class);
+                    restaurant.putExtra("id", id);
+                    restaurant.putExtra("code", currentRestaurant.getString("id"));
+                    startActivity(restaurant);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        centerImage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
+
         gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
@@ -465,61 +490,48 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
                     // Horizontal swipe detected
                     if (diffX > 0) {
                         // Right swipe
-                        try {
-                            String code = currentRestaurant.getString("id");
-                            WebSocketManager.getInstance().sendMessage("like@" + code);
-                            populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                        likeRestaurant();
                         return true;
                     } else {
                         // Left swipe
-                        try {
-                            String code = currentRestaurant.getString("id");
-                            WebSocketManager.getInstance().sendMessage("dislike@" + code);
-                            populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                        dislikeRestaurant();
                         return true;
                     }
                 }
                 return super.onFling(e1, e2, velocityX, velocityY);
             }
         });
+    }
 
-        dislike.setOnClickListener(v -> {
-            try {
-                String code = currentRestaurant.getString("id");
-                WebSocketManager.getInstance().sendMessage("dislike@" + code);
-                Log.d("Dislike", "dislike@" + code);
-                populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        favorite.setOnClickListener(v -> {
-            try {
-                String code = currentRestaurant.getString("id");
-                WebSocketManager.getInstance().sendMessage("like@" + code);
-                Log.d("Like", "like@" + code);
-                populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-        });
+    private void likeRestaurant() {
+        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+        try {
+            String code = currentRestaurant.getString("id");
+            sendLikeThroughWebSocket(code);
+            populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-        centerImage.setOnClickListener(v -> {
-            try {
-                Intent restaurant = new Intent(UserHomeActivity.this, RestaurantProfileActivity.class);
-                restaurant.putExtra("id", id);
-                restaurant.putExtra("code", currentRestaurant.getString("id"));
-                startActivity(restaurant);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-        });
+    private void dislikeRestaurant() {
+        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+        try {
+            String code = currentRestaurant.getString("id");
+            sendDislikeThroughWebSocket(code);
+            Log.d("Dislike", "dislike@" + code);
+            populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void sendLikeThroughWebSocket(String code) {
+        if (!Objects.equals(code, "") && code != null) WebSocketManager.getInstance().sendMessage("like@" + code);
+    }
+
+    private void sendDislikeThroughWebSocket(String code) {
+        if (!Objects.equals(code, "") && code != null) WebSocketManager.getInstance().sendMessage("dislike@" + code);
     }
 
 
@@ -559,8 +571,8 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        gestureDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
+        // Be sure to call the superclass implementation
+        return gestureDetector.onTouchEvent(event) || super.onTouchEvent(event);
     }
 
     @Override
