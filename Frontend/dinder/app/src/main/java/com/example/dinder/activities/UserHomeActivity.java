@@ -46,6 +46,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Home Screen is considered the default location of the app. On this screen the user can swipe
@@ -143,10 +144,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      * Dialog used to display loading symbol while the restaurant's are being fetched
      */
     private Dialog loadingDialog;
-
-
     ArrayList<String> matchCodes = new ArrayList<>();
-
     LinearLayout notificationContainer;
 
     /**
@@ -499,6 +497,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             try {
                 String code = currentRestaurant.getString("id");
                 WebSocketManager.getInstance().sendMessage("dislike@" + code);
+                Log.d("Dislike", "dislike@" + code);
                 populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
             } catch (JSONException e) {
                 throw new RuntimeException(e);
@@ -508,6 +507,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             try {
                 String code = currentRestaurant.getString("id");
                 WebSocketManager.getInstance().sendMessage("like@" + code);
+                Log.d("Like", "like@" + code);
                 populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
             } catch (JSONException e) {
                 throw new RuntimeException(e);

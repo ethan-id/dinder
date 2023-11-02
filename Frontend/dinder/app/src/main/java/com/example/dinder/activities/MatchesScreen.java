@@ -33,6 +33,7 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
     ImageView ratingIcon;
     ArrayList<JSONObject> restaurants = new ArrayList<>();
     JSONObject currentRestaurant;
+
     private void sendImageRequest(String imageUrl, RequestQueue queue) {
         queue.add(new ImageRequest(
                 imageUrl,
@@ -110,7 +111,9 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
 
     @Override
     public void onWebSocketMessage(String message) {
-
+        // Handle WebSocket messages here
+        String restaurantCode = message.substring(message.indexOf("@"));
+        getRestaurant(restaurantCode);
     }
 
     @Override
