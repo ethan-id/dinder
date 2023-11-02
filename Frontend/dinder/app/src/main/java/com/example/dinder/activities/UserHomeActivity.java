@@ -319,6 +319,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             error -> {
                 Log.e("Error", String.valueOf(error));
                 hideLoadingDialog();
+                startActivity(new Intent(UserHomeActivity.this, ErrorScreen.class));
             }
         );
 

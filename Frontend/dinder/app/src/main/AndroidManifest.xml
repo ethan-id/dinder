@@ -16,6 +16,9 @@
             android:name=".activities.RestaurantProfileActivity"
             android:exported="true" />
         <activity
+            android:name=".activities.ErrorScreen"
+            android:exported="false" />
+        <activity
             android:name=".activities.MatchesScreen"
             android:exported="false" />
         <activity
