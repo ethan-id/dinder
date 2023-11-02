@@ -2,8 +2,6 @@ package com.example.dinder.websocket;
 
 import android.util.Log;
 
-import com.example.dinder.activities.MatchesScreen;
-
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -67,7 +65,7 @@ public class WebSocketManager {
      * Removes the currently set WebSocketListener from this WebSocketManager instance.
      * This action effectively disconnects the listener from handling WebSocket events.
      */
-    public void removeWebSocketListener(MatchesScreen matchesScreen) {
+    public void removeWebSocketListener() {
         this.webSocketListener = null;
     }
 

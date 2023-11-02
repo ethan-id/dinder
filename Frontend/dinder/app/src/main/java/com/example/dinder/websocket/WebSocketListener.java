@@ -1,8 +1,5 @@
 package com.example.dinder.websocket;
 
-import android.content.Context;
-import android.widget.Toast;
-
 import org.java_websocket.handshake.ServerHandshake;
 
 /**
@@ -41,19 +38,5 @@ public interface WebSocketListener {
      * @param ex The exception that describes the error.
      */
     void onWebSocketError(Exception ex);
-
-
-    // Create a method to display match notifications
-    default void displayMatchNotification() {
-        displayMatchNotification(null);
-    }
-
-
-    default void displayMatchNotification(String message) {
-        // Parse the message and display a notification to the user
-        Toast.makeText((Context) this, "MATCHED: " + message, Toast.LENGTH_SHORT).show();
-    }
-
-
 }
 
