@@ -90,6 +90,7 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
                 // Start the SocialActivity without animation
                 Intent intent1 = new Intent(MatchesScreen.this, SocialActivity.class);
                 intent1.putExtra("id", id);
+                intent1.putStringArrayListExtra("codes", codes);
                 startActivity(intent1);
                 overridePendingTransition(0, 0); // No animation for this transition
                 finish();
@@ -98,6 +99,7 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
                 // Start the UserProfileActivity without animation
                 Intent intent1 = new Intent(MatchesScreen.this, UserProfileActivity.class);
                 intent1.putExtra("id", id);
+                intent1.putStringArrayListExtra("codes", codes);
                 startActivity(intent1);
                 overridePendingTransition(0, 0); // No animation for this transition
                 finish();
