@@ -6,15 +6,7 @@ import onetoone.Likes.Liked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -66,6 +58,21 @@ public class UserController {
         userRepository.save(user);
         return success;
     }
+
+    @PostMapping("/addFriend/{sent}")
+    public void addNewFriend(@PathVariable String sent) {
+        int index = sent.indexOf(",");
+        String username = sent.substring(0,index);
+        System.out.println(username);
+        String friendUsername = sent.substring(index+1);
+        User person = userRepository.findByUsername(username);
+        User friend = userRepository.findByUsername(friendUsername);
+        if(person!= null && friend != null) {
+            person.getFriends().add(friend);
+            userRepository.save(person);
+        }
+    }
+
 
     @PutMapping("/users/{id}")
     User updateUser(@PathVariable int id, @RequestBody User request){
