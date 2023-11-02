@@ -254,6 +254,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         Intent sentIntent = getIntent();
         String id = sentIntent.getStringExtra("id");
+        ArrayList<String> codes = sentIntent.getStringArrayListExtra("codes");
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId(); // Get the selected item's ID
@@ -262,6 +263,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 // Start the UserHomeActivity without animation
                 Intent intent = new Intent(UserProfileActivity.this, UserHomeActivity.class);
                 intent.putExtra("id", id);
+                intent.putStringArrayListExtra("codes", codes);
                 startActivity(intent);
                 finish(); // Finish the current activity
                 return true;
@@ -269,6 +271,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 // Start the MatchesScreen without animation
                 Intent intent = new Intent(UserProfileActivity.this, MatchesScreen.class);
                 intent.putExtra("id", id);
+                intent.putStringArrayListExtra("codes", codes);
                 startActivity(intent);
                 finish(); // Finish the current activity
                 return true;
@@ -276,6 +279,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 // Start the SocialActivity without animation
                 Intent intent = new Intent(UserProfileActivity.this, SocialActivity.class);
                 intent.putExtra("id", id);
+                intent.putStringArrayListExtra("codes", codes);
                 startActivity(intent);
                 finish(); // Finish the current activity
                 return true;

@@ -445,6 +445,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             private void startSocialActivity() {
                 Intent intent = new Intent(UserHomeActivity.this, SocialActivity.class);
                 intent.putExtra("id", id);
+                intent.putStringArrayListExtra("codes", matchCodes);
                 startActivity(intent);
                 overridePendingTransition(0, 0); // No animation for this transition
             }
@@ -452,6 +453,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             private void startUserProfileActivity() {
                 Intent intent = new Intent(UserHomeActivity.this, UserProfileActivity.class);
                 intent.putExtra("id", id);
+                intent.putStringArrayListExtra("codes", matchCodes);
                 startActivity(intent);
                 overridePendingTransition(0, 0); // No animation for this transition
             }

@@ -19,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.java_websocket.handshake.ServerHandshake;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -58,6 +59,7 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
+        ArrayList<String> codes = intent.getStringArrayListExtra("codes");
 
         bottomNavigationView = findViewById(R.id.bottom_navigator);
         bottomNavigationView.setSelectedItemId(R.id.social);
@@ -69,6 +71,7 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
                 // Start the UserHomeActivity
                 Intent intent1 = new Intent(SocialActivity.this, UserHomeActivity.class);
                 intent1.putExtra("id", id);
+                intent.putStringArrayListExtra("codes", codes);
                 startActivity(intent1);
                 overridePendingTransition(0, 0); // No animation for this transition
                 finish();
@@ -77,6 +80,7 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
                 // Start the MatchesScreen
                 Intent intent1 = new Intent(SocialActivity.this, MatchesScreen.class);
                 intent1.putExtra("id", id);
+                intent.putStringArrayListExtra("codes", codes);
                 startActivity(intent1);
                 overridePendingTransition(0, 0); // No animation for this transition
                 finish();
@@ -88,6 +92,7 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
                 // Start the UserProfileActivity
                 Intent intent1 = new Intent(SocialActivity.this, UserProfileActivity.class);
                 intent1.putExtra("id", id);
+                intent.putStringArrayListExtra("codes", codes);
                 startActivity(intent1);
                 overridePendingTransition(0, 0); // No animation for this transition
                 finish();
