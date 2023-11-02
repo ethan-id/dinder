@@ -102,7 +102,7 @@ public class UserProfileActivity extends AppCompatActivity {
      */
     private void getUser(String id) {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
-        String url = "http://10.0.2.2:8080/users/" + id;
+        String url = "http://coms-309-055.class.las.iastate.edu:8080/users/" + id;
 
         queue.add(new JsonObjectRequest(
             Request.Method.GET, url, null,
@@ -118,12 +118,14 @@ public class UserProfileActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
                 List<Restaurant> restaurants = new ArrayList<>();
+                RestaurantAdapter adapter = new RestaurantAdapter(restaurants);
+                likeList.setAdapter(adapter);
 
                 for (int i = 0; i < userLikesIds.length(); i++) {
                     try {
                         String restaurantId = userLikesIds.getJSONObject(i).getString("name");
                         // Assuming getRestaurantUrl(id) is a function that returns the endpoint to get a restaurant's details
-                        String restUrl = "http://10.0.2.2:8080/restaurant/find/" + restaurantId;
+                        String restUrl = "http://coms-309-055.class.las.iastate.edu:8080/restaurant/find/" + restaurantId;
                         Log.d("URL", restUrl);
 
                         // Make a GET request using Volley (you can use other libraries too)
@@ -140,10 +142,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                     }
 
                                     // If we've fetched all restaurants' details, update the adapter
-                                    if (restaurants.size() % 2 == 0) {
-                                        RestaurantAdapter adapter = new RestaurantAdapter(restaurants);
-                                        likeList.setAdapter(adapter);
-                                    }
+                                    adapter.notifyDataSetChanged();
                                 },
                                 error -> {
                                     // Handle the error
@@ -216,7 +215,7 @@ public class UserProfileActivity extends AppCompatActivity {
      */
     private void saveUserPreferences() throws JSONException {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
-        String url = "http://10.0.2.2:8080/users/" + user.getInt("id");
+        String url = "http://coms-309-055.class.las.iastate.edu:8080/users/" + user.getInt("id");
 
         user.put("vegitarian", vegetarianCheck.isChecked());
         user.put("vegan", veganCheck.isChecked());

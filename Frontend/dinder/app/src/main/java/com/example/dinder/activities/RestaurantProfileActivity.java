@@ -66,7 +66,7 @@ public class RestaurantProfileActivity extends AppCompatActivity {
      */
     private void getRestaurant(String code) {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
-        String url = "http://10.0.2.2:8080/restaurant/find/" + code;
+        String url = "http://coms-309-055.class.las.iastate.edu:8080/restaurant/find/" + code;
 
         queue.add(new JsonObjectRequest(
             Request.Method.GET, url, null,
