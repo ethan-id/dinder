@@ -35,7 +35,7 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
      * RecyclerView used to dynamically display the user's friends
      */
     RecyclerView friendsRecyclerView;
-    private View bottomNavigationView;
+    private BottomNavigationView bottomNavigationView;
 
     /**
      * Initializes the SocialActivity. This method:
@@ -59,7 +59,7 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
+        bottomNavigationView = findViewById(R.id.bottom_navigator);
         bottomNavigationView.setSelectedItemId(R.id.social);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -101,7 +101,7 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         friendsRecyclerView = findViewById(R.id.friendsRecyclerView);
         friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<String> friendsList = Arrays.asList("John", "Jane", "Doe", "Smith");
+        List<String> friendsList = Arrays.asList("BigE", "Jane", "Doe", "Smith", "Jake", "Harry", "Kennedy");
         FriendsAdapter adapter = new FriendsAdapter(friendsList);
         friendsRecyclerView.setAdapter(adapter);
     }

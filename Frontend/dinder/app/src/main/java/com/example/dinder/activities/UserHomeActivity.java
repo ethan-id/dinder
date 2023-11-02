@@ -244,27 +244,28 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
                     try {
                         restaurantName.setText(currentRestaurant.getString("name"));
                     } catch (JSONException e) {
-                        throw new RuntimeException(e);
+                        Log.e("Error", "Error populating restaurant data");
                     }
-//                    try {
-//                        address.setText(currentRestaurant.getString("address"));
-//                    } catch (JSONException e) {
-//                        throw new RuntimeException(e);
-//                    }
+                    try {
+                        JSONObject location = currentRestaurant.getJSONObject("location");
+                        address.setText(location.getString("address1"));
+                    } catch (JSONException e) {
+                        Log.e("Error", "Error populating restaurant data");
+                    }
                     try {
                         chip1.setText(currentRestaurant.getString("price"));
                     } catch (JSONException e) {
-                        throw new RuntimeException(e);
+
                     }
                     try {
                         rating.setText(currentRestaurant.getString("rating"));
                     } catch (JSONException e) {
-                        throw new RuntimeException(e);
+                        Log.e("Error", "Error populating restaurant data");
                     }
                     try {
                         ratingCount.setText(String.format("(%s)", currentRestaurant.getString("review_count")));
                     } catch (JSONException e) {
-                        throw new RuntimeException(e);
+                        Log.e("Error", "Error populating restaurant data");
                     }
                 });
 //                JSONArray titles = currentRestaurant.getJSONArray("_titles");
@@ -381,9 +382,10 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         setContentView(R.layout.activity_userhome);
         setupLoadingDialog();
 
+        WebSocketManager.getInstance().setWebSocketListener(UserHomeActivity.this);
+
         if (!connected) {
             WebSocketManager.getInstance().connectWebSocket("ws://coms-309-055.class.las.iastate.edu:8080/chat/" + username);
-            WebSocketManager.getInstance().setWebSocketListener(UserHomeActivity.this);
             connected = true;
         }
 
@@ -508,6 +510,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         try {
             String code = currentRestaurant.getString("id");
             sendLikeThroughWebSocket(code);
+            Log.d("Like", "like@" + code);
             populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
         } catch (JSONException e) {
             throw new RuntimeException(e);

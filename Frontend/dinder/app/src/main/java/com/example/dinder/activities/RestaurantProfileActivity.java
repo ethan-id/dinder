@@ -42,9 +42,13 @@ public class RestaurantProfileActivity extends AppCompatActivity {
      */
     TextView address;
     /**
+     * The number of reviews the restaurant has received
+     */
+    TextView revCount;
+    /**
      * The number of likes the restaurant has received
      */
-    TextView likeCount;
+    TextView phone;
     /**
      * Restaurant's star rating out of 5
      */
@@ -83,8 +87,11 @@ public class RestaurantProfileActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             try {
                 name.setText(restaurant.getString("name"));
-//                address.setText(restaurant.getString("address"));
                 rating.setText(restaurant.getString("rating"));
+                JSONObject location = restaurant.getJSONObject("location");
+                address.setText(location.getString("address1"));
+                phone.setText(restaurant.getString("display_phone"));
+                revCount.setText(String.format("(%s)", restaurant.getString("review_count")));
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
@@ -112,8 +119,9 @@ public class RestaurantProfileActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.backBtn);
         name = findViewById(R.id.restaurantName);
         address = findViewById(R.id.restaurantAddress);
-        likeCount = findViewById(R.id.likeCount);
+        phone = findViewById(R.id.phone);
         rating = findViewById(R.id.restRating);
+        revCount = findViewById(R.id.reviewCount);
 
         Intent sentIntent = getIntent();
         String code = sentIntent.getStringExtra("code");
