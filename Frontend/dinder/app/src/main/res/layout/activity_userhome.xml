@@ -43,7 +43,7 @@
             android:layout_height="72dp"
             android:layout_marginStart="12dp"
             android:layout_marginBottom="12dp"
-            android:textSize="34sp"
+            android:textSize="30sp"
             android:textStyle="bold"
             app:flow_verticalAlign="center"
             app:layout_constraintBottom_toTopOf="@+id/centerRestaurantImage"
