@@ -202,7 +202,6 @@ public class ChatServer {
                             }
                         }
                         if (numberOfLikes == groupUsernameSessionMap.size()) {
-
                             for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
                                 sendMessageToPArticularUser(GroupMember.getKey(), "Match@" +  newMessage[1]);
                             }
