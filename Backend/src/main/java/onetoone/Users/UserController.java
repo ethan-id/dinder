@@ -60,8 +60,8 @@ public class UserController {
         return success;
     }
 
-    @PostMapping("/addFriend/{sent}")
-    public void addNewFriend(@PathVariable String sent) {
+    @PostMapping("/friend/addFriend/{sent}")
+    public String addNewFriend(@PathVariable String sent) {
         int index = sent.indexOf(",");
         String username = sent.substring(0,index);
         String friendUsername = sent.substring(index+1);
@@ -69,13 +69,15 @@ public class UserController {
         User friend = userRepository.findByUsername(friendUsername);
         for (User user : person.getFriends()) {
             if (user.getUsername().equals(friendUsername)) {
-                return;
+                return failure;
             }
         }
         if(person!= null && friend != null && !person.getFriends().contains(friend)) {
             person.getFriends().add(friend);
             userRepository.save(person);
+            return success;
         }
+        return failure;
     }
 
 
