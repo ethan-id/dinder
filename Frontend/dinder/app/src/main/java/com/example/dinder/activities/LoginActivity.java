@@ -52,7 +52,13 @@ public class LoginActivity extends AppCompatActivity {
      */
     ImageView logo;
 
+    /**
+     * Dialog for loading icon to be shown after user clicks "Login"
+     */
     private Dialog loadingDialog;
+    /**
+     * LinearLayout for notification to be displayed if there is an error while logging in
+     */
     LinearLayout notificationContainer;
 
     /**
@@ -156,7 +162,14 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    // Initialize the dialog in onCreate or wherever appropriate
+    /**
+     * Initializes and configures a non-cancellable loading dialog.
+     *
+     * This method sets up a new dialog intended to indicate that a loading process is ongoing. The dialog is
+     * made non-cancellable, meaning the user cannot dismiss it by pressing back or touching outside the dialog.
+     * This is often used to prevent user interaction while waiting for a background task to complete.
+     * The dialog uses a custom layout defined in `R.layout.loading` and has a transparent background.
+     */
     private void setupLoadingDialog() {
         loadingDialog = new Dialog(this);
         loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -165,20 +178,38 @@ public class LoginActivity extends AppCompatActivity {
         loadingDialog.setCancelable(false); // prevents users from cancelling the dialog
     }
 
-    // Show the dialog
+    /**
+     * Displays a loading dialog on the screen if it is not already showing.
+     * This method checks the current state of the loadingDialog instance and
+     * ensures that the dialog is shown only if it is not already visible on the screen,
+     * avoiding multiple instances of the dialog being displayed over each other.
+     */
     private void showLoadingDialog() {
         if (loadingDialog != null && !loadingDialog.isShowing()) {
             loadingDialog.show();
         }
     }
 
-    // Hide the dialog
+    /**
+     * Hides the loading dialog if it is currently displayed on the screen.
+     * This method checks the current state of the loadingDialog instance and
+     * dismisses it if it is visible. This is typically called when an operation
+     * that requires a loading indicator is completed or cancelled.
+     */
     private void hideLoadingDialog() {
         if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
         }
     }
 
+    /**
+     * Shows a notification with a fade-in effect, then automatically hides it after a specified time with a fade-out effect.
+     * The notification will become visible with a fade-in animation over 500 milliseconds,
+     * stay on the screen for 3 seconds, and then fade out with a 500 milliseconds animation.
+     *
+     * During the fade-in animation, the visibility of the notification container is set to VISIBLE.
+     * After the fade-out animation completes, the visibility is switched to GONE.
+     */
     private void showNotification() {
         // Fade in the notification
         notificationContainer.animate()

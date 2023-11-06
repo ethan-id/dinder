@@ -50,9 +50,6 @@ import java.util.Objects;
  * to the restaurant profile where they can see more information about the restaurant.
  */
 public class UserHomeActivity extends AppCompatActivity implements WebSocketListener {
-    public static final String MATCH_CHANNEL_ID = "Matches";
-    private static final int NOTIFICATION_ID = 1;
-
     /**
      * Large image displayed in the center of the screen used to show the restaurant's food
      */
@@ -121,7 +118,9 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      * A chip used to display a snippet of contextual information about the restaurant
      */
     Chip chip7;
-
+    /**
+     * Boolean representing if the UserHomeActivity has an active WebSocket connection with the server
+     */
     static boolean connected = false;
 
     /**
@@ -140,7 +139,15 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      * Dialog used to display loading symbol while the restaurant's are being fetched
      */
     private Dialog loadingDialog;
+    /**
+     * ArrayList of Strings represting the specific identifiers of restaurants that the user has matched with
+     *
+     * These are received through WebSocket messages sent from the backend and are used to send to the MatchesScreen
+     */
     ArrayList<String> matchCodes = new ArrayList<>();
+    /**
+     * LinearLayout containing a notification to be displayed when the user has a new match
+     */
     LinearLayout notificationContainer;
 
     /**
@@ -507,6 +514,19 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         });
     }
 
+    /**
+     * Sends a "like" action for the current restaurant through a WebSocket connection and
+     * prepares the next restaurant's information to be displayed.
+     *
+     * The method retrieves the unique identifier of the current restaurant, sends it as a "like" action
+     * through a WebSocket message, and logs this action. It then attempts to populate the screen with the
+     * next restaurant in the list.
+     *
+     * If the current restaurant's ID cannot be obtained due to a JSON parsing error, the method throws
+     * a RuntimeException encapsulating the JSONException.
+     *
+     * @throws RuntimeException if there is an error parsing the current restaurant's JSON object.
+     */
     private void likeRestaurant() {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
         try {
@@ -519,6 +539,20 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         }
     }
 
+
+    /**
+     * Sends a "dislike" action for the current restaurant through a WebSocket connection and
+     * prepares the next restaurant's information to be displayed.
+     *
+     * This method performs an operation similar to {@link #likeRestaurant()} but for a "dislike" action.
+     * It retrieves the unique identifier of the current restaurant, sends a "dislike" message through
+     * the WebSocket, and logs this action. Subsequently, it moves to display the next restaurant's details.
+     *
+     * If the current restaurant's ID cannot be obtained due to a JSON parsing error, the method throws
+     * a RuntimeException encapsulating the JSONException.
+     *
+     * @throws RuntimeException if there is an error parsing the current restaurant's JSON object.
+     */
     private void dislikeRestaurant() {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
         try {
@@ -531,15 +565,40 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         }
     }
 
+    /**
+     * Sends a "like" action for a restaurant to the server via WebSocket.
+     *
+     * This method checks if the provided restaurant code is not null or empty and sends a "like" action
+     * prefixed to the restaurant code via WebSocket. This indicates that the user has liked a particular
+     * restaurant.
+     *
+     * @param code The unique identifier for the restaurant to be liked.
+     */
     private void sendLikeThroughWebSocket(String code) {
         if (!Objects.equals(code, "") && code != null) WebSocketManager.getInstance().sendMessage("like@" + code);
     }
 
+
+    /**
+     * Sends a "dislike" action for a restaurant to the server via WebSocket.
+     *
+     * This method is similar to {@link #sendLikeThroughWebSocket(String)} but for sending a "dislike"
+     * action. If the provided restaurant code is valid (not null or empty), it prefixes the code with "dislike@"
+     * and sends it via WebSocket to indicate that the user has disliked the restaurant.
+     *
+     * @param code The unique identifier for the restaurant to be disliked.
+     */
     private void sendDislikeThroughWebSocket(String code) {
         if (!Objects.equals(code, "") && code != null) WebSocketManager.getInstance().sendMessage("dislike@" + code);
     }
 
-
+    /**
+     * Shows a temporary notification with a fade-in animation, then fades out after a set time.
+     *
+     * This method starts an animation that fades in the notification container, makes it visible, and logs
+     * the animation start. After a delay of 3 seconds, it initiates a fade-out animation and hides the
+     * notification container once the animation ends. This provides a transient visual feedback to the user.
+     */
     private void showNotification() {
         Log.d("Animation", "playing animation");
         // Fade in the notification
@@ -612,7 +671,14 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         Log.e("WebSocketError", ex.toString());
     }
 
-    // Initialize the dialog in onCreate or wherever appropriate
+    /**
+     * Initializes and configures a non-cancellable loading dialog.
+     *
+     * This method sets up a new dialog intended to indicate that a loading process is ongoing. The dialog is
+     * made non-cancellable, meaning the user cannot dismiss it by pressing back or touching outside the dialog.
+     * This is often used to prevent user interaction while waiting for a background task to complete.
+     * The dialog uses a custom layout defined in `R.layout.loading` and has a transparent background.
+     */
     private void setupLoadingDialog() {
         loadingDialog = new Dialog(this);
         loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -621,34 +687,27 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         loadingDialog.setCancelable(false); // prevents users from cancelling the dialog
     }
 
-    // Show the dialog
+    /**
+     * Displays a loading dialog on the screen if it is not already showing.
+     * This method checks the current state of the loadingDialog instance and
+     * ensures that the dialog is shown only if it is not already visible on the screen,
+     * avoiding multiple instances of the dialog being displayed over each other.
+     */
     private void showLoadingDialog() {
         if (loadingDialog != null && !loadingDialog.isShowing()) {
             loadingDialog.show();
         }
     }
 
-    // Hide the dialog
+    /**
+     * Hides the loading dialog if it is currently displayed on the screen.
+     * This method checks the current state of the loadingDialog instance and
+     * dismisses it if it is visible. This is typically called when an operation
+     * that requires a loading indicator is completed or cancelled.
+     */
     private void hideLoadingDialog() {
         if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
         }
-    }
-
-    public void displayMatchNotification(String matchInfo) {
-        Intent intent = new Intent(UserHomeActivity.this, MatchesScreen.class);
-        intent.putExtra("match_info", matchInfo);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // Create the notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, MATCH_CHANNEL_ID)
-                .setSmallIcon(R.drawable.favorite)
-                .setContentTitle("New Match!")
-                .setContentText("You have a new match!")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-
-
     }
 }

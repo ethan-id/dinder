@@ -83,6 +83,15 @@ public class RestaurantProfileActivity extends AppCompatActivity {
         ));
     }
 
+    /**
+     * Populates the restaurant profile UI components with data from a JSON object representing a restaurant.
+     * This method must be called on the UI thread because it updates UI components.
+     *
+     * The restaurant profile includes the restaurant's name, rating, address, phone number, and review count.
+     * It assumes that the JSON object `restaurant` has been previously set with the necessary information.
+     *
+     * If there is an issue with JSON parsing, the method throws a RuntimeException encapsulating the JSONException.
+     */
     private void populateRestaurantProfile() {
         runOnUiThread(() -> {
             try {
