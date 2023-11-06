@@ -46,7 +46,7 @@ public class Restaurant {
     @JsonIgnore
     private Set<User> favoritedByUsers = new HashSet<>();
 
-    ArrayList<String> title = new ArrayList<String>();
+
 
     /*
      * @OneToOne creates a relation between the current entity/table(Laptop) with the entity/table defined below it(User)
@@ -73,7 +73,7 @@ public class Restaurant {
         this.address = address;
         this.phone_number = phone_number;
         this.distance = distance;
-        this.title = title;
+
         this.favoritedByUsers = new HashSet<User>();
     }
 
@@ -127,7 +127,7 @@ public class Restaurant {
     public String get_distance() {
         return this.distance;
     }
-    public ArrayList<String> get_titles() {return this.title; }
+
 
 
     /**
@@ -185,7 +185,6 @@ public class Restaurant {
     public void set_distance(String distance) {
         this.distance = distance;
     }
-    public void set_titles(ArrayList<String> title){this.title = title; }
 
 
     public Set<User> getFavoritedByUsers(){
