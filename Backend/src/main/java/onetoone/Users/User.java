@@ -1,7 +1,6 @@
 package onetoone.Users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import onetoone.Favorites.Favorite;
 import onetoone.Likes.Liked;
 import onetoone.Restaurants.Restaurant;
 
