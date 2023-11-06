@@ -116,7 +116,7 @@ public class UserController {
     }
 
     @GetMapping(path= "/friend/{username}/getAll")
-    Set<User> getAllFriends(@PathVariable String username) {
+    Set<String> getAllFriends(@PathVariable String username) {
         User user = Objects.requireNonNull(userRepository.findByUsername(username));
         if (username == null || userRepository.findByUsername(username) == null) {
             return null;
