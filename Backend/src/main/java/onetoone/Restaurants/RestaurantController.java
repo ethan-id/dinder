@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
@@ -29,6 +31,9 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 public class RestaurantController {
 
+    String JesseKey = "Bearer MVfL5KGDWbaFAwn7beZaNIdCJZ95r8o09YFJgksy9pN8Q7bgqEhRbJKdtBdLPPmss6xv9mz3s3OTEAAu3oWaCJu5J838o1Aouy68aK2--ugkynfBSbLHKqqfVRr5ZHYx";
+    String EliKey = "Bearer tBTnB2sqqEgwDw8eWPa3VoOhvXZAd-wCEQ6qKzocvrknlkmD4e-8wvQzDFWghKQKAWe1KGFyhL7j-6bb9JYjHpPJ9h2cApdhsSPdwMUZlOKHUjUhSaIL4RvR9sVCZXYx";
+
     @Autowired
     RestaurantRepository RestaurantRepository;
 
@@ -40,14 +45,42 @@ public class RestaurantController {
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
 
+    @GetMapping(path="/restaurant/{city}/all")
+    @ResponseBody
+    ArrayList<JsonNode> getAllRestaurants(@PathVariable String city) {
+        ArrayList<JsonNode> restaurants = new ArrayList<JsonNode>();
+        String url = ("https://api.yelp.com/v3/businesses/search?&limit=50&term=restaurants&location=" + city);
+        for (int i = 0; i < 5; i++) {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(url + "&offset=" + i)
+                    .addHeader("accept", "application/json")
+                    .addHeader("Authorization", JesseKey)
+                    .build();
+            try {
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    String responseBody = Objects.requireNonNull(response.body()).string();
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    if (!restaurants.contains(objectMapper.readTree(responseBody))) {
+                        restaurants.add(objectMapper.readTree(responseBody));
+                    }
+                }
+            }
+            catch (IOException e) {
+                logger.info(Arrays.toString(e.getStackTrace()));
+            }
+        }
+        return restaurants;
+    }
     @GetMapping(path = "/restaurant/find/{code}")
     @ResponseBody
-    JsonNode getRestaurantReviews(@PathVariable String code) {
+    JsonNode findRestaurantByCode(@PathVariable String code) throws JsonProcessingException {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("https://api.yelp.com/v3/businesses/" + code)
                 .addHeader("accept", "application/json")
-                .addHeader("Authorization", "Bearer MVfL5KGDWbaFAwn7beZaNIdCJZ95r8o09YFJgksy9pN8Q7bgqEhRbJKdtBdLPPmss6xv9mz3s3OTEAAu3oWaCJu5J838o1Aouy68aK2--ugkynfBSbLHKqqfVRr5ZHYx")
+                .addHeader("Authorization", JesseKey)
                 .build();
         try {
             Response response = client.newCall(request).execute();
@@ -56,25 +89,26 @@ public class RestaurantController {
                 ObjectMapper objectMapper = new ObjectMapper();
                 return objectMapper.readTree(responseBody);
             } else {
-                return null;
+                logger.info("Response was unsuccessful");
+                return new ObjectMapper().readTree("Response was unsuccessful");
             }
         }
         catch (IOException e) {
             logger.info(Arrays.toString(e.getStackTrace()));
             System.out.println("Build unsuccessful");
-            return null;
+            return new ObjectMapper().readTree("Build unsuccessful");
         }
     }
 
 
     @GetMapping(path = "/restaurant/reviews/{code}")
     @ResponseBody
-    JsonNode getRestaurantByName(@PathVariable String code) {
+    JsonNode getRestaurantByReviews(@PathVariable String code) throws JsonProcessingException {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("https://api.yelp.com/v3/businesses/" + code + "/reviews")
                 .addHeader("accept", "application/json")
-                .addHeader("Authorization", "Bearer MVfL5KGDWbaFAwn7beZaNIdCJZ95r8o09YFJgksy9pN8Q7bgqEhRbJKdtBdLPPmss6xv9mz3s3OTEAAu3oWaCJu5J838o1Aouy68aK2--ugkynfBSbLHKqqfVRr5ZHYx")
+                .addHeader("Authorization", JesseKey)
                 .build();
         try {
             Response response = client.newCall(request).execute();
@@ -83,12 +117,13 @@ public class RestaurantController {
                 ObjectMapper objectMapper = new ObjectMapper();
                 return objectMapper.readTree(responseBody);
             } else {
-                return null;
+                logger.info("Response was unsuccessful");
+                return new ObjectMapper().readTree("Response was unsuccessful");
             }
         }
         catch (IOException e) {
             System.out.println("Build unsuccessful");
-            return null;
+            return new ObjectMapper().readTree("Build unsuccessful");
         }
     }
 
@@ -105,8 +140,7 @@ public class RestaurantController {
             Request request = new Request.Builder()
                     .url(url + "&location=" + city + "&price=" + price + "&offset=" + i)
                     .addHeader("accept", "application/json")
-                    .addHeader("Authorization", "Bearer MVfL5KGDWbaFAwn7beZaNIdCJZ95r8o09YFJgksy9pN8Q7bgqEhRbJKdtBd" +
-                            "LPPmss6xv9mz3s3OTEAAu3oWaCJu5J838o1Aouy68aK2--ugkynfBSbLHKqqfVRr5ZHYx")
+                    .addHeader("Authorization", JesseKey)
                     .build();
             try (Response response = client.newCall(request).execute()) {
                 if (response.isSuccessful()) {

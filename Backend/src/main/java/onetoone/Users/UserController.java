@@ -134,5 +134,5 @@ public class UserController {
         return  Objects.requireNonNull(user.findFriendByUsername(friend));
     }
 
-
 }
+
