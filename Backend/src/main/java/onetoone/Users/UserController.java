@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -102,6 +105,14 @@ public class UserController {
         userRepository.deleteById(id);
         return success;
     }
+
+    @ApiOperation(value = "Remove a friend by their username", response = Iterable.class, tags = "RemoveFriend")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success!"),
+            @ApiResponse(code = 401, message = "Not authorized!"),
+            @ApiResponse(code = 403, message = "Forbidden!"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 510, message = "Internal server error")})
     @PutMapping(path= "/friend/{username}/remove/{friendUsername}")
     String removeFriend(@PathVariable String username, @PathVariable String friendUsername) {
         User user =  Objects.requireNonNull(userRepository.findByUsername(username));
@@ -115,6 +126,13 @@ public class UserController {
         return success;
     }
 
+    @ApiOperation(value = "Returns all friends the user has", response = Iterable.class, tags = "GetAllFriends")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success!"),
+            @ApiResponse(code = 401, message = "Not authorized!"),
+            @ApiResponse(code = 403, message = "Forbidden!"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 510, message = "Internal server error")})
     @GetMapping(path= "/friend/{username}/getAll")
     Set<String> getAllFriends(@PathVariable String username) {
         User user = Objects.requireNonNull(userRepository.findByUsername(username));
@@ -124,6 +142,13 @@ public class UserController {
         return Objects.requireNonNull(user.getAllFriends());
     }
 
+    @ApiOperation(value = "Find a specific friend by their username", response = Iterable.class, tags = "FindFriendByUsername")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success!"),
+            @ApiResponse(code = 401, message = "Not authorized!"),
+            @ApiResponse(code = 403, message = "Forbidden!"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 510, message = "Internal server error")})
     @GetMapping(path= "/friend/{username}/find/{friend}")
     User findFriendByUsername(@PathVariable String username, @PathVariable String friend) {
         User user = Objects.requireNonNull(userRepository.findByUsername(username));
