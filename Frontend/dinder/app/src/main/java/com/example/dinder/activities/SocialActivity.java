@@ -36,6 +36,9 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
      * RecyclerView used to dynamically display the user's friends
      */
     RecyclerView friendsRecyclerView;
+    /**
+     * Private field representing the View displaying the bottom navigation menu on the screen
+     */
     private BottomNavigationView bottomNavigationView;
 
     /**
