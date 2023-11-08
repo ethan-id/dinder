@@ -35,7 +35,7 @@ auto-deploy:
     - sudo systemctl start system-web-demo
 
 android-build:
-  image: gjandres/android-ci:latest # Docker image that has Android environments installed    
+  image: afirefly/android-ci:java17 # Docker image that has Android environments installed    
   stage: androidbuild               # one of the stages listed above
   tags:
    - android                    # change to your runner's tag
