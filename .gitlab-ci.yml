@@ -40,7 +40,6 @@ android-build:
   tags:
    - android                    # change to your runner's tag
   before_script:                    # enable gradlew, change 'Frontend' to where you have 'gradlew'
-    - export JAVA_HOME="/usr/lib/jvm/java-17"
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - chmod +x ./Frontend/dinder/gradlew
   script:
