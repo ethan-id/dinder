@@ -1,8 +1,9 @@
 package onetoone.Users;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
-import onetoone.Likes.Liked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,10 +40,10 @@ public class UserController {
         String passkey = sent.substring(index+1);
         User temp = userRepository.findByUsername(username);
         if(temp != null){
-           if(temp.getPasskey().equals(passkey)) {
+            if(temp.getPasskey().equals(passkey)) {
                 return new ResponseEntity<>(temp, HttpStatus.OK);
-           }
-           return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     };
@@ -59,18 +60,24 @@ public class UserController {
         return success;
     }
 
-    @PostMapping("/addFriend/{sent}")
-    public void addNewFriend(@PathVariable String sent) {
+    @PostMapping("/friend/addFriend/{sent}")
+    public String addNewFriend(@PathVariable String sent) {
         int index = sent.indexOf(",");
         String username = sent.substring(0,index);
-        System.out.println(username);
         String friendUsername = sent.substring(index+1);
         User person = userRepository.findByUsername(username);
         User friend = userRepository.findByUsername(friendUsername);
-        if(person!= null && friend != null) {
+        for (User user : person.getFriends()) {
+            if (user.getUsername().equals(friendUsername)) {
+                return failure;
+            }
+        }
+        if(person!= null && friend != null && !person.getFriends().contains(friend)) {
             person.getFriends().add(friend);
             userRepository.save(person);
+            return success;
         }
+        return failure;
     }
 
 
@@ -95,22 +102,37 @@ public class UserController {
         userRepository.deleteById(id);
         return success;
     }
-
-    @GetMapping(path= "/users/add-friend/{username}")
-    String addFriend(@PathVariable String username) {
-        if (username == null || userRepository.findByUsername(username) == null) {
+    @PutMapping(path= "/friend/{username}/remove/{friendUsername}")
+    String removeFriend(@PathVariable String username, @PathVariable String friendUsername) {
+        User user =  Objects.requireNonNull(userRepository.findByUsername(username));
+        User friend = Objects.requireNonNull(userRepository.findByUsername(friendUsername));
+        if (friendUsername == null || username == null || user == null || !user.getUsername().equals(username)
+                || !friend.getUsername().equals(friendUsername) || friend == null) {
             return failure;
         }
-
+        user.removeFriend(Objects.requireNonNull(friend));
+        userRepository.save(Objects.requireNonNull(user));
         return success;
     }
 
-    @PutMapping(path = "/users/favorites/{username}")
-    String deleteUserFavorite(@PathVariable String username){
-        User user = userRepository.findByUsername(username);
-        user.deleteFavorites();
-        userRepository.save(user);
-        return success;
+    @GetMapping(path= "/friend/{username}/getAll")
+    Set<String> getAllFriends(@PathVariable String username) {
+        User user = Objects.requireNonNull(userRepository.findByUsername(username));
+        if (username == null || userRepository.findByUsername(username) == null) {
+            return null;
+        }
+        return Objects.requireNonNull(user.getAllFriends());
+    }
+
+    @GetMapping(path= "/friend/{username}/find/{friend}")
+    User findFriendByUsername(@PathVariable String username, @PathVariable String friend) {
+        User user = Objects.requireNonNull(userRepository.findByUsername(username));
+        if (username == null || userRepository.findByUsername(username) == null || !user.getUsername().equals(username) ||
+                friend == null || userRepository.findByUsername(friend) == null || !userRepository.findByUsername(friend).getUsername().equals(friend)) {
+            return null;
+        }
+        return  Objects.requireNonNull(user.findFriendByUsername(friend));
     }
 
 }
+

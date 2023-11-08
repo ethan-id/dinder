@@ -6,6 +6,7 @@ import onetoone.Restaurants.Restaurant;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -42,7 +43,7 @@ public class User {
     @JoinTable(name="friends_with",
             joinColumns={@JoinColumn(name="person_id")},
             inverseJoinColumns={@JoinColumn(name="friend_id")})
-
+    @JsonIgnore
     private Set<User> friends = new HashSet<User>();
 
     @ManyToMany(mappedBy="friends")
@@ -150,9 +151,27 @@ public class User {
         return friends;
     }
 
-    public void deleteFavorites(){
-        favoriteRestaurants.clear();
+    public void removeFriend(User friend) { if (friend != null) { friends.remove(friend); } }
+
+    public User findFriendByUsername(String friend) {
+        if (friend != null) {
+            for (User user : friends) {
+                if (user.getUsername().equals(friend)) {
+                    return user;
+                }
+            }
+            return null;
+        }
+        return null;
     }
+
+    public Set<String> getAllFriends() {
+        Set response = new HashSet<String>();
+        for (User user : friends) {
+            response.add(Objects.requireNonNull(user.getUsername()));
+        }
+        return response; }
+
 
     //    public void setFavoriteRestaurants(Set<Restaurant> favorites){ this.favoriteRestaurants = favorites;}
 }
