@@ -24,17 +24,37 @@ public class UserController {
     private String failure = "{\"message\":\"failure\"}";
     private String exists = "{\"message\":\"exists\"}";
 
+    @ApiOperation(value = "Get all users from the database", response = Iterable.class, tags = "GetAllUsers")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success!"),
+            @ApiResponse(code = 401, message = "Not authorized!"),
+            @ApiResponse(code = 403, message = "Forbidden!"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 510, message = "Internal server error")})
     @GetMapping(path = "/users")
     List<User> getAllUsers(){
         userRepository.findByUsername("l");
         return userRepository.findAll();
     }
 
+    @ApiOperation(value = "Get a specific user by id", response = Iterable.class, tags = "GetUserById")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success!"),
+            @ApiResponse(code = 401, message = "Not authorized!"),
+            @ApiResponse(code = 403, message = "Forbidden!"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 510, message = "Internal server error")})
     @GetMapping(path = "/users/{id}")
     User getUserById( @PathVariable int id){
         return userRepository.findById(id);
     }
-
+    @ApiOperation(value = "Get a specific user by username", response = Iterable.class, tags = "GetUserByUsername")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success!"),
+            @ApiResponse(code = 401, message = "Not authorized!"),
+            @ApiResponse(code = 403, message = "Forbidden!"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 510, message = "Internal server error")})
     @GetMapping(path = "/users/login/{sent}")
     public ResponseEntity<?> getUserByUsername(@PathVariable String sent){
         int index = sent.indexOf(",");
@@ -51,7 +71,13 @@ public class UserController {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     };
 
-
+    @ApiOperation(value = "Create new user", response = Iterable.class, tags = "GetAllUsers")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success!"),
+            @ApiResponse(code = 401, message = "Not authorized!"),
+            @ApiResponse(code = 403, message = "Forbidden!"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 510, message = "Internal server error")})
     @PostMapping(path = "/users")
     String createUser(@RequestBody User user){
         if (user == null)
@@ -63,6 +89,13 @@ public class UserController {
         return success;
     }
 
+    @ApiOperation(value = "Adds a new friend to the given user", response = Iterable.class, tags = "AddNewFriend")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success!"),
+            @ApiResponse(code = 401, message = "Not authorized!"),
+            @ApiResponse(code = 403, message = "Forbidden!"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 510, message = "Internal server error")})
     @PostMapping("/friend/addFriend/{sent}")
     public String addNewFriend(@PathVariable String sent) {
         int index = sent.indexOf(",");
@@ -83,7 +116,13 @@ public class UserController {
         return failure;
     }
 
-
+    @ApiOperation(value = "Updates an existing user to match the provided user", response = Iterable.class, tags = "UpdateUser")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success!"),
+            @ApiResponse(code = 401, message = "Not authorized!"),
+            @ApiResponse(code = 403, message = "Forbidden!"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 510, message = "Internal server error")})
     @PutMapping("/users/{id}")
     User updateUser(@PathVariable int id, @RequestBody User request){
         User user = userRepository.findById(id);
@@ -99,7 +138,13 @@ public class UserController {
         return userRepository.findById(id);
     }
 
-
+    @ApiOperation(value = "Deletes a user from the database", response = Iterable.class, tags = "DeleteUser")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success!"),
+            @ApiResponse(code = 401, message = "Not authorized!"),
+            @ApiResponse(code = 403, message = "Forbidden!"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 510, message = "Internal server error")})
     @DeleteMapping(path = "/users/{id}")
     String deleteUser(@PathVariable int id){
         userRepository.deleteById(id);
