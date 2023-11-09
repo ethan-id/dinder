@@ -47,7 +47,7 @@ android-build:
     - ./gradlew build               # gradle build
 
 android-test:
-   image: gjandres/android-ci:latest
+   image: afirefly/android-ci:java17
    stage: androidtest               # one of the stages listed above
    tags:
     - android                   # change to your runner's tag
