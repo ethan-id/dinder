@@ -5,8 +5,6 @@ stages:             # these stages (jobs) forms the CICD pipeline
   - androidbuild    # this is a JOB to build your Android application
   - androidtest     # this is a JOB to run tests in your Android application (it's okay you don't have any test for now)
 
-
-
 maven-build:            
   stage: mavenbuild     # one of the stages listed above
   tags:                 # to specify which runner to execute this job
