@@ -20,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
+import com.example.dinder.activities.utils.NavigationUtils;
 import com.example.dinder.adapters.RestaurantAdapter;
 import com.example.dinder.adapters.model.Restaurant;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -249,47 +250,13 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userprofile);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
-        bottomNavigationView.setSelectedItemId(R.id.userprofile);
-
         Intent sentIntent = getIntent();
         String id = sentIntent.getStringExtra("id");
         ArrayList<String> codes = sentIntent.getStringArrayListExtra("codes");
 
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId(); // Get the selected item's ID
-
-            if (itemId == R.id.home) {
-                // Start the UserHomeActivity without animation
-                Intent intent = new Intent(UserProfileActivity.this, UserHomeActivity.class);
-                intent.putExtra("id", id);
-                intent.putStringArrayListExtra("codes", codes);
-                startActivity(intent);
-                finish(); // Finish the current activity
-                return true;
-            } else if (itemId == R.id.match) {
-                // Start the MatchesScreen without animation
-                Intent intent = new Intent(UserProfileActivity.this, MatchesScreen.class);
-                intent.putExtra("id", id);
-                intent.putStringArrayListExtra("codes", codes);
-                startActivity(intent);
-                finish(); // Finish the current activity
-                return true;
-            } else if (itemId == R.id.social) {
-                // Start the SocialActivity without animation
-                Intent intent = new Intent(UserProfileActivity.this, SocialActivity.class);
-                intent.putExtra("id", id);
-                intent.putStringArrayListExtra("codes", codes);
-                startActivity(intent);
-                finish(); // Finish the current activity
-                return true;
-            } else if (itemId == R.id.userprofile) {
-                // You're already on this page, so no need to do anything here.
-                return true;
-            }
-
-            return false;
-        });
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
+        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes);
+        bottomNavigationView.setSelectedItemId(R.id.userprofile);
 
         profilePic = findViewById(R.id.profilePicture);
         saveBtn = findViewById(R.id.saveBtn);

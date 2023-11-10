@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dinder.R;
+import com.example.dinder.activities.utils.NavigationUtils;
 import com.example.dinder.adapters.FriendsAdapter;
 import com.example.dinder.websocket.WebSocketListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -65,45 +66,8 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         ArrayList<String> codes = intent.getStringArrayListExtra("codes");
 
         bottomNavigationView = findViewById(R.id.bottom_navigator);
+        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes);
         bottomNavigationView.setSelectedItemId(R.id.social);
-
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId(); // Get the selected item's ID
-
-            if (itemId == R.id.home) {
-                // Start the UserHomeActivity
-                Intent intent1 = new Intent(SocialActivity.this, UserHomeActivity.class);
-                intent1.putExtra("id", id);
-                intent.putStringArrayListExtra("codes", codes);
-                startActivity(intent1);
-                overridePendingTransition(0, 0); // No animation for this transition
-                finish();
-                return true;
-            } else if (itemId == R.id.match) {
-                // Start the MatchesScreen
-                Intent intent1 = new Intent(SocialActivity.this, MatchesScreen.class);
-                intent1.putExtra("id", id);
-                intent.putStringArrayListExtra("codes", codes);
-                startActivity(intent1);
-                overridePendingTransition(0, 0); // No animation for this transition
-                finish();
-                return true;
-            } else if (itemId == R.id.social) {
-                // You're already on this page, so no need to do anything here.
-                return true;
-            } else if (itemId == R.id.userprofile) {
-                // Start the UserProfileActivity
-                Intent intent1 = new Intent(SocialActivity.this, UserProfileActivity.class);
-                intent1.putExtra("id", id);
-                intent.putStringArrayListExtra("codes", codes);
-                startActivity(intent1);
-                overridePendingTransition(0, 0); // No animation for this transition
-                finish();
-                return true;
-            }
-
-            return false;
-        });
 
         searchBar = findViewById(R.id.search);
         friendsRecyclerView = findViewById(R.id.friendsRecyclerView);
