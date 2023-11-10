@@ -33,21 +33,12 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    <!-- The H2 database dependency -->
-<!--    <dependency>-->
-<!--        <groupId>com.h2database</groupId>-->
-<!--        <artifactId>h2</artifactId>-->
-<!--        <version>1.4.200</version>-->
-<!--        <scope>runtime</scope>-->
-<!--    </dependency>-->
-
     <!-- Swagger UI dependency -->
     <dependency>
       <groupId>io.springfox</groupId>
       <artifactId>springfox-boot-starter</artifactId>
       <version>3.0.0</version>
     </dependency>
-
 
     <dependency>
       <groupId>mysql</groupId>
@@ -78,19 +69,11 @@
       <artifactId>lombok</artifactId>
     </dependency>
 
-
     <!--		dependency for websocket-->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-websocket</artifactId>
     </dependency>
-
-    <!--		dependency for websocket-->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-websocket</artifactId>
-    </dependency>
-
   </dependencies>
 
 
