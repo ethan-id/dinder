@@ -28,6 +28,8 @@ auto-deploy:
   stage: mavendeploy    # one of the stages listed above
   tags:
   - spring      # change to your runner's tag
+  only:
+    - main
   script:               # script to run the deployment service you created
     - cd Backend        # change 'Backend' to to where you have the pom.xml (do not add / in the beginning)
     - sudo mv target/*.jar /target/web-demo.jar 
