@@ -120,26 +120,37 @@ public class ChatServer {
         String username = sessionUsernameMap.get(session);
         // server side log
         logger.info("[onMessage] " + username + ": " + message);
+        User user = new User();
+        try {
+            user = userRepository.findByUsername(username);
+        }
+        catch (Exception e) {
+            broadcast("user does not exist");
+            return;
+        }
 
         // Direct message to a user using the format "@username <message>"
         if(message.contains("invite@")){
+
+            /**
+             * What if we made a class type 'Request' where it corresponded to a table on the database and had an id and had
+             * its own repository and then when a request is fufilled we delete it from the repository. A request could be
+             * made to invite a friend and it would correspond to the id. And then we can check if the id has been resolved or not,
+             * if it exists then it is accepted and if it does not then it is declined.
+             */
+
             // map current group session with username
             groupSessionUsernameMap.putIfAbsent(session, username);
             // map current group username with session
             groupUsernameSessionMap.putIfAbsent(username, session);
-            /**
-             * Note to morning Jesse:
-             * The groupUsernameSessionMap and the groupSessionUsernameMap do not increase in size
-             * I think the put method may overwrite the current user in it
-             * Otherwise it is not adding to the group
-             */
+
             String usernameToAdd = message.substring(7);    //@username and get rid of @
             // map current group session with username
-            groupSessionUsernameMap.putIfAbsent(session, usernameToAdd);
+            groupSessionUsernameMap.putIfAbsent(session, "absent");
             // map current group username with session
-            groupUsernameSessionMap.putIfAbsent(usernameToAdd, session);
+            groupUsernameSessionMap.putIfAbsent("absent", session);
 
-            sendMessageToPArticularUser(usernameToAdd, "invitee@"+usernameToAdd);
+            sendMessageToPArticularUser(usernameToAdd, user.getName() + " invited you to Dinder!");
             sendMessageToPArticularUser(username, "invited@"+usernameToAdd);
 
         }
@@ -165,7 +176,6 @@ public class ChatServer {
 //            broadcast(username + ": " + message);
 //        }
         if (message.contains("@") && message.contains("like")) {
-            User user = new User();
             try {
                 user = userRepository.findByUsername(username);
             }
