@@ -38,7 +38,10 @@ android-build:
   image: afirefly/android-ci:java17 # Docker image that has Android environments installed    
   stage: androidbuild               # one of the stages listed above
   tags:
-   - android                    # change to your runner's tag
+   - android 
+  retry:
+    max: 2
+    when: always                # change to your runner's tag
   before_script:                    # enable gradlew, change 'Frontend' to where you have 'gradlew'
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - chmod +x ./Frontend/dinder/gradlew
@@ -51,6 +54,9 @@ android-test:
    stage: androidtest               # one of the stages listed above
    tags:
     - android                   # change to your runner's tag
+   retry:
+     max: 2
+     when: always
    before_script:                   # enable gradlew, change 'Frontend' to where you have 'gradlew'
      - export GRADLE_USER_HOME=`pwd`/.gradle
      - chmod +x ./Frontend/dinder/gradlew
