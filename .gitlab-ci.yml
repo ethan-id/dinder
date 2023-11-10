@@ -53,6 +53,10 @@ android-build:
 android-test:
    image: afirefly/android-ci:java17
    stage: androidtest               # one of the stages listed above
+   cache:
+    paths:
+      - .gradle/caches
+      - .gradle/wrapper
    tags:
     - android                   # change to your runner's tag
    before_script:                   # enable gradlew, change 'Frontend' to where you have 'gradlew'
