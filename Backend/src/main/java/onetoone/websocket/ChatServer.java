@@ -2,6 +2,7 @@ package onetoone.websocket;
 
 import onetoone.Likes.LikeRepository;
 import onetoone.Likes.Liked;
+import onetoone.Requests.Request;
 import onetoone.Restaurants.Restaurant;
 import onetoone.Restaurants.RestaurantRepository;
 import onetoone.Users.User;
@@ -131,26 +132,29 @@ public class ChatServer {
 
         // Direct message to a user using the format "@username <message>"
         if(message.contains("invite@")){
-
-            /**
-             * What if we made a class type 'Request' where it corresponded to a table on the database and had an id and had
-             * its own repository and then when a request is fufilled we delete it from the repository. A request could be
-             * made to invite a friend and it would correspond to the id. And then we can check if the id has been resolved or not,
-             * if it exists then it is accepted and if it does not then it is declined.
-             */
-
             // map current group session with username
             groupSessionUsernameMap.putIfAbsent(session, username);
             // map current group username with session
             groupUsernameSessionMap.putIfAbsent(username, session);
 
             String usernameToAdd = message.substring(7);    //@username and get rid of @
-            // map current group session with username
-            groupSessionUsernameMap.putIfAbsent(session, "absent");
-            // map current group username with session
-            groupUsernameSessionMap.putIfAbsent("absent", session);
+            User userToAdd = new User();
+            try {
+                userToAdd = userRepository.findByUsername(usernameToAdd);
+            }
+            catch (Exception e) {
+                broadcast("user does not exist");
+                return;
+            }
+            Request request = new Request(message, userToAdd);
 
-            sendMessageToPArticularUser(usernameToAdd, user.getName() + " invited you to Dinder!");
+//
+//            // map current group session with username
+//            groupSessionUsernameMap.putIfAbsent(session, usernameToAdd);
+//            // map current group username with session
+//            groupUsernameSessionMap.putIfAbsent(usernameToAdd, session);
+
+            sendMessageToPArticularUser(usernameToAdd, user.getName() + " invited you to Dinder with them!");
             sendMessageToPArticularUser(username, "invited@"+usernameToAdd);
 
         }

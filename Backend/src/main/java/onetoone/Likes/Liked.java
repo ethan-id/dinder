@@ -26,7 +26,6 @@ public class Liked {
 
     /**
      * id is likeId
-     * @return
      */
     public int getId() {
         return id;
@@ -38,7 +37,6 @@ public class Liked {
 
     /**
      * name is restaurantId
-     * @return
      */
 
     public String getName() {

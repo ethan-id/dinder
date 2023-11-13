@@ -1,28 +1,30 @@
 package onetoone.Requests;
 
 import onetoone.Users.User;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Request {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String parameter;
 
-    private User creator;
-
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User invitedUser;
 
-    public Request(String parameter, User creator, User invitedUser) {
+    private boolean status;
+
+    @Autowired
+    RequestRepository requestRepository;
+
+    public Request(String parameter, User invitedUser) {
         this.parameter = parameter;
-        this.creator = creator;
         this.invitedUser = invitedUser;
+        this.status = true;
     }
 
     public int getId() {
@@ -33,12 +35,12 @@ public class Request {
         return parameter;
     }
 
-    public String getCreator() {
-        return creator.getUsername();
-    }
-
     public String getInvitedUser() {
         return invitedUser.getUsername();
+    }
+
+    public boolean getStatus() {
+        return status;
     }
 
     public void setId(int id) {
@@ -49,11 +51,14 @@ public class Request {
         this.parameter = parameter;
     }
 
-    public void setCreatedBy(User creator) {
-        this.creator = creator;
-    }
-
     public void setInvitedUser(User invitedUser) {
         this.invitedUser = invitedUser;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+        if (!this.status) {
+            requestRepository.deleteById(this.id);
+        }
     }
 }
