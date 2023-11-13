@@ -2,16 +2,14 @@ package com.example.dinder.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -20,9 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -31,6 +27,7 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
+import com.example.dinder.activities.utils.NavigationUtils;
 import com.example.dinder.websocket.WebSocketListener;
 import com.example.dinder.websocket.WebSocketManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -140,8 +137,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     private Dialog loadingDialog;
     /**
-     * ArrayList of Strings represting the specific identifiers of restaurants that the user has matched with
-     *
+     * ArrayList of Strings representing the specific identifiers of restaurants that the user has matched with
      * These are received through WebSocket messages sent from the backend and are used to send to the MatchesScreen
      */
     ArrayList<String> matchCodes = new ArrayList<>();
@@ -161,42 +157,30 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     private void setChip(int index, String tag) {
         switch (index) {
-            case 0:
-                runOnUiThread(() -> {
-                    chip2.setText(tag);
-                    chip2.setVisibility(View.VISIBLE);
-                });
-                break;
-            case 1:
-                runOnUiThread(() -> {
-                    chip3.setText(tag);
-                    chip3.setVisibility(View.VISIBLE);
-                });
-                break;
-            case 2:
-                runOnUiThread(() -> {
-                    chip4.setText(tag);
-                    chip4.setVisibility(View.VISIBLE);
-                });
-                break;
-            case 3:
-                runOnUiThread(() -> {
-                    chip5.setText(tag);
-                    chip5.setVisibility(View.VISIBLE);
-                });
-                break;
-            case 4:
-                runOnUiThread(() -> {
-                    chip6.setText(tag);
-                    chip6.setVisibility(View.VISIBLE);
-                });
-                break;
-            case 5:
-                runOnUiThread(() -> {
-                    chip7.setText(tag);
-                    chip7.setVisibility(View.VISIBLE);
-                });
-                break;
+            case 0 -> runOnUiThread(() -> {
+                chip2.setText(tag);
+                chip2.setVisibility(View.VISIBLE);
+            });
+            case 1 -> runOnUiThread(() -> {
+                chip3.setText(tag);
+                chip3.setVisibility(View.VISIBLE);
+            });
+            case 2 -> runOnUiThread(() -> {
+                chip4.setText(tag);
+                chip4.setVisibility(View.VISIBLE);
+            });
+            case 3 -> runOnUiThread(() -> {
+                chip5.setText(tag);
+                chip5.setVisibility(View.VISIBLE);
+            });
+            case 4 -> runOnUiThread(() -> {
+                chip6.setText(tag);
+                chip6.setVisibility(View.VISIBLE);
+            });
+            case 5 -> runOnUiThread(() -> {
+                chip7.setText(tag);
+                chip7.setVisibility(View.VISIBLE);
+            });
         }
     }
 
@@ -205,7 +189,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      * that only chips with valid content are displayed to the user. UI operations are
      * performed on the main thread to ensure smooth user experience.
      */
-
     private void hideEmptyChips() {
         runOnUiThread(() -> {
             if (chip1.getText().toString().equals("")) {
@@ -261,9 +244,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
                     }
                     try {
                         chip1.setText(currentRestaurant.getString("price"));
-                    } catch (JSONException e) {
-
-                    }
+                    } catch (JSONException ignored) {}
                     try {
                         rating.setText(currentRestaurant.getString("rating"));
                     } catch (JSONException e) {
@@ -372,6 +353,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      *                           previously being shut down, this Bundle contains the data it most recently
      *                           supplied in {@link #onSaveInstanceState}. Otherwise, it is null.
      */
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -419,76 +401,22 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         getRestaurants(queue);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
+        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, matchCodes);
         bottomNavigationView.setSelectedItemId(R.id.home);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-
-                if (itemId == R.id.home) {
-                    // You are already on UserHomeActivity, no need to do anything here.
-                    return true;
-                } else if (itemId == R.id.match) {
-                    startMatchesScreen(); // Start the MatchesScreen activity
-                    return true;
-                } else if (itemId == R.id.social) {
-                    startSocialActivity(); // Start the SocialActivity
-                    return true;
-                } else if (itemId == R.id.userprofile) {
-                    startUserProfileActivity(); // Start the UserProfileActivity
-                    return true;
-                }
-                return false;
-            }
-
-            private void startMatchesScreen() {
-                Intent intent = new Intent(UserHomeActivity.this, MatchesScreen.class);
-                intent.putExtra("id", id);
-                intent.putStringArrayListExtra("codes", matchCodes);
-                startActivity(intent);
-                overridePendingTransition(0, 0); // No animation for this transition
-            }
-
-            private void startSocialActivity() {
-                Intent intent = new Intent(UserHomeActivity.this, SocialActivity.class);
-                intent.putExtra("id", id);
-                intent.putStringArrayListExtra("codes", matchCodes);
-                startActivity(intent);
-                overridePendingTransition(0, 0); // No animation for this transition
-            }
-
-            private void startUserProfileActivity() {
-                Intent intent = new Intent(UserHomeActivity.this, UserProfileActivity.class);
-                intent.putExtra("id", id);
-                intent.putStringArrayListExtra("codes", matchCodes);
-                startActivity(intent);
-                overridePendingTransition(0, 0); // No animation for this transition
-            }
-        });
-
-
 
         dislike.setOnClickListener(v -> dislikeRestaurant());
         favorite.setOnClickListener(v -> likeRestaurant());
-        centerImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Intent restaurant = new Intent(UserHomeActivity.this, RestaurantProfileActivity.class);
-                    restaurant.putExtra("id", id);
-                    restaurant.putExtra("code", currentRestaurant.getString("id"));
-                    startActivity(restaurant);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
+        centerImage.setOnClickListener(v -> {
+            try {
+                Intent restaurant = new Intent(UserHomeActivity.this, RestaurantProfileActivity.class);
+                restaurant.putExtra("id", id);
+                restaurant.putExtra("code", currentRestaurant.getString("id"));
+                startActivity(restaurant);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
             }
         });
-        centerImage.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetector.onTouchEvent(event);
-            }
-        });
+        centerImage.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
 
         gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
@@ -502,12 +430,11 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
                     if (diffX > 0) {
                         // Right swipe
                         likeRestaurant();
-                        return true;
                     } else {
                         // Left swipe
                         dislikeRestaurant();
-                        return true;
                     }
+                    return true;
                 }
                 return super.onFling(e1, e2, velocityX, velocityY);
             }
@@ -517,11 +444,9 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     /**
      * Sends a "like" action for the current restaurant through a WebSocket connection and
      * prepares the next restaurant's information to be displayed.
-     *
      * The method retrieves the unique identifier of the current restaurant, sends it as a "like" action
      * through a WebSocket message, and logs this action. It then attempts to populate the screen with the
      * next restaurant in the list.
-     *
      * If the current restaurant's ID cannot be obtained due to a JSON parsing error, the method throws
      * a RuntimeException encapsulating the JSONException.
      *
@@ -543,11 +468,9 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     /**
      * Sends a "dislike" action for the current restaurant through a WebSocket connection and
      * prepares the next restaurant's information to be displayed.
-     *
      * This method performs an operation similar to {@link #likeRestaurant()} but for a "dislike" action.
      * It retrieves the unique identifier of the current restaurant, sends a "dislike" message through
      * the WebSocket, and logs this action. Subsequently, it moves to display the next restaurant's details.
-     *
      * If the current restaurant's ID cannot be obtained due to a JSON parsing error, the method throws
      * a RuntimeException encapsulating the JSONException.
      *
@@ -567,7 +490,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
 
     /**
      * Sends a "like" action for a restaurant to the server via WebSocket.
-     *
      * This method checks if the provided restaurant code is not null or empty and sends a "like" action
      * prefixed to the restaurant code via WebSocket. This indicates that the user has liked a particular
      * restaurant.
@@ -581,7 +503,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
 
     /**
      * Sends a "dislike" action for a restaurant to the server via WebSocket.
-     *
      * This method is similar to {@link #sendLikeThroughWebSocket(String)} but for sending a "dislike"
      * action. If the provided restaurant code is valid (not null or empty), it prefixes the code with "dislike@"
      * and sends it via WebSocket to indicate that the user has disliked the restaurant.
@@ -594,7 +515,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
 
     /**
      * Shows a temporary notification with a fade-in animation, then fades out after a set time.
-     *
      * This method starts an animation that fades in the notification container, makes it visible, and logs
      * the animation start. After a delay of 3 seconds, it initiates a fade-out animation and hides the
      * notification container once the animation ends. This provides a transient visual feedback to the user.
@@ -649,9 +569,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     public void onWebSocketMessage(String message) {
         // If the message is an invitation show notification on screen, telling user who invited them to a group
         if (message.contains("Match")) {
-            runOnUiThread(() -> {
-                showNotification();
-            });
+            runOnUiThread(this::showNotification);
             String code = message.split("@")[1];
             matchCodes.add(code);
             Log.d("Code", code);
@@ -673,7 +591,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
 
     /**
      * Initializes and configures a non-cancellable loading dialog.
-     *
      * This method sets up a new dialog intended to indicate that a loading process is ongoing. The dialog is
      * made non-cancellable, meaning the user cannot dismiss it by pressing back or touching outside the dialog.
      * This is often used to prevent user interaction while waiting for a background task to complete.
@@ -683,7 +600,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         loadingDialog = new Dialog(this);
         loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         loadingDialog.setContentView(R.layout.loading);
-        loadingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(loadingDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         loadingDialog.setCancelable(false); // prevents users from cancelling the dialog
     }
 

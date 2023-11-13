@@ -14,6 +14,7 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
+import com.example.dinder.activities.utils.NavigationUtils;
 import com.example.dinder.websocket.WebSocketListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -90,46 +91,8 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
         ratingIcon = findViewById(R.id.ratingIcon);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
+        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes);
         bottomNavigationView.setSelectedItemId(R.id.match);
-
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-
-            if (itemId == R.id.home) {
-                // Start the UserHomeActivity without animation
-                Intent intent1 = new Intent(MatchesScreen.this, UserHomeActivity.class);
-                intent1.putExtra("id", id);
-                intent1.putExtra("connected", true);
-                intent1.putStringArrayListExtra("codes", codes);
-                startActivity(intent1);
-                overridePendingTransition(0, 0); // No animation for this transition
-                finish();
-                return true;
-            } else if (itemId == R.id.match) {
-                // You're already on this page, so no need to do anything here.
-                return true;
-            } else if (itemId == R.id.social) {
-                // Start the SocialActivity without animation
-                Intent intent1 = new Intent(MatchesScreen.this, SocialActivity.class);
-                intent1.putExtra("id", id);
-                intent1.putStringArrayListExtra("codes", codes);
-                startActivity(intent1);
-                overridePendingTransition(0, 0); // No animation for this transition
-                finish();
-                return true;
-            } else if (itemId == R.id.userprofile) {
-                // Start the UserProfileActivity without animation
-                Intent intent1 = new Intent(MatchesScreen.this, UserProfileActivity.class);
-                intent1.putExtra("id", id);
-                intent1.putStringArrayListExtra("codes", codes);
-                startActivity(intent1);
-                overridePendingTransition(0, 0); // No animation for this transition
-                finish();
-                return true;
-            }
-
-            return false;
-        });
     }
 
     /**
