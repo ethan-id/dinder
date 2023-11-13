@@ -39,6 +39,10 @@ auto-deploy:
 android-build:
   image: afirefly/android-ci:java17 # Docker image that has Android environments installed    
   stage: androidbuild               # one of the stages listed above
+  cache:
+    paths:
+      - .gradle/caches
+      - .gradle/wrapper
   tags:
    - android 
   retry:
@@ -54,6 +58,10 @@ android-build:
 android-test:
    image: afirefly/android-ci:java17
    stage: androidtest               # one of the stages listed above
+   cache:
+    paths:
+      - .gradle/caches
+      - .gradle/wrapper
    tags:
     - android                   # change to your runner's tag
    retry:
