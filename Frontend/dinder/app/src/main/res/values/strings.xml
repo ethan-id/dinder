@@ -62,4 +62,6 @@
     <string name="uh_oh">UH OH</string>
     <string name="unfortunately_the_page_you_are_to_reach_is_not_available_at_this_moment_please_try_again_later">Unfortunately the page you are to reach is not available at this moment. Please try again later.</string>
     <string name="phone_icon">Phone Icon</string>
+    <string name="reviews">Reviews</string>
+    <string name="user_review_image">User Review Image</string>
 </resources>
