@@ -138,8 +138,8 @@ public class LoginActivity extends AppCompatActivity {
         setupLoadingDialog();
 
         notificationContainer = findViewById(R.id.notification_layout);
-        loginBtn = findViewById(R.id.signUpBtn);
-        signUpBtn = findViewById(R.id.backToLoginBtn);
+        loginBtn = findViewById(R.id.loginBtn);
+        signUpBtn = findViewById(R.id.mainSignUpBtn);
         username = findViewById(R.id.editTextUsername);
         password = findViewById(R.id.editTextPassword);
         logo = findViewById(R.id.appLogo);

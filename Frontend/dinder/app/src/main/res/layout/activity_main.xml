@@ -62,7 +62,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/signUpBtn"
+        android:id="@+id/loginBtn"
         style="@style/Button.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,11 +71,11 @@
         android:text="@string/login"
         android:textColor="@color/white"
         android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/backToLoginBtn"
+        app:layout_constraintStart_toEndOf="@+id/mainSignUpBtn"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/backToLoginBtn"
+        android:id="@+id/mainSignUpBtn"
         style="@style/Button.Secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
