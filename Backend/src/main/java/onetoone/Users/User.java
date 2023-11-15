@@ -32,7 +32,7 @@ public class User {
     @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
     private Set<Liked> likes;
 
-    @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="invitedUser", fetch = FetchType.EAGER)
     private Set<Request> requests;
 
     @ManyToMany(fetch = FetchType.EAGER)
