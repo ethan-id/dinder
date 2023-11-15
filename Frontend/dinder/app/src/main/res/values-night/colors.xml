@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="dark_gray">#333333</color>
+    <color name="gray">#757575</color>
+    <color name="light_gray">#a3a3a3</color>
+    <color name="lighter_gray">#bcbcbc</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="maroon">#800000</color>
+    <color name="beige">#F5F5DC</color>
+
+    <color name="primary_background">#333333</color>
+    <color name="secondary_background">#A3A3A3</color>
+    <color name="button_text_primary">#FFFFFF</color>
+    <color name="button_text_second">#101010</color>
+</resources>
