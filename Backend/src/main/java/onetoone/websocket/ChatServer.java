@@ -146,6 +146,13 @@ public class ChatServer {
 //        else { // Message to whole chat
 //            broadcast(username + ": " + message);
 //        }
+        if(message.contains("leave")){
+            sendMessageToPArticularUser(username,"Thanks for Dindering!");
+            groupUsernameSessionMap.remove(username);
+            userRepository.findByUsername(username).clearLikes();
+            userRepository.save(userRepository.findByUsername(username));
+        }
+
         if (message.startsWith("@")) {
 
             // split by space
@@ -206,7 +213,7 @@ public class ChatServer {
                                 sendMessageToPArticularUser(GroupMember.getKey(), "Match@" +  newMessage[1]);
                             }
                             addFavorite(newMessage[1]);
-                            reset();
+                            numberOfLikes = 0;
                             break;
                         }
                         numberOfLikes = 0;
@@ -236,6 +243,9 @@ public class ChatServer {
         // remove user from memory mappings
         sessionUsernameMap.remove(session);
         usernameSessionMap.remove(username);
+
+        groupSessionUsernameMap.remove(session);
+        groupUsernameSessionMap.remove(username);
 
         // send the message to chat
         broadcast(username + " disconnected");
@@ -312,7 +322,8 @@ public class ChatServer {
             likeRepository.deleteAll(userLikes);
             userLikes.clear();
             userRepository.save(userRepository.findByUsername(GroupMember.getKey()));
-
+            groupUsernameSessionMap.clear();
+            groupSessionUsernameMap.clear();
         }
     }
 
