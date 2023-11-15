@@ -2,6 +2,7 @@ package onetoone.Users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import onetoone.Likes.Liked;
+import onetoone.Requests.Request;
 import onetoone.Restaurants.Restaurant;
 
 import javax.persistence.*;
@@ -30,6 +31,9 @@ public class User {
     private boolean halal;
     @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
     private Set<Liked> likes;
+
+    @OneToMany(mappedBy="invitedUser", fetch = FetchType.EAGER)
+    private Set<Request> requests;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -71,6 +75,7 @@ public class User {
         this.favoriteRestaurants = new HashSet<Restaurant>();
         this.friends = new HashSet<User>();
         this.friendsOf = new HashSet<User>();
+        this.requests = new HashSet<Request>();
     }
 
     public User() {
@@ -133,12 +138,12 @@ public class User {
     }
 
     public Set<Liked> getLikes() { return likes; }
+    public Set<Request> getRequests() {return requests; }
     public void setNewLike(Liked like) { likes.add(like); }
-
+    public void setNewRequest(Request request) { requests.add(request); }
     public void clearLikes(){
         getLikes().clear();
     }
-
     public Set<Restaurant> getFavoriteRestaurants(){
         return favoriteRestaurants;
     }
@@ -171,6 +176,7 @@ public class User {
             response.add(Objects.requireNonNull(user.getUsername()));
         }
         return response; }
+
 
 
     //    public void setFavoriteRestaurants(Set<Restaurant> favorites){ this.favoriteRestaurants = favorites;}

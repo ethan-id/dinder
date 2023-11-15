@@ -2,6 +2,7 @@ package onetoone.websocket;
 
 import onetoone.Likes.LikeRepository;
 import onetoone.Likes.Liked;
+import onetoone.Requests.Request;
 import onetoone.Restaurants.Restaurant;
 import onetoone.Restaurants.RestaurantRepository;
 import onetoone.Users.User;
@@ -120,6 +121,14 @@ public class ChatServer {
         String username = sessionUsernameMap.get(session);
         // server side log
         logger.info("[onMessage] " + username + ": " + message);
+        User user = new User();
+        try {
+            user = userRepository.findByUsername(username);
+        }
+        catch (Exception e) {
+            broadcast("user does not exist");
+            return;
+        }
 
         // Direct message to a user using the format "@username <message>"
         if(message.contains("invite@")){
@@ -127,19 +136,25 @@ public class ChatServer {
             groupSessionUsernameMap.putIfAbsent(session, username);
             // map current group username with session
             groupUsernameSessionMap.putIfAbsent(username, session);
-            /**
-             * Note to morning Jesse:
-             * The groupUsernameSessionMap and the groupSessionUsernameMap do not increase in size
-             * I think the put method may overwrite the current user in it
-             * Otherwise it is not adding to the group
-             */
-            String usernameToAdd = message.substring(7);    //@username and get rid of @
-            // map current group session with username
-            groupSessionUsernameMap.putIfAbsent(session, usernameToAdd);
-            // map current group username with session
-            groupUsernameSessionMap.putIfAbsent(usernameToAdd, session);
 
-            sendMessageToPArticularUser(usernameToAdd, "invitee@"+usernameToAdd);
+            String usernameToAdd = message.substring(7);    //@username and get rid of @
+            User userToAdd = new User();
+            try {
+                userToAdd = userRepository.findByUsername(usernameToAdd);
+            }
+            catch (Exception e) {
+                broadcast("user does not exist");
+                return;
+            }
+            Request request = new Request(message, userToAdd);
+
+//
+//            // map current group session with username
+//            groupSessionUsernameMap.putIfAbsent(session, usernameToAdd);
+//            // map current group username with session
+//            groupUsernameSessionMap.putIfAbsent(usernameToAdd, session);
+
+            sendMessageToPArticularUser(usernameToAdd, user.getName() + " invited you to Dinder with them!");
             sendMessageToPArticularUser(username, "invited@"+usernameToAdd);
 
         }
@@ -165,7 +180,6 @@ public class ChatServer {
 //            broadcast(username + ": " + message);
 //        }
         if (message.contains("@") && message.contains("like")) {
-            User user = new User();
             try {
                 user = userRepository.findByUsername(username);
             }
