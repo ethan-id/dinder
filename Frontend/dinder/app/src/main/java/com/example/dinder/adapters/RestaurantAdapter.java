@@ -89,7 +89,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
          */
         TextView restaurantName, restaurantAddress;
         /**
-         * ImageView wigets for the heart icon, and the restaurant's image
+         * ImageView widget for the heart icon
          */
         ImageView heartIcon;
         /**
