@@ -1,6 +1,8 @@
 package com.example.dinder.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,12 +16,18 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
+import com.example.dinder.adapters.ReviewAdapter;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * The Restaurant Profile screen, used to display a specific Restaurant's information
@@ -57,6 +65,14 @@ public class RestaurantProfileActivity extends AppCompatActivity {
      * A JSONObject containing all the restaurant's information
      */
     JSONObject restaurant;
+    /**
+     * List of reviews of the restaurant as JSON Objects
+     */
+    ArrayList<JSONObject> reviews = new ArrayList<>();
+
+    private RecyclerView reviewRecyclerView;
+    private RecyclerView.Adapter reviewAdapter;
+    private RecyclerView.LayoutManager reviewLayoutManager;
 
     /**
      * Fetches the restaurant data from the server based on the given user ID.
@@ -80,6 +96,47 @@ public class RestaurantProfileActivity extends AppCompatActivity {
                 Log.d("restaurant", restaurant.toString());
             },
             Throwable::printStackTrace
+        ));
+    }
+
+    /**
+     * Fetches and processes restaurant reviews from a remote server.
+     *
+     * This method makes a GET request to a specified URL to retrieve restaurant reviews.
+     * Each review is expected to be in JSON format. The method adds all received reviews to
+     * a local collection, `reviews`. In case of a JSON parsing error, it throws a runtime exception.
+     *
+     * @param code The unique code or identifier for the restaurant whose reviews are to be fetched.
+     *             This code is appended to the URL endpoint to specify the restaurant.
+     * @throws RuntimeException if there is a JSONException while parsing the response.
+     */
+    private void getRestaurantReviews(String code) {
+        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+        String url = "http://coms-309-055.class.las.iastate.edu:8080/restaurant/reviews/" + code;
+
+        queue.add(new JsonObjectRequest(
+                Request.Method.GET, url, null,
+                response -> {
+                    JSONArray rev;
+                    try {
+                        rev = response.getJSONArray("reviews");
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                    for (int i = 0; i < rev.length(); i++) {
+                        try {
+                            reviews.add(rev.getJSONObject(i));
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+                    // Specify an adapter and populate reviews list
+                    reviewAdapter = new ReviewAdapter(reviews);
+                    Log.d("reviews", reviews.toString());
+                    reviewRecyclerView.setAdapter(reviewAdapter);
+                },
+                Throwable::printStackTrace
         ));
     }
 
@@ -137,6 +194,16 @@ public class RestaurantProfileActivity extends AppCompatActivity {
         String id = sentIntent.getStringExtra("id");
 
         getRestaurant(code);
+        getRestaurantReviews(code);
+
+        reviewRecyclerView = findViewById(R.id.reviewList);
+
+        // Use this setting to improve performance
+        reviewRecyclerView.setHasFixedSize(true);
+
+        // Use a linear layout manager
+        reviewLayoutManager = new LinearLayoutManager(this);
+        reviewRecyclerView.setLayoutManager(reviewLayoutManager);
 
         backBtn.setOnClickListener(v -> {
             Intent homeScreen = new Intent(RestaurantProfileActivity.this, UserHomeActivity.class);
