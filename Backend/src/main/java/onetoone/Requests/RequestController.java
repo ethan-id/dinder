@@ -38,7 +38,7 @@ public class RequestController {
             Request creatorRequest = new Request(parameter, userRepository.findByUsername(creator), "You sent a " + parameter + " request to " + invited);
             userRepository.findByUsername(creator).setNewRequest(creatorRequest);
             requestRepository.save(creatorRequest);
-            Request invitedRequest = new Request(parameter, userRepository.findByUsername(invited), creator + " sent you a " + parameter + " request");
+            Request invitedRequest = new Request(parameter, userRepository.findByUsername(invited), creator + " sent you a " + parameter + " request with ID " + creatorRequest.getId());
             userRepository.findByUsername(invited).setNewRequest(invitedRequest);
             requestRepository.save(invitedRequest);
             return success;
@@ -54,9 +54,17 @@ public class RequestController {
             return;
         }
         try {
-           Request request = requestRepository.findById(id);
-           request.setStatus(false);
-           requestRepository.delete(request);
+           Request invitedRequest = requestRepository.findById(id);
+           String message = invitedRequest.getMessage();
+           try {
+               int newId = Integer.parseInt(message.substring(message.length() - 1));
+               Request newRequest = requestRepository.findById(newId);
+               newRequest.setStatus(false);
+               requestRepository.delete(newRequest);
+           }
+           catch (Exception e) { }
+           invitedRequest.setStatus(false);
+           requestRepository.delete(invitedRequest);
         }
         catch (Exception e) {
             System.out.println("finding or deleting the request did not work :(");

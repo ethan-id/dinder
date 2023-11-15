@@ -146,7 +146,7 @@ public class ChatServer {
                 broadcast("user does not exist");
                 return;
             }
-            Request request = new Request(message, userToAdd);
+           // Request request = new Request(message, userToAdd);
 
 //
 //            // map current group session with username
