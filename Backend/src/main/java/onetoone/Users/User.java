@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import onetoone.Likes.Liked;
 import onetoone.Requests.Request;
 import onetoone.Restaurants.Restaurant;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -43,14 +44,14 @@ public class User {
     )
     private Set<Restaurant> favoriteRestaurants;
 
-    @ManyToMany(cascade={CascadeType.ALL})
+    @ManyToMany(cascade={CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinTable(name="friends_with",
             joinColumns={@JoinColumn(name="person_id")},
             inverseJoinColumns={@JoinColumn(name="friend_id")})
     @JsonIgnore
     private Set<User> friends = new HashSet<User>();
 
-    @ManyToMany(mappedBy="friends")
+    @ManyToMany(mappedBy="friends", fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<User> friendsOf = new HashSet<User>();
 
@@ -152,12 +153,16 @@ public class User {
         favoriteRestaurants.add(restaurant);
     }
 
+    public void addFriend(User friend) { this.friends.add(friend); }
+    @Transactional
     public Set<User> getFriends() {
         return friends;
     }
 
+    @Transactional
     public void removeFriend(User friend) { if (friend != null) { friends.remove(friend); } }
 
+    @Transactional
     public User findFriendByUsername(String friend) {
         if (friend != null) {
             for (User user : friends) {
@@ -170,6 +175,7 @@ public class User {
         return null;
     }
 
+    @Transactional
     public Set<String> getAllFriends() {
         Set response = new HashSet<String>();
         for (User user : friends) {
