@@ -54,23 +54,37 @@ public class RequestController {
             Request newRequest = requestRepository.findById(id);
             User creator = Objects.requireNonNull(userRepository.findByUsername(newRequest.getMessage().substring(0, newRequest.getMessage().indexOf(' '))));
             User friend = Objects.requireNonNull(userRepository.findByUsername(newRequest.getInvitedUser()));
-            creator.addFriend(friend);
-            friend.addFriend(creator);
-            userRepository.save(creator);
-            userRepository.save(friend);
-            for (Request request : creator.getRequests()) {
-                if (request.getParameter().equals("friend") && request.getId() == (newRequest.getId() + 1)) {
-                    request.setStatus(false);
-                    requestRepository.delete(request);
+            if (newRequest.getParameter().equals("friend")) {
+                creator.addFriend(friend);
+                friend.addFriend(creator);
+                userRepository.save(creator);
+                userRepository.save(friend);
+                for (Request request : creator.getRequests()) {
+                    if (request.getParameter().equals("friend") && request.getId() == (newRequest.getId() + 1)) {
+                        request.setStatus(false);
+                        requestRepository.delete(request);
+                        newRequest.setStatus(false);
+                        requestRepository.delete(newRequest);
+                        return success;
+                    }
                 }
             }
-            newRequest.setStatus(false);
-            requestRepository.delete(newRequest);
+            else if (newRequest.getParameter().equals("group")){
+                for (Request request : creator.getRequests()) {
+                    if (request.getParameter().equals("group") && request.getId() == (newRequest.getId() + 1)) {
+                        request.setStatus(false);
+                        requestRepository.save(request);
+                        newRequest.setStatus(false);
+                        requestRepository.save(newRequest);
+                        return success;
+                    }
+                }
+            }
         } catch (Exception e) {
             logger.info("deleting the request did not work :(");
             return "deleting the request did not work :(";
         }
-        return success;
+        return failure;
     }
 
     @DeleteMapping(path = "/request/delete/{id}")

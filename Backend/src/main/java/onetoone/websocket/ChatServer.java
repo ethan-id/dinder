@@ -152,6 +152,32 @@ public class ChatServer {
                 broadcast("user does not exist");
                 return;
             }
+            for (Request request : user.getRequests()) {
+                if (request.getParameter().equals("group") && request.getMessage().substring(27).contains(usernameToAdd)  && !request.getStatus()) {
+                    for (Request friendsRequests : userToAdd.getRequests()) {
+                        if (friendsRequests.getParameter().equals("group") && !friendsRequests.getStatus() && friendsRequests.getMessage().substring(0, friendsRequests.getMessage().indexOf(' ')).equals(username)) {
+                            groupSessionUsernameMap.putIfAbsent(session, username);
+                            groupUsernameSessionMap.putIfAbsent(username, session);
+                            groupSessionUsernameMap.putIfAbsent(session, usernameToAdd);
+                            groupUsernameSessionMap.putIfAbsent(usernameToAdd, session);
+                            requestRepository.delete(request);
+                            requestRepository.delete(friendsRequests);
+                            groupBroadcast(usernameToAdd + " has joined the group!");
+                            return;
+                        }
+                    }
+                }
+            }
+            Request invitedGroupRequest = new Request("group", userToAdd, user.getUsername() + " invited you to Dinder!");
+            requestRepository.save(invitedGroupRequest);
+            userToAdd.setNewRequest(invitedGroupRequest);
+            userRepository.save(userToAdd);
+            Request creatorGroupRequest = new Request("group", user, "You requested to Dinder with " + usernameToAdd + " with ID " + invitedGroupRequest.getId());
+            requestRepository.save(creatorGroupRequest);
+            user.setNewRequest(creatorGroupRequest);
+            userRepository.save(user);
+            sendMessageToPArticularUser(username, "You requested to Dinder with " + usernameToAdd);
+            sendMessageToPArticularUser(usernameToAdd, username + " invited you to Dinder!");
            // Request request = new Request(message, userToAdd);
 
 //
@@ -159,10 +185,6 @@ public class ChatServer {
 //            groupSessionUsernameMap.putIfAbsent(session, usernameToAdd);
 //            // map current group username with session
 //            groupUsernameSessionMap.putIfAbsent(usernameToAdd, session);
-
-            sendMessageToPArticularUser(usernameToAdd, user.getName() + " invited you to Dinder with them!");
-            sendMessageToPArticularUser(username, "invited@"+usernameToAdd);
-
         }
 
         //Sending a friend request
@@ -174,8 +196,6 @@ public class ChatServer {
                         sendMessageToPArticularUser(username, friend.getUsername() + " is already your friend");
                     }
                 }
-            }
-            if (!user.getRequests().isEmpty()) {
                 for (Request request : user.getRequests()) {
                     if (request.getInvitedUser().equals(potentialFriend.getUsername()) && request.getParameter().equals("friend")) {
                         sendMessageToPArticularUser(username, "There is already a pending friend request for you and " + request.getInvitedUser());
