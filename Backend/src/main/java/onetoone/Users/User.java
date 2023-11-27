@@ -1,6 +1,7 @@
 package onetoone.Users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import onetoone.Favorites.Favorite;
 import onetoone.Likes.Liked;
 import onetoone.Requests.Request;
 import onetoone.Restaurants.Restaurant;
@@ -36,13 +37,8 @@ public class User {
     @OneToMany(mappedBy="invitedUser", fetch = FetchType.EAGER)
     private Set<Request> requests;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_restaurant_favorite",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "restaurant_id")
-    )
-    private Set<Restaurant> favoriteRestaurants;
+    @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
+    private Set<Favorite> favoriteRestaurants;
 
     @ManyToMany(cascade={CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinTable(name="friends_with",
@@ -73,7 +69,7 @@ public class User {
         this.vegitarian = false;
         this.halal = false;
         this.likes = new HashSet<Liked>();
-        this.favoriteRestaurants = new HashSet<Restaurant>();
+        this.favoriteRestaurants = new HashSet<Favorite>();
         this.friends = new HashSet<User>();
         this.friendsOf = new HashSet<User>();
         this.requests = new HashSet<Request>();
@@ -145,12 +141,12 @@ public class User {
     public void clearLikes(){
         getLikes().clear();
     }
-    public Set<Restaurant> getFavoriteRestaurants(){
+    public Set<Favorite> getFavoriteRestaurants(){
         return favoriteRestaurants;
     }
 
-    public void addFavorite(Restaurant restaurant){
-        favoriteRestaurants.add(restaurant);
+    public void addFavorite(Favorite favorite){
+        favoriteRestaurants.add(favorite);
     }
 
     public void addFriend(User friend) { this.friends.add(friend); }

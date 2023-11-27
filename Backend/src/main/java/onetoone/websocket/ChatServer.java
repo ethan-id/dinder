@@ -1,5 +1,11 @@
 package onetoone.websocket;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
+import onetoone.Favorites.Favorite;
+import onetoone.Favorites.FavoriteRepository;
 import onetoone.Likes.LikeRepository;
 import onetoone.Likes.Liked;
 import onetoone.Requests.Request;
@@ -53,6 +59,7 @@ public class ChatServer {
     private static UserRepository userRepository;
     private static RestaurantRepository restaurantRepository;
     private static LikeRepository likeRepository;
+    private static FavoriteRepository favoriteRepository;
     private static RequestRepository requestRepository;
 
     @Autowired
@@ -67,6 +74,9 @@ public class ChatServer {
     public void setLikeRepository(LikeRepository likeRepository) {
         this.likeRepository = likeRepository;
     }
+    @Autowired
+    public void setFavoriteRepository(FavoriteRepository favoriteRepository){this.favoriteRepository = favoriteRepository;}
+
     @Autowired
     public void setRequestRepository(RequestRepository repo) {
         requestRepository = repo;
@@ -219,6 +229,7 @@ public class ChatServer {
         if(message.contains("leave")){
             sendMessageToPArticularUser(username,"Thanks for Dindering!");
             groupUsernameSessionMap.remove(username);
+            groupSessionUsernameMap.remove(session);
             userRepository.findByUsername(username).clearLikes();
             userRepository.save(userRepository.findByUsername(username));
         }
@@ -280,8 +291,10 @@ public class ChatServer {
                         if (numberOfLikes == groupUsernameSessionMap.size()) {
                             for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
                                 sendMessageToPArticularUser(GroupMember.getKey(), "Match@" +  newMessage[1]);
+                                Favorite favorite = new Favorite(newMessage[1]);
+                                userRepository.findByUsername(GroupMember.getKey()).addFavorite(favorite);
+                                userRepository.save(userRepository.findByUsername(GroupMember.getKey()));
                             }
-                            addFavorite(newMessage[1]);
                             numberOfLikes = 0;
                             break;
                         }
@@ -290,7 +303,12 @@ public class ChatServer {
                 }
             }
             else {
-                broadcast("Match@" + newMessage[1]);
+                sendMessageToPArticularUser(username,"Match@" + newMessage[1]);
+                Favorite favorite = new Favorite(newMessage[1]);
+                favorite.setUser(Objects.requireNonNull(user));
+                userRepository.findByUsername(username).addFavorite(favorite);
+                favoriteRepository.save(favorite);
+                userRepository.save(userRepository.findByUsername(username));
             }
         }
     }
@@ -386,36 +404,14 @@ public class ChatServer {
         });
     }
     private void reset(){
-        for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
-            Set<Liked> userLikes = userRepository.findByUsername(GroupMember.getKey()).getLikes();
-            likeRepository.deleteAll(userLikes);
-            userLikes.clear();
-            userRepository.save(userRepository.findByUsername(GroupMember.getKey()));
-            groupUsernameSessionMap.clear();
-            groupSessionUsernameMap.clear();
-        }
-    }
-
-    private void addFavorite(String match){
-        Restaurant restaurant = restaurantRepository.findByCode(match);
-        if (restaurant == null) {
-            // Log or throw an exception if the restaurant isn't found.
-            return;
-        }
-        for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
-            User user = userRepository.findByUsername(GroupMember.getKey());
-
-            if (user == null) {
-                // Log or throw an exception if the user isn't found.
-                continue;  // skip to the next iteration
+            for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
+                Set<Liked> userLikes = userRepository.findByUsername(GroupMember.getKey()).getLikes();
+                likeRepository.deleteAll(userLikes);
+                userLikes.clear();
+                userRepository.save(userRepository.findByUsername(GroupMember.getKey()));
+                groupUsernameSessionMap.clear();
+                groupSessionUsernameMap.clear();
             }
-            user.addFavorite(restaurant);
-            restaurant.addFavoritedByUsers(user);
-            userRepository.save(user);
-            // Consider batching this save call if you have a large number of users to optimize further.
-        }
-
-        restaurantRepository.save(restaurant);
-        // You might want to move this outside the loop if every user is favoriting the same restaurant. This way, you only save once.
     }
+
 }
