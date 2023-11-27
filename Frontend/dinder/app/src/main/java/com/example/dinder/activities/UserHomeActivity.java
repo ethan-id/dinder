@@ -619,12 +619,24 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     /**
      * Hides the loading dialog if it is currently displayed on the screen.
      * This method checks the current state of the loadingDialog instance and
-     * dismisses it if it is visible. This is typically called when an operation
-     * that requires a loading indicator is completed or cancelled.
+     * dismisses it if it is visible. Additionally, it checks if the activity
+     * is still attached to the window before dismissing the dialog to prevent
+     * illegal state exceptions.
      */
     private void hideLoadingDialog() {
-        if (loadingDialog != null && loadingDialog.isShowing()) {
+        if (loadingDialog != null && loadingDialog.isShowing() && isActivityAttached()) {
             loadingDialog.dismiss();
         }
+    }
+
+    /**
+     * Checks if the activity is currently attached to the window.
+     * This is useful to ensure that we are not attempting to perform UI
+     * operations on a detached activity.
+     *
+     * @return true if the activity is attached to the window, false otherwise.
+     */
+    private boolean isActivityAttached() {
+        return getWindow() != null && getWindow().getDecorView().getWindowToken() != null;
     }
 }
