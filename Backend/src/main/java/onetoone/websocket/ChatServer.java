@@ -72,8 +72,6 @@ public class ChatServer {
     @Autowired
     public void setFavoriteRepository(FavoriteRepository favoriteRepository){this.favoriteRepository = favoriteRepository;}
 
-    String JesseKey = "Bearer MVfL5KGDWbaFAwn7beZaNIdCJZ95r8o09YFJgksy9pN8Q7bgqEhRbJKdtBdLPPmss6xv9mz3s3OTEAAu3oWaCJu5J838o1Aouy68aK2--ugkynfBSbLHKqqfVRr5ZHYx";
-
     /*
      * Grabs the MessageRepository singleton from the Spring Application
      * Context.  This works because of the @Controller annotation on this
@@ -317,9 +315,7 @@ public class ChatServer {
             // map current group username with session
             groupUsernameSessionMap.put(username, session);
             sendMessageToPArticularUser(username, "[Group " + username + "]: You are in a group ");
-        } //else { // Message to whole chat
-//            broadcast(username + ": " + message);
-//        }
+        }
     }
 
     /**
@@ -356,51 +352,4 @@ public class ChatServer {
                 groupSessionUsernameMap.clear();
             }
     }
-
-//    private void addFavorite(String code) throws IOException {
-//        Restaurant restaurant = findByCode(code);
-//        if (restaurant == null) {
-//            // Log or throw an exception if the restaurant isn't found.
-//            return;
-//        }
-//        for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
-//            User user = userRepository.findByUsername(GroupMember.getKey());
-//
-//            if (user == null) {
-//                // Log or throw an exception if the user isn't found.
-//                continue;  // skip to the next iteration
-//            }
-//            user.addFavorite(restaurant);
-//            userRepository.save(user);
-//            // Consider batching this save call if you have a large number of users to optimize further.
-//        }
-//
-//        restaurantRepository.save(restaurant);
-//        // You might want to move this outside the loop if every user is favoriting the same restaurant. This way, you only save once.
-//    }
-//
-//    public Restaurant findByCode(String code) throws IOException {
-//        OkHttpClient client = new OkHttpClient();
-//        okhttp3.Request request = new okhttp3.Request.Builder()
-//                .url("https://api.yelp.com/v3/businesses/" + code)
-//                .addHeader("accept", "application/json")
-//                .addHeader("Authorization", JesseKey)
-//                .build();
-//
-//        try (Response response = client.newCall(request).execute()) {
-//            if (response.isSuccessful() && response.body() != null) {
-//                String responseBody = response.body().string();
-//                ObjectMapper objectMapper = new ObjectMapper();
-//                // Assuming that the JSON structure matches your Restaurant entity
-//                return objectMapper.readValue(responseBody, Restaurant.class);
-//            } else {
-//                logger.info("Response was unsuccessful or body is null");
-//                return null;
-//            }
-//        } catch (Exception e) {
-//            logger.error("Error in fetching restaurant data", e);
-//            return null;
-//        }
-//    }
-
 }
