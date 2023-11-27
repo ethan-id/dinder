@@ -35,3 +35,9 @@ If port 8080 is already in use run the following:
 ```
 sudo fuser -k 8080/tcp
 ```
+
+If the pipeline fails you need to restart the daemon process run the following commands
+```
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
