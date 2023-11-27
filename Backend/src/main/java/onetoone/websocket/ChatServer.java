@@ -3,6 +3,7 @@ package onetoone.websocket;
 import onetoone.Likes.LikeRepository;
 import onetoone.Likes.Liked;
 import onetoone.Requests.Request;
+import onetoone.Requests.RequestRepository;
 import onetoone.Restaurants.Restaurant;
 import onetoone.Restaurants.RestaurantRepository;
 import onetoone.Users.User;
@@ -52,6 +53,7 @@ public class ChatServer {
     private static UserRepository userRepository;
     private static RestaurantRepository restaurantRepository;
     private static LikeRepository likeRepository;
+    private static RequestRepository requestRepository;
 
     @Autowired
     public void setUserRepository(UserRepository repo) {
@@ -64,6 +66,10 @@ public class ChatServer {
     @Autowired
     public void setLikeRepository(LikeRepository likeRepository) {
         this.likeRepository = likeRepository;
+    }
+    @Autowired
+    public void setRequestRepository(RequestRepository repo) {
+        requestRepository = repo;
     }
 
     /*
@@ -121,7 +127,7 @@ public class ChatServer {
         String username = sessionUsernameMap.get(session);
         // server side log
         logger.info("[onMessage] " + username + ": " + message);
-        User user = new User();
+        User user;
         try {
             user = userRepository.findByUsername(username);
         }
@@ -146,17 +152,66 @@ public class ChatServer {
                 broadcast("user does not exist");
                 return;
             }
-            Request request = new Request(message, userToAdd);
+            for (Request request : user.getRequests()) {
+                if (request.getParameter().equals("group") && request.getMessage().substring(27).contains(usernameToAdd)  && !request.getStatus()) {
+                    for (Request friendsRequests : userToAdd.getRequests()) {
+                        if (friendsRequests.getParameter().equals("group") && !friendsRequests.getStatus() && friendsRequests.getMessage().substring(0, friendsRequests.getMessage().indexOf(' ')).equals(username)) {
+                            groupSessionUsernameMap.putIfAbsent(session, username);
+                            groupUsernameSessionMap.putIfAbsent(username, session);
+                            groupSessionUsernameMap.putIfAbsent(session, usernameToAdd);
+                            groupUsernameSessionMap.putIfAbsent(usernameToAdd, session);
+                            requestRepository.delete(request);
+                            requestRepository.delete(friendsRequests);
+                            groupBroadcast(usernameToAdd + " has joined the group!");
+                            return;
+                        }
+                    }
+                }
+            }
+            Request invitedGroupRequest = new Request("group", userToAdd, user.getUsername() + " invited you to Dinder!");
+            requestRepository.save(invitedGroupRequest);
+            userToAdd.setNewRequest(invitedGroupRequest);
+            userRepository.save(userToAdd);
+            Request creatorGroupRequest = new Request("group", user, "You requested to Dinder with " + usernameToAdd + " with ID " + invitedGroupRequest.getId());
+            requestRepository.save(creatorGroupRequest);
+            user.setNewRequest(creatorGroupRequest);
+            userRepository.save(user);
+            sendMessageToPArticularUser(username, "You requested to Dinder with " + usernameToAdd);
+            sendMessageToPArticularUser(usernameToAdd, username + " invited you to Dinder!");
+           // Request request = new Request(message, userToAdd);
 
 //
 //            // map current group session with username
 //            groupSessionUsernameMap.putIfAbsent(session, usernameToAdd);
 //            // map current group username with session
 //            groupUsernameSessionMap.putIfAbsent(usernameToAdd, session);
+        }
 
-            sendMessageToPArticularUser(usernameToAdd, user.getName() + " invited you to Dinder with them!");
-            sendMessageToPArticularUser(username, "invited@"+usernameToAdd);
-
+        //Sending a friend request
+        if (message.contains("request@")) {
+            User potentialFriend = userRepository.findByUsername(message.substring(8));
+            if (!user.getFriends().isEmpty()) {
+                for (User friend : user.getFriends()) {
+                    if (potentialFriend.getUsername().equals(friend.getUsername())) {
+                        sendMessageToPArticularUser(username, friend.getUsername() + " is already your friend");
+                    }
+                }
+                for (Request request : user.getRequests()) {
+                    if (request.getInvitedUser().equals(potentialFriend.getUsername()) && request.getParameter().equals("friend")) {
+                        sendMessageToPArticularUser(username, "There is already a pending friend request for you and " + request.getInvitedUser());
+                    }
+                }
+            }
+            Request invitedRequest = new Request("friend", potentialFriend, user.getUsername() + " sent you a friend request");
+            potentialFriend.setNewRequest(invitedRequest);
+            userRepository.save(potentialFriend);
+            requestRepository.save(invitedRequest);
+            Request creatorRequest = new Request("friend", user, "You sent a friend request to " + potentialFriend.getUsername() + " with ID " + invitedRequest.getId());
+            user.setNewRequest(creatorRequest);
+            userRepository.save(user);
+            requestRepository.save(creatorRequest);
+            sendMessageToPArticularUser(user.getUsername(), "You sent a friend request to " + potentialFriend.getUsername());
+            sendMessageToPArticularUser(potentialFriend.getUsername(), user.getUsername() + " sent you a friend request!");
         }
 //        else { // Message to whole chat
 //            broadcast(username + ": " + message);
