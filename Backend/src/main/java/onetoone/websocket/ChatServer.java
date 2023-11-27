@@ -22,7 +22,10 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 
 /**
@@ -57,8 +60,8 @@ public class ChatServer {
     private static RestaurantRepository restaurantRepository;
     private static LikeRepository likeRepository;
     private static FavoriteRepository favoriteRepository;
-
     private static RequestRepository requestRepository;
+    private static FavoriteRepository favoriteRepository;
 
     @Autowired
     public void setUserRepository(UserRepository repo) {
