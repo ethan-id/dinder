@@ -270,16 +270,16 @@ public class ChatServer {
                 likeRepository.save(like);
                 userRepository.save(user);
             }
-            int like_count = 0;
-            User userWithMostLikes = new User();
+            int like_count = 100000000;
+            User userWithLeastLikes = new User();
             if (groupUsernameSessionMap.size() >= 2) {
                 for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
-                    if (userRepository.findByUsername(GroupMember.getKey()).getLikes().size() > like_count) {
-                        userWithMostLikes = userRepository.findByUsername(GroupMember.getKey());
+                    if (userRepository.findByUsername(GroupMember.getKey()).getLikes().size() < like_count) {
+                        userWithLeastLikes = userRepository.findByUsername(GroupMember.getKey());
                     }
                 }
-                if (userWithMostLikes.getUsername() != null) {
-                    for (Liked likedRestaurant : userWithMostLikes.getLikes()) {
+                if (userWithLeastLikes.getUsername() != null) {
+                    for (Liked likedRestaurant : userWithLeastLikes.getLikes()) {
                         int numberOfLikes = 0;
                         for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
                             for (Liked like : userRepository.findByUsername(GroupMember.getKey()).getLikes()) {
