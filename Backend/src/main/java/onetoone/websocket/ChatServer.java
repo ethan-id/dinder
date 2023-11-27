@@ -152,6 +152,9 @@ public class ChatServer {
                 broadcast("user does not exist");
                 return;
             }
+            if (!user.isPlus() && (groupSessionUsernameMap.size() >= 2 || groupUsernameSessionMap.size() >= 2)) {
+                return;
+            }
             for (Request request : user.getRequests()) {
                 if (request.getParameter().equals("group") && request.getMessage().substring(27).contains(usernameToAdd)  && !request.getStatus()) {
                     for (Request friendsRequests : userToAdd.getRequests()) {
