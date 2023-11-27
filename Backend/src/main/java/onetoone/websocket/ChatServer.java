@@ -374,9 +374,7 @@ public class ChatServer {
             // map current group username with session
             groupUsernameSessionMap.put(username, session);
             sendMessageToPArticularUser(username, "[Group " + username + "]: You are in a group ");
-        } //else { // Message to whole chat
-//            broadcast(username + ": " + message);
-//        }
+        }
     }
 
     /**
@@ -413,5 +411,4 @@ public class ChatServer {
                 groupSessionUsernameMap.clear();
             }
     }
-
 }
