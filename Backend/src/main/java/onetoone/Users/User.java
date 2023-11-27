@@ -31,6 +31,7 @@ public class User {
     private boolean vegan;
     private boolean vegitarian;
     private boolean halal;
+    private boolean plus;
     @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
     private Set<Liked> likes;
 
@@ -61,13 +62,14 @@ public class User {
 
 
 
-    public User(String name, String username, String passkey) {
+    public User(String name, String username, String passkey, boolean plus) {
         this.name = name;
         this.username = username;
         this.passkey = passkey;
         this.vegan = false;
         this.vegitarian = false;
         this.halal = false;
+        this.plus = plus;
         this.likes = new HashSet<Liked>();
         this.favoriteRestaurants = new HashSet<Favorite>();
         this.friends = new HashSet<User>();
@@ -133,7 +135,9 @@ public class User {
     public void setVegitarian(boolean vegitarian) {
         this.vegitarian = vegitarian;
     }
+    public void setPlus(boolean plus) {this.plus = plus; }
 
+    public boolean isPlus() { return plus; }
     public Set<Liked> getLikes() { return likes; }
     public Set<Request> getRequests() {return requests; }
     public void setNewLike(Liked like) { likes.add(like); }
