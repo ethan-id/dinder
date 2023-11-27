@@ -10,6 +10,8 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
+import android.app.Activity;
+
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.intent.Intents;
@@ -50,6 +52,7 @@ public class LoginActivityTest {
         if (idlingResource != null) {
             IdlingRegistry.getInstance().unregister(idlingResource);
         }
+        loginScenario.getScenario().onActivity(Activity::finish);
     }
 
     @Rule
