@@ -42,9 +42,6 @@ public class Restaurant {
     private String distance;
     private String phone_number;
 
-    @ManyToMany(mappedBy = "favoriteRestaurants", fetch = FetchType.EAGER)
-    @JsonIgnore
-    private Set<User> favoritedByUsers = new HashSet<>();
 
 
 
@@ -73,8 +70,6 @@ public class Restaurant {
         this.address = address;
         this.phone_number = phone_number;
         this.distance = distance;
-
-        this.favoritedByUsers = new HashSet<User>();
     }
 
     public Restaurant() {
@@ -187,8 +182,6 @@ public class Restaurant {
     }
 
 
-    public Set<User> getFavoritedByUsers(){
-        return favoritedByUsers;
-    }
-    public void addFavoritedByUsers(User user){favoritedByUsers.add(user);}
+
+
 }
