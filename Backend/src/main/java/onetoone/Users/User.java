@@ -66,14 +66,14 @@ public class User {
 
 
 
-    public User(String name, String username, String passkey, boolean plus) {
+    public User(String name, String username, String passkey) {
         this.name = name;
         this.username = username;
         this.passkey = passkey;
         this.vegan = false;
         this.vegitarian = false;
         this.halal = false;
-        this.plus = plus;
+        this.plus = false;
         this.likes = new HashSet<Liked>();
         this.favoriteRestaurants = new HashSet<Restaurant>();
         this.friends = new HashSet<User>();
