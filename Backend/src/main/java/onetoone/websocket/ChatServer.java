@@ -61,7 +61,6 @@ public class ChatServer {
     private static LikeRepository likeRepository;
     private static FavoriteRepository favoriteRepository;
     private static RequestRepository requestRepository;
-    private static FavoriteRepository favoriteRepository;
 
     @Autowired
     public void setUserRepository(UserRepository repo) {
@@ -76,7 +75,8 @@ public class ChatServer {
         this.likeRepository = likeRepository;
     }
     @Autowired
-    public void setFavoriteRepository(FavoriteRepository favoriteRepository){this.favoriteRepository = favoriteRepository;}
+    public void setFavoriteRepository(FavoriteRepository favoriteRepository){
+        this.favoriteRepository = favoriteRepository;}
 
     @Autowired
     public void setRequestRepository(RequestRepository repo) {
