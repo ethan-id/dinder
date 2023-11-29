@@ -1,5 +1,7 @@
 package com.example.dinder.adapters.model;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 /**
@@ -37,7 +39,7 @@ public class Restaurant {
     /**
      * The Restaurant's applicable categories
      */
-    private List<Category> categories;
+    private List<JSONObject> categories;
     /**
      * The average rating the Restaurant has received
      */
@@ -45,7 +47,7 @@ public class Restaurant {
     /**
      * The latitudinal and longitudinal coordinates of the Restaurant's location
      */
-    private Coordinates coordinates;
+    private JSONObject coordinates;
     /**
      * A List of Strings containing transactions
      */
@@ -57,7 +59,7 @@ public class Restaurant {
     /**
      * An Object containing specific location details about the Restaurant
      */
-    private Location location;
+    private JSONObject location;
     /**
      * The Restaurant's phone number
      */
@@ -85,117 +87,6 @@ public class Restaurant {
     public Restaurant(int id, String name) {
         this.id = String.valueOf(id);
         this.name = name;
-    }
-
-    /**
-     * Represents a category of a restaurant.
-     */
-    public static class Category {
-        /**
-         * The Category's alian
-         */
-        private String alias;
-        /**
-         * The Category
-         */
-        private String title;
-
-        /**
-         * Constructs a Category with an alias and a title.
-         *
-         * @param alias The alias of the category.
-         * @param title The title or name of the category.
-         */
-        public Category(String alias, String title) {
-            this.alias = alias;
-            this.title = title;
-        }
-    }
-
-    /**
-     * Represents geographical coordinates with latitude and longitude.
-     */
-    public static class Coordinates {
-        /**
-         * The Restaurant's latitude
-         */
-        private double latitude;
-        /**
-         * The Restaurant's longitude
-         */
-        private double longitude;
-
-        /**
-         * Constructs Coordinates with specified latitude and longitude.
-         *
-         * @param latitude  The latitude of the location.
-         * @param longitude The longitude of the location.
-         */
-        public Coordinates(double latitude, double longitude) {
-            this.latitude = latitude;
-            this.longitude = longitude;
-        }
-    }
-
-    /**
-     * Represents a location with address details and geographical information.
-     */
-    public static class Location {
-        /**
-         * The first address line for the Restaurant's location
-         */
-        private String address1;
-        /**
-         * The second address line for the Restaurant's location
-         */
-        private String address2;
-        /**
-         * The third address line for the Restaurant's location
-         */
-        private String address3;
-        /**
-         * The city the Restaurant is located in
-         */
-        private String city;
-        /**
-         * Restaurant's zip code
-         */
-        private String zipCode;
-        /**
-         * The country where the Restaurant is located within
-         */
-        private String country;
-        /**
-         * The state where the Restaurant is located within
-         */
-        private String state;
-        /**
-         * A List of Strings that are formatted to more easily display the Restaurant's address
-         */
-        private List<String> displayAddress;
-
-        /**
-         * Constructs a Location with detailed address information.
-         *
-         * @param address1        The primary street address.
-         * @param address2        Additional address information, such as suite or apartment number.
-         * @param address3        Further address details.
-         * @param city            The city in which the restaurant is located.
-         * @param zipCode         The postal code for the location.
-         * @param country         The country of the restaurant.
-         * @param state           The state or province of the restaurant.
-         * @param displayAddress  A list of strings that form the complete displayable address.
-         */
-        public Location(String address1, String address2, String address3, String city, String zipCode, String country, String state, List<String> displayAddress) {
-            this.address1 = address1;
-            this.address2 = address2;
-            this.address3 = address3;
-            this.city = city;
-            this.zipCode = zipCode;
-            this.country = country;
-            this.state = state;
-            this.displayAddress = displayAddress;
-        }
     }
 
     /**
@@ -331,7 +222,7 @@ public class Restaurant {
      *
      * @return The list of restaurant categories.
      */
-    public List<Category> getCategories() {
+    public List<JSONObject> getCategories() {
         return categories;
     }
 
@@ -340,7 +231,7 @@ public class Restaurant {
      *
      * @param categories The list of categories to set for the restaurant.
      */
-    public void setCategories(List<Category> categories) {
+    public void setCategories(List<JSONObject> categories) {
         this.categories = categories;
     }
 
@@ -367,7 +258,7 @@ public class Restaurant {
      *
      * @return The coordinates of the restaurant.
      */
-    public Coordinates getCoordinates() {
+    public JSONObject getCoordinates() {
         return coordinates;
     }
 
@@ -376,7 +267,7 @@ public class Restaurant {
      *
      * @param coordinates The coordinates to set for the restaurant.
      */
-    public void setCoordinates(Coordinates coordinates) {
+    public void setCoordinates(JSONObject coordinates) {
         this.coordinates = coordinates;
     }
 
@@ -421,7 +312,7 @@ public class Restaurant {
      *
      * @return The location of the restaurant.
      */
-    public Location getLocation() {
+    public JSONObject getLocation() {
         return location;
     }
 
@@ -430,7 +321,7 @@ public class Restaurant {
      *
      * @param location The location to set for the restaurant.
      */
-    public void setLocation(Location location) {
+    public void setLocation(JSONObject location) {
         this.location = location;
     }
 

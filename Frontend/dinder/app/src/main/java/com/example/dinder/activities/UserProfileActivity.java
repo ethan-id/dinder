@@ -137,6 +137,8 @@ public class UserProfileActivity extends AppCompatActivity {
                                     try {
                                         Restaurant restaurant = new Restaurant();
                                         restaurant.setName(response2.getString("name"));
+                                        restaurant.setLocation(response2.getJSONObject("location"));
+                                        restaurant.setRating(Double.parseDouble(response2.getString("rating")));
                                         restaurants.add(restaurant);
                                     } catch (JSONException e) {
                                         throw new RuntimeException(e);

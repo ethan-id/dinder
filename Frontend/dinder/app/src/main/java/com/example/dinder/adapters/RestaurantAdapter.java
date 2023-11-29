@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dinder.R;
 import com.example.dinder.adapters.model.Restaurant;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -58,6 +62,12 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Restaurant like = likes.get(position);
         holder.restaurantName.setText(like.getName());
+        try {
+            holder.restaurantAddress.setText(like.getLocation().getString("address1"));
+            holder.ratingBar.setRating((float) like.getRating());
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -75,13 +85,17 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
         /**
-         * The name of the Restaurant
+         * The name of the restaurant and the address of the restaurant
          */
-        TextView restaurantName;
+        TextView restaurantName, restaurantAddress;
         /**
-         * An Icon representing a heart
+         * ImageView widget for the heart icon
          */
         ImageView heartIcon;
+        /**
+         * A rating bar widget for displaying the restaurant's rating
+         */
+        RatingBar ratingBar;
 
         /**
          * Constructs a ViewHolder for the item layout.
@@ -90,8 +104,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
          */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            restaurantName = itemView.findViewById(R.id.textView);
+            restaurantName = itemView.findViewById(R.id.likeName);
+            restaurantAddress = itemView.findViewById(R.id.likeAddress);
             heartIcon = itemView.findViewById(R.id.recentLikeHeart);
+            ratingBar = itemView.findViewById(R.id.likeRatingBar);
         }
     }
 

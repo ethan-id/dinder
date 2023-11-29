@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
 
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         setupLoadingDialog();
 
         notificationContainer = findViewById(R.id.notification_layout);
