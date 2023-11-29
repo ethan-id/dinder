@@ -15,6 +15,7 @@ import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
 import com.example.dinder.activities.utils.NavigationUtils;
 import com.example.dinder.adapters.FriendsAdapter;
+import com.example.dinder.adapters.IncomingAdapter;
 import com.example.dinder.websocket.WebSocketListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -38,6 +39,7 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
      * RecyclerView used to dynamically display the user's friends
      */
     RecyclerView friendsRecyclerView;
+    RecyclerView incomingRequestsRecyclerView;
     /**
      * Private field representing the View displaying the bottom navigation menu on the screen
      */
@@ -96,8 +98,16 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         bottomNavigationView.setSelectedItemId(R.id.social);
 
         searchBar = findViewById(R.id.search);
+
         friendsRecyclerView = findViewById(R.id.friendsRecyclerView);
         friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        incomingRequestsRecyclerView = findViewById(R.id.incomingRequestsRecyclerView);
+        incomingRequestsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        List<String> incoming = Arrays.asList("Test1", "Test2");
+        IncomingAdapter incAdapter = new IncomingAdapter(incoming);
+        incomingRequestsRecyclerView.setAdapter(incAdapter);
 
         getUsersFriends(id);
     }

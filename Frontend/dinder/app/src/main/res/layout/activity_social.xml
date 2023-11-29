@@ -2,13 +2,23 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/incomingRequestsRecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintStart_toStartOf="@+id/search"
+            app:layout_constraintEnd_toEndOf="@+id/search"
+            app:layout_constraintTop_toBottomOf="@+id/search" />
 
         <SearchView
             android:id="@+id/search"
@@ -26,10 +36,9 @@
             android:id="@+id/friendsRecyclerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintStart_toStartOf="@+id/search"
-            app:layout_constraintTop_toBottomOf="@+id/search" />
+            android:layout_marginTop="15dp"
+            app:layout_constraintStart_toStartOf="@+id/incomingRequestsRecyclerView"
+            app:layout_constraintTop_toBottomOf="@+id/incomingRequestsRecyclerView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
