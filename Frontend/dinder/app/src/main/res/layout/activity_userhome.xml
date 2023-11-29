@@ -135,7 +135,7 @@
 
         <TextView
             android:id="@+id/address"
-            android:layout_width="196dp"
+            android:layout_width="150dp"
             android:layout_height="31dp"
             android:layout_marginStart="4dp"
             android:layout_marginTop="8dp"
@@ -156,27 +156,18 @@
             app:layout_constraintTop_toBottomOf="@+id/centerRestaurantImage"
             app:srcCompat="@drawable/location_on" />
 
-        <ImageView
-            android:id="@+id/ratingIcon"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="360dp"
-            android:layout_marginTop="48dp"
-            android:contentDescription="@string/location"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/centerRestaurantImage"
-            app:srcCompat="@drawable/star" />
-
-        <TextView
-            android:id="@+id/rating"
-            android:layout_width="98dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="4dp"
-            android:textAlignment="textEnd"
-            android:textSize="20sp"
-            app:flow_verticalAlign="center"
-            app:layout_constraintEnd_toStartOf="@+id/ratingIcon"
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="@style/Widget.AppCompat.RatingBar.Indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:layout_marginEnd="2dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:rating="4.5"
+            android:stepSize="0.5"
+            app:layout_constraintEnd_toEndOf="@+id/centerRestaurantImage"
             app:layout_constraintTop_toBottomOf="@+id/centerRestaurantImage" />
 
         <include
@@ -194,12 +185,12 @@
             android:id="@+id/ratingCount"
             android:layout_width="45dp"
             android:layout_height="26dp"
-            android:layout_marginTop="3dp"
+            android:layout_marginEnd="3dp"
             android:textAlignment="center"
             android:textSize="16sp"
             app:flow_verticalAlign="top"
-            app:layout_constraintStart_toStartOf="@+id/ratingIcon"
-            app:layout_constraintTop_toBottomOf="@+id/ratingIcon" />
+            app:layout_constraintEnd_toEndOf="@+id/ratingBar"
+            app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigator"

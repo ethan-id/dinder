@@ -1,5 +1,7 @@
 package com.example.dinder.activities;
 
+import static java.lang.Float.parseFloat;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
@@ -16,6 +18,7 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -70,7 +73,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     /**
      * X out of 5 star rating of the restaurant
      */
-    TextView rating;
+    RatingBar rating;
     /**
      * The number of rating/reviews the restaurant has received
      */
@@ -246,7 +249,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
                         chip1.setText(currentRestaurant.getString("price"));
                     } catch (JSONException ignored) {}
                     try {
-                        rating.setText(currentRestaurant.getString("rating"));
+                        rating.setRating(parseFloat(currentRestaurant.getString("rating")));
                     } catch (JSONException e) {
                         Log.e("Error", "Error populating restaurant data");
                     }
@@ -383,7 +386,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         locationIcon = findViewById(R.id.locationIcon);
         ratingIcon = findViewById(R.id.ratingIcon);
         restaurantName = findViewById(R.id.restName);
-        rating = findViewById(R.id.rating);
+        rating = findViewById(R.id.ratingBar);
         ratingCount = findViewById(R.id.ratingCount);
         address = findViewById(R.id.address);
         dislike = findViewById(R.id.dislikeBtn);
