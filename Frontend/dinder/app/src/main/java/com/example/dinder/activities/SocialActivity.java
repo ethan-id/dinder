@@ -2,12 +2,8 @@ package com.example.dinder.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.SearchView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,17 +15,12 @@ import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
 import com.example.dinder.activities.utils.NavigationUtils;
 import com.example.dinder.adapters.FriendsAdapter;
-import com.example.dinder.adapters.RestaurantAdapter;
-import com.example.dinder.adapters.model.Restaurant;
 import com.example.dinder.websocket.WebSocketListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.java_websocket.handshake.ServerHandshake;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
