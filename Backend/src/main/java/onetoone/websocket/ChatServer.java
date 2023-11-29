@@ -82,6 +82,7 @@ public class ChatServer {
     public void setRequestRepository(RequestRepository repo) {
         requestRepository = repo;
     }
+
     /*
      * Grabs the MessageRepository singleton from the Spring Application
      * Context.  This works because of the @Controller annotation on this
@@ -148,11 +149,10 @@ public class ChatServer {
 
         // Direct message to a user using the format "@username <message>"
         if(message.contains("invite@")){
-            // map current group session with username
-            groupSessionUsernameMap.putIfAbsent(session, username);
-            // map current group username with session
-            groupUsernameSessionMap.putIfAbsent(username, session);
-
+//            // map current group session with username
+//            groupSessionUsernameMap.putIfAbsent(session, username);
+//            // map current group username with session
+//            groupUsernameSessionMap.putIfAbsent(username, session);
             String usernameToAdd = message.substring(7);    //@username and get rid of @
             User userToAdd = new User();
             try {
@@ -160,6 +160,10 @@ public class ChatServer {
             }
             catch (Exception e) {
                 broadcast("user does not exist");
+                return;
+            }
+            if (!user.isPlus() && (groupSessionUsernameMap.size() >= 2 || groupUsernameSessionMap.size() >= 2)) {
+                sendMessageToPArticularUser(username, "Upgrade to Dinder+ to be able to add more than 2 people to your group!");
                 return;
             }
             for (Request request : user.getRequests()) {
@@ -172,7 +176,9 @@ public class ChatServer {
                             groupUsernameSessionMap.putIfAbsent(usernameToAdd, session);
                             requestRepository.delete(request);
                             requestRepository.delete(friendsRequests);
-                            groupBroadcast(usernameToAdd + " has joined the group!");
+                            for (String usernames : groupUsernameSessionMap.keySet()) {
+                                sendMessageToPArticularUser(usernames, usernameToAdd + " has joined the group!");
+                            }
                             return;
                         }
                     }
@@ -229,7 +235,6 @@ public class ChatServer {
         if(message.contains("leave")){
             sendMessageToPArticularUser(username,"Thanks for Dindering!");
             groupUsernameSessionMap.remove(username);
-            groupSessionUsernameMap.remove(session);
             userRepository.findByUsername(username).clearLikes();
             userRepository.save(userRepository.findByUsername(username));
         }
@@ -267,16 +272,16 @@ public class ChatServer {
                 likeRepository.save(like);
                 userRepository.save(user);
             }
-            int like_count = 0;
-            User userWithMostLikes = new User();
+            int like_count = 100000000;
+            User userWithLeastLikes = new User();
             if (groupUsernameSessionMap.size() >= 2) {
                 for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
-                    if (userRepository.findByUsername(GroupMember.getKey()).getLikes().size() > like_count) {
-                        userWithMostLikes = userRepository.findByUsername(GroupMember.getKey());
+                    if (userRepository.findByUsername(GroupMember.getKey()).getLikes().size() < like_count) {
+                        userWithLeastLikes = userRepository.findByUsername(GroupMember.getKey());
                     }
                 }
-                if (userWithMostLikes.getUsername() != null) {
-                    for (Liked likedRestaurant : userWithMostLikes.getLikes()) {
+                if (userWithLeastLikes.getUsername() != null) {
+                    for (Liked likedRestaurant : userWithLeastLikes.getLikes()) {
                         int numberOfLikes = 0;
                         for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
                             for (Liked like : userRepository.findByUsername(GroupMember.getKey()).getLikes()) {
@@ -367,14 +372,16 @@ public class ChatServer {
             logger.info("[DM Exception] " + e.getMessage());
         }
         Session session = usernameSessionMap.get(username);
-        if (message.contains("group")) {
-            // map current group session with username
-            groupSessionUsernameMap.put(session, username);
-
-            // map current group username with session
-            groupUsernameSessionMap.put(username, session);
-            sendMessageToPArticularUser(username, "[Group " + username + "]: You are in a group ");
-        }
+//        if (message.contains("group")) {
+//            // map current group session with username
+//            groupSessionUsernameMap.put(session, username);
+//
+//            // map current group username with session
+//            groupUsernameSessionMap.put(username, session);
+//            sendMessageToPArticularUser(username, "[Group " + username + "]: You are in a group ");
+//        } //else { // Message to whole chat
+//            broadcast(username + ": " + message);
+//        }
     }
 
     /**
