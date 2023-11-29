@@ -1,5 +1,6 @@
 package onetoone.Favorites;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import onetoone.Users.User;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ public class Favorite {
 
     @ManyToOne
     @JoinColumn(name = "favoriter_id")
+    @JsonIgnore
     private User user;
     String code;
 
