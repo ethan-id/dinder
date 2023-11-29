@@ -147,87 +147,86 @@ public class ChatServer {
             return;
         }
 
+        String usernameToAdd = message.substring(8);    //@username and get rid of @
+        User userToAdd = new User();
+        try {
+            userToAdd = userRepository.findByUsername(usernameToAdd);
+        }
+        catch (Exception e) {
+            broadcast("user does not exist");
+            return;
+        }
         // Direct message to a user using the format "@username <message>"
         if(message.contains("invite@")){
-//            // map current group session with username
-//            groupSessionUsernameMap.putIfAbsent(session, username);
-//            // map current group username with session
-//            groupUsernameSessionMap.putIfAbsent(username, session);
-            String usernameToAdd = message.substring(7);    //@username and get rid of @
-            User userToAdd = new User();
-            try {
-                userToAdd = userRepository.findByUsername(usernameToAdd);
-            }
-            catch (Exception e) {
-                broadcast("user does not exist");
-                return;
-            }
+            groupSessionUsernameMap.putIfAbsent(session, username);
+            groupUsernameSessionMap.putIfAbsent(username, session);
+
             if (!user.isPlus() && (groupSessionUsernameMap.size() >= 2 || groupUsernameSessionMap.size() >= 2)) {
                 sendMessageToPArticularUser(username, "Upgrade to Dinder+ to be able to add more than 2 people to your group!");
                 return;
             }
-            for (Request request : user.getRequests()) {
-                if (request.getParameter().equals("group") && request.getMessage().substring(27).contains(usernameToAdd)  && !request.getStatus()) {
-                    for (Request friendsRequests : userToAdd.getRequests()) {
-                        if (friendsRequests.getParameter().equals("group") && !friendsRequests.getStatus() && friendsRequests.getMessage().substring(0, friendsRequests.getMessage().indexOf(' ')).equals(username)) {
-                            groupSessionUsernameMap.putIfAbsent(session, username);
-                            groupUsernameSessionMap.putIfAbsent(username, session);
-                            groupSessionUsernameMap.putIfAbsent(session, usernameToAdd);
-                            groupUsernameSessionMap.putIfAbsent(usernameToAdd, session);
-                            requestRepository.delete(request);
-                            requestRepository.delete(friendsRequests);
-                            for (String usernames : groupUsernameSessionMap.keySet()) {
-                                sendMessageToPArticularUser(usernames, usernameToAdd + " has joined the group!");
-                            }
-                            return;
-                        }
-                    }
+            if (groupUsernameSessionMap.containsKey(usernameToAdd)) {
+                sendMessageToPArticularUser(username, usernameToAdd + " is already Dindering with you, silly!");
+                return;
+            }
+            for (Request request : userToAdd.getRequests()) {
+                if (request.getCreator().equals(username) && request.getParameter().equals("group")) {
+                    sendMessageToPArticularUser(username, " There is already a Dindering request active for you and " + usernameToAdd);
+                    return;
                 }
             }
-            Request invitedGroupRequest = new Request("group", userToAdd, user.getUsername() + " invited you to Dinder!");
+            for (Request friendsRequests : userToAdd.getRequests()) {
+                if (friendsRequests.getParameter().equals("group") && !friendsRequests.getStatus()) {
+                    requestRepository.delete(friendsRequests);
+                }
+            }
+            Request invitedGroupRequest = new Request("group", username, userToAdd);
             requestRepository.save(invitedGroupRequest);
             userToAdd.setNewRequest(invitedGroupRequest);
             userRepository.save(userToAdd);
-            Request creatorGroupRequest = new Request("group", user, "You requested to Dinder with " + usernameToAdd + " with ID " + invitedGroupRequest.getId());
-            requestRepository.save(creatorGroupRequest);
-            user.setNewRequest(creatorGroupRequest);
-            userRepository.save(user);
             sendMessageToPArticularUser(username, "You requested to Dinder with " + usernameToAdd);
             sendMessageToPArticularUser(usernameToAdd, username + " invited you to Dinder!");
-           // Request request = new Request(message, userToAdd);
-
-//
-//            // map current group session with username
-//            groupSessionUsernameMap.putIfAbsent(session, usernameToAdd);
-//            // map current group username with session
-//            groupUsernameSessionMap.putIfAbsent(usernameToAdd, session);
         }
-
         //Sending a friend request
+
         if (message.contains("request@")) {
-            User potentialFriend = userRepository.findByUsername(message.substring(8));
+            userToAdd = userRepository.findByUsername(usernameToAdd);
             if (!user.getFriends().isEmpty()) {
                 for (User friend : user.getFriends()) {
-                    if (potentialFriend.getUsername().equals(friend.getUsername())) {
+                    if (userToAdd.getUsername().equals(friend.getUsername())) {
                         sendMessageToPArticularUser(username, friend.getUsername() + " is already your friend");
                     }
                 }
                 for (Request request : user.getRequests()) {
-                    if (request.getInvitedUser().equals(potentialFriend.getUsername()) && request.getParameter().equals("friend")) {
+                    if (request.getInvitedUser().equals(userToAdd.getUsername()) && request.getParameter().equals("friend")) {
                         sendMessageToPArticularUser(username, "There is already a pending friend request for you and " + request.getInvitedUser());
                     }
                 }
             }
-            Request invitedRequest = new Request("friend", potentialFriend, user.getUsername() + " sent you a friend request");
-            potentialFriend.setNewRequest(invitedRequest);
-            userRepository.save(potentialFriend);
+            Request invitedRequest = new Request("friend", username, userToAdd);
+            userToAdd.setNewRequest(invitedRequest);
+            userRepository.save(userToAdd);
             requestRepository.save(invitedRequest);
-            Request creatorRequest = new Request("friend", user, "You sent a friend request to " + potentialFriend.getUsername() + " with ID " + invitedRequest.getId());
-            user.setNewRequest(creatorRequest);
-            userRepository.save(user);
-            requestRepository.save(creatorRequest);
-            sendMessageToPArticularUser(user.getUsername(), "You sent a friend request to " + potentialFriend.getUsername());
-            sendMessageToPArticularUser(potentialFriend.getUsername(), user.getUsername() + " sent you a friend request!");
+            sendMessageToPArticularUser(user.getUsername(), "You sent a friend request to " + userToAdd.getUsername());
+            sendMessageToPArticularUser(userToAdd.getUsername(), user.getUsername() + " sent you a friend request!");
+        }
+
+        if (message.contains("accept@")) {
+            if (user.getRequests().isEmpty()) {
+                sendMessageToPArticularUser(username, "You have no open requests");
+                return;
+            }
+            for (Request request : user.getRequests()) {
+                if (request.getId() == Integer.parseInt(message.substring(7))) {
+                    request.setStatus(false);
+                    groupSessionUsernameMap.putIfAbsent(session, username);
+                    groupUsernameSessionMap.putIfAbsent(username, session);
+                    for (String usernames : groupUsernameSessionMap.keySet()) {
+                        sendMessageToPArticularUser(usernames, username + " has joined the group!");
+                    }
+                    return;
+                }
+            }
         }
 //        else { // Message to whole chat
 //            broadcast(username + ": " + message);
