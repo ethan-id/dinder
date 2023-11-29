@@ -12,14 +12,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.dinder.R;
+import com.example.dinder.VolleySingleton;
 import com.example.dinder.activities.utils.NavigationUtils;
 import com.example.dinder.adapters.FriendsAdapter;
+import com.example.dinder.adapters.RestaurantAdapter;
+import com.example.dinder.adapters.model.Restaurant;
 import com.example.dinder.websocket.WebSocketListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,6 +51,31 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
      * Private field representing the View displaying the bottom navigation menu on the screen
      */
     private BottomNavigationView bottomNavigationView;
+
+    List<String> friendsList = new ArrayList<>();
+
+    private void getUsersFriends(String id) {
+        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+        String url = "http://coms-309-055.class.las.iastate.edu:8080/users/" + id;
+
+        queue.add(new JsonObjectRequest(
+            Request.Method.GET, url, null,
+            response -> {
+                try {
+                    List<String> list = Arrays.asList(String.valueOf(response.getJSONArray("allFriends")));
+                    for (String friend : list) {
+                        friendsList.add(friend.substring(friend.indexOf("\"")+1, friend.lastIndexOf("\"")));
+                    }
+
+                    FriendsAdapter adapter = new FriendsAdapter(friendsList);
+                    friendsRecyclerView.setAdapter(adapter);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            },
+            Throwable::printStackTrace
+        ));
+    }
 
     /**
      * Initializes the SocialActivity. This method:
@@ -73,9 +108,8 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         friendsRecyclerView = findViewById(R.id.friendsRecyclerView);
         friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<String> friendsList = Arrays.asList("BigE", "Jane", "Doe", "Smith", "Jake", "Harry", "Kennedy");
-        FriendsAdapter adapter = new FriendsAdapter(friendsList);
-        friendsRecyclerView.setAdapter(adapter);
+        getUsersFriends(id);
+//        friendsList = Arrays.asList("BigE", "Jane", "Doe", "Smith", "Jake", "Harry", "Kennedy");
     }
 
     @Override
