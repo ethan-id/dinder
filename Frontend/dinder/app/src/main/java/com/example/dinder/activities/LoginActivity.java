@@ -92,6 +92,11 @@ public class LoginActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
+                try {
+                    Homepage.putExtra("plus", response.getBoolean("plus"));
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
                 startActivity(Homepage);
             },
             error -> {

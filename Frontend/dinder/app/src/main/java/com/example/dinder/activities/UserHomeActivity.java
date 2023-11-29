@@ -364,6 +364,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         String username = intent.getStringExtra("username");
+        Boolean plus = intent.getBooleanExtra("plus", false);
         ArrayList<String> receivedCodes = intent.getStringArrayListExtra("codes");
         if (receivedCodes != null) {
             matchCodes = receivedCodes;
