@@ -109,7 +109,6 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         getUsersFriends(id);
-//        friendsList = Arrays.asList("BigE", "Jane", "Doe", "Smith", "Jake", "Harry", "Kennedy");
     }
 
     @Override
