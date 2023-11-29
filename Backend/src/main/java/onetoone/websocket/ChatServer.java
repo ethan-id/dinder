@@ -138,11 +138,10 @@ public class ChatServer {
 
         // Direct message to a user using the format "@username <message>"
         if(message.contains("invite@")){
-            // map current group session with username
-            groupSessionUsernameMap.putIfAbsent(session, username);
-            // map current group username with session
-            groupUsernameSessionMap.putIfAbsent(username, session);
-
+//            // map current group session with username
+//            groupSessionUsernameMap.putIfAbsent(session, username);
+//            // map current group username with session
+//            groupUsernameSessionMap.putIfAbsent(username, session);
             String usernameToAdd = message.substring(7);    //@username and get rid of @
             User userToAdd = new User();
             try {
@@ -153,6 +152,7 @@ public class ChatServer {
                 return;
             }
             if (!user.isPlus() && (groupSessionUsernameMap.size() >= 2 || groupUsernameSessionMap.size() >= 2)) {
+                sendMessageToPArticularUser(username, "Upgrade to Dinder+ to be able to add more than 2 people to your group!");
                 return;
             }
             for (Request request : user.getRequests()) {
@@ -165,7 +165,9 @@ public class ChatServer {
                             groupUsernameSessionMap.putIfAbsent(usernameToAdd, session);
                             requestRepository.delete(request);
                             requestRepository.delete(friendsRequests);
-                            groupBroadcast(usernameToAdd + " has joined the group!");
+                            for (String usernames : groupUsernameSessionMap.keySet()) {
+                                sendMessageToPArticularUser(usernames, usernameToAdd + " has joined the group!");
+                            }
                             return;
                         }
                     }
@@ -352,14 +354,14 @@ public class ChatServer {
             logger.info("[DM Exception] " + e.getMessage());
         }
         Session session = usernameSessionMap.get(username);
-        if (message.contains("group")) {
-            // map current group session with username
-            groupSessionUsernameMap.put(session, username);
-
-            // map current group username with session
-            groupUsernameSessionMap.put(username, session);
-            sendMessageToPArticularUser(username, "[Group " + username + "]: You are in a group ");
-        } //else { // Message to whole chat
+//        if (message.contains("group")) {
+//            // map current group session with username
+//            groupSessionUsernameMap.put(session, username);
+//
+//            // map current group username with session
+//            groupUsernameSessionMap.put(username, session);
+//            sendMessageToPArticularUser(username, "[Group " + username + "]: You are in a group ");
+//        } //else { // Message to whole chat
 //            broadcast(username + ": " + message);
 //        }
     }

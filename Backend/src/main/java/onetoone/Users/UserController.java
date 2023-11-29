@@ -204,5 +204,21 @@ public class UserController {
         return  Objects.requireNonNull(user.findFriendByUsername(friend));
     }
 
+    @PostMapping(path = "/users/{username}/plus/{value}")
+    String setUserDinderPlusValue(@PathVariable String username, @PathVariable boolean value) {
+        if (userRepository.findByUsername(username) == null) {
+            return failure;
+        }
+        try {
+            userRepository.findByUsername(username).setPlus(value);
+            userRepository.save(userRepository.findByUsername(username));
+            return success;
+        }
+        catch (Exception e) {
+            return failure;
+        }
+    }
+
+
 }
 
