@@ -21,6 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -105,7 +106,16 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         incomingRequestsRecyclerView = findViewById(R.id.incomingRequestsRecyclerView);
         incomingRequestsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<String> incoming = Arrays.asList("Test1", "Test2");
+        List<JSONObject> incoming = new ArrayList<>();
+        JSONObject testIncoming = new JSONObject();
+        try {
+            testIncoming.put("creatorID", 21);
+            testIncoming.put("creator", "Jesse");
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        incoming.add(testIncoming);
+
         IncomingAdapter incAdapter = new IncomingAdapter(incoming);
         incomingRequestsRecyclerView.setAdapter(incAdapter);
 

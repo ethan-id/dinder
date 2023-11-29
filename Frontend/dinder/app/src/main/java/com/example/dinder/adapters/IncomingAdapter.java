@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.dinder.R;
 import com.example.dinder.websocket.WebSocketManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 /**
@@ -24,14 +27,14 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
     /**
      * A list of strings containing the user's friends
      */
-    private List<String> incomingRequests;
+    private List<JSONObject> incomingRequests;
 
     /**
      * Constructor that instantiates a FriendsAdapter; takes a list of strings as a friends list to use
      *
      * @param incomingRequests       A List of Strings representing a list of friends' names
      */
-    public IncomingAdapter(List<String> incomingRequests) {
+    public IncomingAdapter(List<JSONObject> incomingRequests) {
         this.incomingRequests = incomingRequests;
     }
 
@@ -44,13 +47,16 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
 
     @Override
     public void onBindViewHolder(@NonNull FriendViewHolder holder, int position) {
-        String friendName = incomingRequests.get(position);
-        holder.friendName.setText(friendName);
+        JSONObject friend = incomingRequests.get(position);
+        try {
+            holder.friendName.setText(friend.getString("creator"));
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
         holder.invite.setText("Accept");
-        // Here, you can also set image resources, click listeners, etc.
-//        holder.invite.setOnClickListener(v -> {
+        holder.invite.setOnClickListener(v -> {
 //            WebSocketManager.getInstance().sendMessage("accept@" + friendName);
-//        });
+        });
     }
 
     /**
