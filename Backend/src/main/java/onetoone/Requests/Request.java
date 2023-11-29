@@ -48,6 +48,9 @@ public class Request {
 
     public String getCreator() { return creator; }
 
+    public int getInvitedUserId() { return invitedUserId; }
+    public void setInvitedUserId(int id) { this.invitedUserId = id; }
+
     public void setId(int id) {
         this.id = id;
     }
