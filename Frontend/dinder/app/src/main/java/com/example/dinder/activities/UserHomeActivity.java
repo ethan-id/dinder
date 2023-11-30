@@ -404,7 +404,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         getRestaurants(queue);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
-        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, matchCodes);
+        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, matchCodes, username);
         bottomNavigationView.setSelectedItemId(R.id.home);
 
         dislike.setOnClickListener(v -> dislikeRestaurant());
@@ -413,6 +413,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             try {
                 Intent restaurant = new Intent(UserHomeActivity.this, RestaurantProfileActivity.class);
                 restaurant.putExtra("id", id);
+                restaurant.putExtra("username", username);
                 restaurant.putExtra("code", currentRestaurant.getString("id"));
                 startActivity(restaurant);
             } catch (JSONException e) {

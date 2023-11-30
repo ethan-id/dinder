@@ -191,6 +191,7 @@ public class RestaurantProfileActivity extends AppCompatActivity {
 
         Intent sentIntent = getIntent();
         String code = sentIntent.getStringExtra("code");
+        String username = sentIntent.getStringExtra("username");
         String id = sentIntent.getStringExtra("id");
 
         getRestaurant(code);
@@ -208,7 +209,7 @@ public class RestaurantProfileActivity extends AppCompatActivity {
         backBtn.setOnClickListener(v -> {
             Intent homeScreen = new Intent(RestaurantProfileActivity.this, UserHomeActivity.class);
             homeScreen.putExtra("id", id);
-            homeScreen.putExtra("connected", true);
+            homeScreen.putExtra("username", username);
             startActivity(homeScreen);
         });
     }

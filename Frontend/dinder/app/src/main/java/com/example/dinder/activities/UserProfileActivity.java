@@ -254,10 +254,11 @@ public class UserProfileActivity extends AppCompatActivity {
 
         Intent sentIntent = getIntent();
         String id = sentIntent.getStringExtra("id");
+        String username = sentIntent.getStringExtra("username");
         ArrayList<String> codes = sentIntent.getStringArrayListExtra("codes");
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
-        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes);
+        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username);
         bottomNavigationView.setSelectedItemId(R.id.userprofile);
 
         profilePic = findViewById(R.id.profilePicture);

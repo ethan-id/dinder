@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
 import com.example.dinder.activities.utils.NavigationUtils;
@@ -107,6 +108,16 @@ public class SocialActivity extends AppCompatActivity implements IncomingAdapter
         ));
     }
 
+    public void sendFriendRequest(String username, String friend) {
+        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+        String url = "http://coms-309-055.class.las.iastate.edu:8080/request/create/" + username + "/friend/" + friend;
+
+        queue.add(new StringRequest(Request.Method.POST, url,
+                response -> {
+                    Log.d("Friend Request: ", response);
+                }, Throwable::printStackTrace));
+    }
+
     /**
      * Initializes the SocialActivity. This method:
      * <ul>
@@ -133,10 +144,11 @@ public class SocialActivity extends AppCompatActivity implements IncomingAdapter
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
+        String username = intent.getStringExtra("username");
         ArrayList<String> codes = intent.getStringArrayListExtra("codes");
 
         bottomNavigationView = findViewById(R.id.bottom_navigator);
-        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes);
+        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username);
         bottomNavigationView.setSelectedItemId(R.id.social);
 
         friendsRecyclerView = findViewById(R.id.friendsRecyclerView);
@@ -147,7 +159,7 @@ public class SocialActivity extends AppCompatActivity implements IncomingAdapter
 
         sendRequestButton.setOnClickListener(v -> {
             String friendToAdd = usernameInput.getText().toString();
-            // send friend request...
+            sendFriendRequest(username, friendToAdd);
             usernameInput.setText("");
         });
 

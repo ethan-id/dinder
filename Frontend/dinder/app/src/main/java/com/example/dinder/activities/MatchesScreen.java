@@ -74,6 +74,7 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
+        String username = intent.getStringExtra("username");
         ArrayList<String> codes = intent.getStringArrayListExtra("codes");
 
         if (codes.size() > 0) {
@@ -91,7 +92,7 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
         ratingIcon = findViewById(R.id.ratingIcon);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
-        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes);
+        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username);
         bottomNavigationView.setSelectedItemId(R.id.match);
     }
 
