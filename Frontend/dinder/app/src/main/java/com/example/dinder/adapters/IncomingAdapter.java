@@ -36,14 +36,16 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
     private List<JSONObject> incomingRequests;
     private Context context;
 
-    /**
-     * Constructor that instantiates a FriendsAdapter; takes a list of strings as a friends list to use
-     *
-     * @param incomingRequests       A List of Strings representing a list of friends' names
-     */
-    public IncomingAdapter(List<JSONObject> incomingRequests, Context ctx) {
+    public interface AdapterCallback {
+        void onListChanged();
+    }
+
+    private AdapterCallback callback;
+
+    public IncomingAdapter(List<JSONObject> incomingRequests, Context ctx, AdapterCallback callback) {
         this.incomingRequests = incomingRequests;
         this.context = ctx;
+        this.callback = callback;
     }
 
     @NonNull
@@ -80,6 +82,9 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
                 incomingRequests.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, incomingRequests.size());
+                if (callback != null) {
+                    callback.onListChanged(); // Notify the activity that the list has changed
+                }
             }, Throwable::printStackTrace));
     }
 

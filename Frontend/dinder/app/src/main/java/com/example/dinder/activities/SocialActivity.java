@@ -3,8 +3,10 @@ package com.example.dinder.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,7 +34,7 @@ import java.util.List;
  * The Social Screen displays the user's friends list, allows the user to invite friends to their group, and allows
  * the user to send friend requests to other users.
  */
-public class SocialActivity extends AppCompatActivity {
+public class SocialActivity extends AppCompatActivity implements IncomingAdapter.AdapterCallback {
     /**
      * RecyclerView used to dynamically display the user's friends
      */
@@ -41,6 +43,8 @@ public class SocialActivity extends AppCompatActivity {
 
     EditText usernameInput;
     ImageView sendRequestButton;
+    TextView friendRequestsHeader;
+    TextView friendsHeader;
     /**
      * Private field representing the View displaying the bottom navigation menu on the screen
      */
@@ -48,6 +52,21 @@ public class SocialActivity extends AppCompatActivity {
 
     List<String> friendsList = new ArrayList<>();
     List<JSONObject> incoming = new ArrayList<>();
+
+    public void updateHeaders() {
+        runOnUiThread(() -> {
+            if (incoming.isEmpty()) {
+                friendRequestsHeader.setVisibility(View.GONE);
+            } else {
+                friendRequestsHeader.setVisibility(View.VISIBLE);
+            }
+            if (friendsList.isEmpty()) {
+                friendsHeader.setVisibility(View.GONE);
+            } else {
+                friendsHeader.setVisibility(View.VISIBLE);
+            }
+        });
+    }
 
     private void getUsersFriendsAndRequests(String id) {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
@@ -62,9 +81,10 @@ public class SocialActivity extends AppCompatActivity {
                         JSONObject requestObject = requestsArray.getJSONObject(i);
                         incoming.add(requestObject); // Add each JSONObject to the incoming list
                     }
+                    updateHeaders();
 
                     // Set the adapter for the RecyclerView with the updated incoming list
-                    IncomingAdapter incAdapter = new IncomingAdapter(incoming, this.getApplicationContext());
+                    IncomingAdapter incAdapter = new IncomingAdapter(incoming, this.getApplicationContext(), this);
                     incomingRequestsRecyclerView.setAdapter(incAdapter);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
@@ -75,6 +95,7 @@ public class SocialActivity extends AppCompatActivity {
                     for (int i = 0; i < iter.length(); i++) {
                         friendsList.add(iter.get(i).toString());
                     }
+                    updateHeaders();
 
                     FriendsAdapter adapter = new FriendsAdapter(friendsList);
                     friendsRecyclerView.setAdapter(adapter);
@@ -107,6 +128,8 @@ public class SocialActivity extends AppCompatActivity {
 
         usernameInput = findViewById(R.id.usernameInput);
         sendRequestButton = findViewById(R.id.sendRequestButton);
+        friendRequestsHeader = findViewById(R.id.friendRequestsHeader);
+        friendsHeader = findViewById(R.id.friendsHeader);
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
@@ -129,5 +152,10 @@ public class SocialActivity extends AppCompatActivity {
         });
 
         getUsersFriendsAndRequests(id);
+    }
+
+    @Override
+    public void onListChanged() {
+        updateHeaders();
     }
 }

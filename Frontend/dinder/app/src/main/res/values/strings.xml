@@ -66,4 +66,6 @@
     <string name="user_review_image">User Review Image</string>
     <string name="send_friend_request">Send Friend Request</string>
     <string name="enter_username">Enter Username</string>
+    <string name="friend_requests">Friend Requests</string>
+    <string name="friends">Friends</string>
 </resources>
