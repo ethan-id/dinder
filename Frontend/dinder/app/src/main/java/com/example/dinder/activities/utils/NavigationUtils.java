@@ -35,6 +35,7 @@ public class NavigationUtils extends AppCompatActivity {
     private static void startHomeScreen(Context context, String id, ArrayList<String> matchCodes) {
         if (!(context instanceof UserHomeActivity)) {
             Intent intent = new Intent(context, UserHomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             intent.putExtra("id", id);
             intent.putStringArrayListExtra("codes", matchCodes);
             context.startActivity(intent);
