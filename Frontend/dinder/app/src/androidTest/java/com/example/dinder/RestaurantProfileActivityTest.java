@@ -5,10 +5,12 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import android.app.Activity;
+import android.app.Instrumentation;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.IdlingRegistry;
@@ -54,6 +56,14 @@ public class RestaurantProfileActivityTest {
     @Rule
     public ActivityScenarioRule<LoginActivity> loginScenario = new ActivityScenarioRule<>(LoginActivity.class);
 
+    public void awaitTransition(int time) {
+        try {
+            Thread.sleep(time); // Wait for the screen transition
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Test
     public void testNavigateToRestaurantProfile() {
         // Enter valid username and password
@@ -63,21 +73,38 @@ public class RestaurantProfileActivityTest {
         // Click on the login button
         onView(withId(R.id.loginBtn)).perform(click());
 
-        try {
-            Thread.sleep(5000); // Wait for getRestaurants()
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        awaitTransition(5000);
 
         // Click on the center image to navigate to the restaurant profile screen
         onView(withId(R.id.centerRestaurantImage)).perform(click());
 
-        try {
-            Thread.sleep(1000); // Wait for the screen transition
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        awaitTransition(1000);
 
         intended(hasComponent(RestaurantProfileActivity.class.getName()));
+    }
+
+    @Test
+    public void testNavigateToHomeFromRestaurantProfile() {
+        // Enter valid username and password
+        onView(withId(R.id.editTextUsername)).perform(typeText("MrEthan"), closeSoftKeyboard());
+        onView(withId(R.id.editTextPassword)).perform(typeText("johndeere"), closeSoftKeyboard());
+
+        // Click on the login button
+        onView(withId(R.id.loginBtn)).perform(click());
+
+        awaitTransition(5000);
+
+        // Click on the center image to navigate to the restaurant profile screen
+        onView(withId(R.id.centerRestaurantImage)).perform(click());
+
+        awaitTransition(1000);
+
+        // Go back
+        onView(withId(R.id.backBtn)).perform(click());
+
+        awaitTransition(500);
+
+        // Assert that we go back to the home screen.
+        intending(hasComponent(UserHomeActivity.class.getName())).respondWith(new Instrumentation.ActivityResult(0, null));
     }
 }
