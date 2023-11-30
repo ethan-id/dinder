@@ -1,8 +1,8 @@
-<center>
-    <img src="./Frontend/dinder/app/src/main/res/drawable/temporary_logo.png" height="250px">
+<div align="center">
+<img src="./Frontend/dinder/app/src/main/res/drawable/temporary_logo.png" height="250px" alt="Dinder Logo">
     
 <h4>Fall '23 SE 309, Team: SD-322</h4>
-</center>
+</div>
 
 ## Description
 Struggling to find a place to eat? Moved to a new city and aren't sure what's around you, but don't want to have to sift through maps? Dinder is for you!
