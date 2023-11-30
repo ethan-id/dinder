@@ -147,17 +147,20 @@ public class ChatServer {
             return;
         }
 
-        String usernameToAdd = message.substring(8);    //@username and get rid of @
-        User userToAdd = new User();
-        try {
-            userToAdd = userRepository.findByUsername(usernameToAdd);
-        }
-        catch (Exception e) {
-            broadcast("user does not exist");
-            return;
-        }
+
         // Direct message to a user using the format "@username <message>"
         if(message.contains("invite@")){
+
+            String usernameToAdd = message.substring(7);    //@username and get rid of @
+            User userToAdd = new User();
+            try {
+                userToAdd = userRepository.findByUsername(usernameToAdd);
+            }
+            catch (Exception e) {
+                broadcast("user does not exist");
+                return;
+            }
+
             groupSessionUsernameMap.putIfAbsent(session, username);
             groupUsernameSessionMap.putIfAbsent(username, session);
 
@@ -190,6 +193,17 @@ public class ChatServer {
         //Sending a friend request
 
         if (message.contains("request@")) {
+
+            String usernameToAdd = message.substring(8);    //@username and get rid of @
+            User userToAdd = new User();
+            try {
+                userToAdd = userRepository.findByUsername(usernameToAdd);
+            }
+            catch (Exception e) {
+                broadcast("user does not exist");
+                return;
+            }
+
             userToAdd = userRepository.findByUsername(usernameToAdd);
             if (!user.getFriends().isEmpty()) {
                 for (User friend : user.getFriends()) {
@@ -219,6 +233,7 @@ public class ChatServer {
             for (Request request : user.getRequests()) {
                 if (request.getId() == Integer.parseInt(message.substring(7))) {
                     request.setStatus(false);
+                    requestRepository.delete(request);
                     groupSessionUsernameMap.putIfAbsent(session, username);
                     groupUsernameSessionMap.putIfAbsent(username, session);
                     for (String usernames : groupUsernameSessionMap.keySet()) {
@@ -267,11 +282,12 @@ public class ChatServer {
             if (newMessage[0].equals("like")) {
                 Liked like = new Liked(newMessage[1]);
                 like.setUser(Objects.requireNonNull(user));
-                Objects.requireNonNull(user).setNewLike(like);
+                Objects.requireNonNull(user).setNewLike(Objects.requireNonNull(like));
                 likeRepository.save(like);
                 userRepository.save(user);
             }
             int like_count = 100000000;
+            int numberOfLikes = 0;
             User userWithLeastLikes = new User();
             if (groupUsernameSessionMap.size() >= 2) {
                 for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
@@ -279,31 +295,28 @@ public class ChatServer {
                         userWithLeastLikes = userRepository.findByUsername(GroupMember.getKey());
                     }
                 }
+                String restaurantMatch = "";
                 if (userWithLeastLikes.getUsername() != null) {
-                    for (Liked likedRestaurant : userWithLeastLikes.getLikes()) {
-                        int numberOfLikes = 0;
-                        for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
-                            for (Liked like : userRepository.findByUsername(GroupMember.getKey()).getLikes()) {
-                                if (like.getName().equals(likedRestaurant.getName())) {
-                                    numberOfLikes++;
-                                    if (numberOfLikes == groupUsernameSessionMap.size()) {
-                                        break;
-                                    }
+                    for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
+                        for (Liked like : userRepository.findByUsername(GroupMember.getKey()).getLikes()) {
+                            if (like.getName().equals(newMessage[1])) {
+                                numberOfLikes++;
+                                restaurantMatch = like.getName();
+                                if (numberOfLikes == groupUsernameSessionMap.size()) {
+                                    break;
                                 }
                             }
                         }
-                        if (numberOfLikes == groupUsernameSessionMap.size()) {
-                            for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
-                                sendMessageToPArticularUser(GroupMember.getKey(), "Match@" +  newMessage[1]);
-                                Favorite favorite = new Favorite(newMessage[1]);
-                                userRepository.findByUsername(GroupMember.getKey()).addFavorite(favorite);
-                                userRepository.save(userRepository.findByUsername(GroupMember.getKey()));
-                            }
-                            numberOfLikes = 0;
-                            break;
-                        }
-                        numberOfLikes = 0;
                     }
+                    if (numberOfLikes == groupUsernameSessionMap.size()) {
+                        for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
+                            sendMessageToPArticularUser(GroupMember.getKey(), "Match@" + restaurantMatch);
+                            Favorite favorite = new Favorite(newMessage[1]);
+                            userRepository.findByUsername(GroupMember.getKey()).addFavorite(favorite);
+                            userRepository.save(userRepository.findByUsername(GroupMember.getKey()));
+                        }
+                    }
+                    numberOfLikes = 0;
                 }
             }
             else {
