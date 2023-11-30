@@ -401,7 +401,17 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         logo = findViewById(R.id.restLogo);
         notificationContainer = findViewById(R.id.match_notif_layout);
 
-        getRestaurants(queue);
+        if (savedInstanceState != null) {
+            // Activity is being recreated, restore the state
+            int savedIndex = savedInstanceState.getInt("currentRestaurantIndex", -1);
+            if (savedIndex != -1 && savedIndex < restaurants.size()) {
+                // Restore the view with the saved restaurant
+                populateScreen(queue, savedIndex);
+            }
+        } else {
+            // Normal activity setup
+            getRestaurants(queue);
+        }
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
         NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, matchCodes, username);
@@ -443,6 +453,15 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
                 return super.onFling(e1, e2, velocityX, velocityY);
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Save the current restaurant index and any other relevant data
+        int currentRestaurantIndex = restaurants.indexOf(currentRestaurant);
+        outState.putInt("currentRestaurantIndex", currentRestaurantIndex);
     }
 
     /**
