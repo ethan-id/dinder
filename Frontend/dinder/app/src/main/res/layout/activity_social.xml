@@ -9,6 +9,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- Friend Request Input and Send Button -->
+        <LinearLayout
+            android:id="@+id/addFriendContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:id="@+id/usernameInput"
+                android:maxLines="1"
+                android:layout_width="0dp"
+                android:layout_marginTop="2dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:hint="@string/enter_username" />
+
+            <ImageView
+                android:id="@+id/sendRequestButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/person_add"
+                android:contentDescription="@string/send_friend_request" />
+
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/incomingRequestsRecyclerView"
             android:layout_width="wrap_content"
@@ -16,21 +43,9 @@
             android:layout_marginTop="20dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            app:layout_constraintStart_toStartOf="@+id/search"
-            app:layout_constraintEnd_toEndOf="@+id/search"
-            app:layout_constraintTop_toBottomOf="@+id/search" />
-
-        <SearchView
-            android:id="@+id/search"
-            android:layout_width="378dp"
-            android:layout_height="54dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="46dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/rounded_search"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="@+id/addFriendContainer"
+            app:layout_constraintEnd_toEndOf="@+id/addFriendContainer"
+            app:layout_constraintTop_toBottomOf="@+id/addFriendContainer" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/friendsRecyclerView"

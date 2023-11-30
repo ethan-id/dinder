@@ -2,7 +2,8 @@ package com.example.dinder.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.SearchView;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,10 +17,8 @@ import com.example.dinder.VolleySingleton;
 import com.example.dinder.activities.utils.NavigationUtils;
 import com.example.dinder.adapters.FriendsAdapter;
 import com.example.dinder.adapters.IncomingAdapter;
-import com.example.dinder.websocket.WebSocketListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,16 +30,15 @@ import java.util.List;
  * The Social Screen displays the user's friends list, allows the user to invite friends to their group, and allows
  * the user to send friend requests to other users.
  */
-public class SocialActivity extends AppCompatActivity implements WebSocketListener {
-    /**
-     * Search bar used for the user to send friend requests
-     */
-    SearchView searchBar;
+public class SocialActivity extends AppCompatActivity {
     /**
      * RecyclerView used to dynamically display the user's friends
      */
     RecyclerView friendsRecyclerView;
     RecyclerView incomingRequestsRecyclerView;
+
+    EditText usernameInput;
+    ImageView sendRequestButton;
     /**
      * Private field representing the View displaying the bottom navigation menu on the screen
      */
@@ -90,6 +88,9 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social);
 
+        usernameInput = findViewById(R.id.usernameInput);
+        sendRequestButton = findViewById(R.id.sendRequestButton);
+
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         ArrayList<String> codes = intent.getStringArrayListExtra("codes");
@@ -97,8 +98,6 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         bottomNavigationView = findViewById(R.id.bottom_navigator);
         NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes);
         bottomNavigationView.setSelectedItemId(R.id.social);
-
-        searchBar = findViewById(R.id.search);
 
         friendsRecyclerView = findViewById(R.id.friendsRecyclerView);
         friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -119,26 +118,12 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         IncomingAdapter incAdapter = new IncomingAdapter(incoming);
         incomingRequestsRecyclerView.setAdapter(incAdapter);
 
+        sendRequestButton.setOnClickListener(v -> {
+            String friendToAdd = usernameInput.getText().toString();
+            // send friend request...
+            usernameInput.setText("");
+        });
+
         getUsersFriends(id);
-    }
-
-    @Override
-    public void onWebSocketOpen(ServerHandshake handshakeData) {
-
-    }
-
-    @Override
-    public void onWebSocketMessage(String message) {
-
-    }
-
-    @Override
-    public void onWebSocketClose(int code, String reason, boolean remote) {
-
-    }
-
-    @Override
-    public void onWebSocketError(Exception ex) {
-
     }
 }
