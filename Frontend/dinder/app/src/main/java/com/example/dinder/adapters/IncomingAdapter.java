@@ -1,5 +1,6 @@
 package com.example.dinder.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
 import com.example.dinder.R;
+import com.example.dinder.VolleySingleton;
 import com.example.dinder.websocket.WebSocketManager;
 
 import org.json.JSONException;
@@ -28,14 +34,16 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
      * A list of strings containing the user's friends
      */
     private List<JSONObject> incomingRequests;
+    private Context context;
 
     /**
      * Constructor that instantiates a FriendsAdapter; takes a list of strings as a friends list to use
      *
      * @param incomingRequests       A List of Strings representing a list of friends' names
      */
-    public IncomingAdapter(List<JSONObject> incomingRequests) {
+    public IncomingAdapter(List<JSONObject> incomingRequests, Context ctx) {
         this.incomingRequests = incomingRequests;
+        this.context = ctx;
     }
 
     @NonNull
@@ -55,8 +63,24 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
         }
         holder.invite.setText("Accept");
         holder.invite.setOnClickListener(v -> {
-//            WebSocketManager.getInstance().sendMessage("accept@" + friendName);
+            try {
+                acceptFriendRequest(friend.getInt("id"), position);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         });
+    }
+
+    public void acceptFriendRequest(int requestId, int position) {
+        RequestQueue queue = VolleySingleton.getInstance(context.getApplicationContext()).getRequestQueue();
+        String url = "http://coms-309-055.class.las.iastate.edu:8080/request/accept/" + requestId;
+
+        queue.add(new StringRequest(Request.Method.POST, url,
+            response -> {
+                incomingRequests.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, incomingRequests.size());
+            }, Throwable::printStackTrace));
     }
 
     /**

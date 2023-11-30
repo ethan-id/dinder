@@ -2,6 +2,7 @@ package com.example.dinder.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -19,6 +20,7 @@ import com.example.dinder.adapters.FriendsAdapter;
 import com.example.dinder.adapters.IncomingAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,8 +47,9 @@ public class SocialActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
 
     List<String> friendsList = new ArrayList<>();
+    List<JSONObject> incoming = new ArrayList<>();
 
-    private void getUsersFriends(String id) {
+    private void getUsersFriendsAndRequests(String id) {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
         String url = "http://coms-309-055.class.las.iastate.edu:8080/users/" + id;
 
@@ -54,9 +57,23 @@ public class SocialActivity extends AppCompatActivity {
             Request.Method.GET, url, null,
             response -> {
                 try {
-                    List<String> list = Arrays.asList(String.valueOf(response.getJSONArray("allFriends")));
-                    for (String friend : list) {
-                        friendsList.add(friend.substring(friend.indexOf("\"")+1, friend.lastIndexOf("\"")));
+                    JSONArray requestsArray = response.getJSONArray("requests");
+                    for (int i = 0; i < requestsArray.length(); i++) {
+                        JSONObject requestObject = requestsArray.getJSONObject(i);
+                        incoming.add(requestObject); // Add each JSONObject to the incoming list
+                    }
+
+                    // Set the adapter for the RecyclerView with the updated incoming list
+                    IncomingAdapter incAdapter = new IncomingAdapter(incoming, this.getApplicationContext());
+                    incomingRequestsRecyclerView.setAdapter(incAdapter);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                try {
+                    JSONArray iter = response.getJSONArray("allFriends");
+                    for (int i = 0; i < iter.length(); i++) {
+                        friendsList.add(iter.get(i).toString());
                     }
 
                     FriendsAdapter adapter = new FriendsAdapter(friendsList);
@@ -105,25 +122,12 @@ public class SocialActivity extends AppCompatActivity {
         incomingRequestsRecyclerView = findViewById(R.id.incomingRequestsRecyclerView);
         incomingRequestsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<JSONObject> incoming = new ArrayList<>();
-        JSONObject testIncoming = new JSONObject();
-        try {
-            testIncoming.put("creatorID", 21);
-            testIncoming.put("creator", "Jesse");
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        incoming.add(testIncoming);
-
-        IncomingAdapter incAdapter = new IncomingAdapter(incoming);
-        incomingRequestsRecyclerView.setAdapter(incAdapter);
-
         sendRequestButton.setOnClickListener(v -> {
             String friendToAdd = usernameInput.getText().toString();
             // send friend request...
             usernameInput.setText("");
         });
 
-        getUsersFriends(id);
+        getUsersFriendsAndRequests(id);
     }
 }

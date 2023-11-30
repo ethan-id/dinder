@@ -51,8 +51,8 @@
             android:id="@+id/friendsRecyclerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            app:layout_constraintStart_toStartOf="@+id/incomingRequestsRecyclerView"
+            app:layout_constraintStart_toStartOf="@+id/addFriendContainer"
+            app:layout_constraintEnd_toEndOf="@+id/addFriendContainer"
             app:layout_constraintTop_toBottomOf="@+id/incomingRequestsRecyclerView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
