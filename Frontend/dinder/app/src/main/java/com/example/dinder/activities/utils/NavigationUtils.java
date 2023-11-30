@@ -15,55 +15,59 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 
 public class NavigationUtils extends AppCompatActivity {
-    public static void setupBottomNavigation(BottomNavigationView bottomNavigationView, Context context, String id, ArrayList<String> matchCodes) {
+    public static void setupBottomNavigation(BottomNavigationView bottomNavigationView, Context context, String id, ArrayList<String> matchCodes, String username) {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
             if (itemId == R.id.home) {
-                startHomeScreen(context, id, matchCodes);
+                startHomeScreen(context, id, matchCodes, username);
             } else if (itemId == R.id.match) {
-                startMatchesScreen(context, id, matchCodes);
+                startMatchesScreen(context, id, matchCodes, username);
             } else if (itemId == R.id.social) {
-                startSocialActivity(context, id, matchCodes);
+                startSocialActivity(context, id, matchCodes, username);
             } else if (itemId == R.id.userprofile) {
-                startUserProfileActivity(context, id, matchCodes);
+                startUserProfileActivity(context, id, matchCodes, username);
             }
             return true;
         });
     }
 
-    private static void startHomeScreen(Context context, String id, ArrayList<String> matchCodes) {
+    private static void startHomeScreen(Context context, String id, ArrayList<String> matchCodes, String username) {
         if (!(context instanceof UserHomeActivity)) {
             Intent intent = new Intent(context, UserHomeActivity.class);
             intent.putExtra("id", id);
             intent.putStringArrayListExtra("codes", matchCodes);
+            intent.putExtra("username", username);
             context.startActivity(intent);
         }
     }
 
-    private static void startMatchesScreen(Context context, String id, ArrayList<String> matchCodes) {
+    private static void startMatchesScreen(Context context, String id, ArrayList<String> matchCodes, String username) {
         if (!(context instanceof MatchesScreen)) {
             Intent intent = new Intent(context, MatchesScreen.class);
             intent.putExtra("id", id);
             intent.putStringArrayListExtra("codes", matchCodes);
+            intent.putExtra("username", username);
             context.startActivity(intent);
         }
     }
 
-    private static void startSocialActivity(Context context, String id, ArrayList<String> matchCodes) {
+    private static void startSocialActivity(Context context, String id, ArrayList<String> matchCodes, String username) {
         if (!(context instanceof SocialActivity)) {
             Intent intent = new Intent(context, SocialActivity.class);
             intent.putExtra("id", id);
             intent.putStringArrayListExtra("codes", matchCodes);
+            intent.putExtra("username", username);
             context.startActivity(intent);
         }
     }
 
-    private static void startUserProfileActivity(Context context, String id, ArrayList<String> matchCodes) {
+    private static void startUserProfileActivity(Context context, String id, ArrayList<String> matchCodes, String username) {
         if (!(context instanceof UserProfileActivity)) {
             Intent intent = new Intent(context, UserProfileActivity.class);
             intent.putExtra("id", id);
             intent.putStringArrayListExtra("codes", matchCodes);
+            intent.putExtra("username", username);
             context.startActivity(intent);
         }
     }

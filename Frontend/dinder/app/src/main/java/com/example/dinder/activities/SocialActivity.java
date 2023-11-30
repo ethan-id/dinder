@@ -2,7 +2,11 @@ package com.example.dinder.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.SearchView;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,15 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
 import com.example.dinder.activities.utils.NavigationUtils;
 import com.example.dinder.adapters.FriendsAdapter;
-import com.example.dinder.websocket.WebSocketListener;
+import com.example.dinder.adapters.IncomingAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,23 +35,41 @@ import java.util.List;
  * The Social Screen displays the user's friends list, allows the user to invite friends to their group, and allows
  * the user to send friend requests to other users.
  */
-public class SocialActivity extends AppCompatActivity implements WebSocketListener {
-    /**
-     * Search bar used for the user to send friend requests
-     */
-    SearchView searchBar;
+public class SocialActivity extends AppCompatActivity implements IncomingAdapter.AdapterCallback {
     /**
      * RecyclerView used to dynamically display the user's friends
      */
     RecyclerView friendsRecyclerView;
+    RecyclerView incomingRequestsRecyclerView;
+
+    EditText usernameInput;
+    ImageView sendRequestButton;
+    TextView friendRequestsHeader;
+    TextView friendsHeader;
     /**
      * Private field representing the View displaying the bottom navigation menu on the screen
      */
     private BottomNavigationView bottomNavigationView;
 
     List<String> friendsList = new ArrayList<>();
+    List<JSONObject> incoming = new ArrayList<>();
 
-    private void getUsersFriends(String id) {
+    public void updateHeaders() {
+        runOnUiThread(() -> {
+            if (incoming.isEmpty()) {
+                friendRequestsHeader.setVisibility(View.GONE);
+            } else {
+                friendRequestsHeader.setVisibility(View.VISIBLE);
+            }
+            if (friendsList.isEmpty()) {
+                friendsHeader.setVisibility(View.GONE);
+            } else {
+                friendsHeader.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void getUsersFriendsAndRequests(String id) {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
         String url = "http://coms-309-055.class.las.iastate.edu:8080/users/" + id;
 
@@ -53,10 +77,26 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
             Request.Method.GET, url, null,
             response -> {
                 try {
-                    List<String> list = Arrays.asList(String.valueOf(response.getJSONArray("allFriends")));
-                    for (String friend : list) {
-                        friendsList.add(friend.substring(friend.indexOf("\"")+1, friend.lastIndexOf("\"")));
+                    JSONArray requestsArray = response.getJSONArray("requests");
+                    for (int i = 0; i < requestsArray.length(); i++) {
+                        JSONObject requestObject = requestsArray.getJSONObject(i);
+                        incoming.add(requestObject); // Add each JSONObject to the incoming list
                     }
+                    updateHeaders();
+
+                    // Set the adapter for the RecyclerView with the updated incoming list
+                    IncomingAdapter incAdapter = new IncomingAdapter(incoming, this.getApplicationContext(), this);
+                    incomingRequestsRecyclerView.setAdapter(incAdapter);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                try {
+                    JSONArray iter = response.getJSONArray("allFriends");
+                    for (int i = 0; i < iter.length(); i++) {
+                        friendsList.add(iter.get(i).toString());
+                    }
+                    updateHeaders();
 
                     FriendsAdapter adapter = new FriendsAdapter(friendsList);
                     friendsRecyclerView.setAdapter(adapter);
@@ -66,6 +106,16 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
             },
             Throwable::printStackTrace
         ));
+    }
+
+    public void sendFriendRequest(String username, String friend) {
+        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+        String url = "http://coms-309-055.class.las.iastate.edu:8080/request/create/" + username + "/friend/" + friend;
+
+        queue.add(new StringRequest(Request.Method.POST, url,
+                response -> {
+                    Log.d("Friend Request: ", response);
+                }, Throwable::printStackTrace));
     }
 
     /**
@@ -87,38 +137,37 @@ public class SocialActivity extends AppCompatActivity implements WebSocketListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social);
 
+        usernameInput = findViewById(R.id.usernameInput);
+        sendRequestButton = findViewById(R.id.sendRequestButton);
+        friendRequestsHeader = findViewById(R.id.friendRequestsHeader);
+        friendsHeader = findViewById(R.id.friendsHeader);
+
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
+        String username = intent.getStringExtra("username");
         ArrayList<String> codes = intent.getStringArrayListExtra("codes");
 
         bottomNavigationView = findViewById(R.id.bottom_navigator);
-        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes);
+        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username);
         bottomNavigationView.setSelectedItemId(R.id.social);
 
-        searchBar = findViewById(R.id.search);
         friendsRecyclerView = findViewById(R.id.friendsRecyclerView);
         friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        getUsersFriends(id);
+        incomingRequestsRecyclerView = findViewById(R.id.incomingRequestsRecyclerView);
+        incomingRequestsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        sendRequestButton.setOnClickListener(v -> {
+            String friendToAdd = usernameInput.getText().toString();
+            sendFriendRequest(username, friendToAdd);
+            usernameInput.setText("");
+        });
+
+        getUsersFriendsAndRequests(id);
     }
 
     @Override
-    public void onWebSocketOpen(ServerHandshake handshakeData) {
-
-    }
-
-    @Override
-    public void onWebSocketMessage(String message) {
-
-    }
-
-    @Override
-    public void onWebSocketClose(int code, String reason, boolean remote) {
-
-    }
-
-    @Override
-    public void onWebSocketError(Exception ex) {
-
+    public void onListChanged() {
+        updateHeaders();
     }
 }
