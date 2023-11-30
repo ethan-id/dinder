@@ -69,7 +69,7 @@ public class RestaurantController {
             Request request = new Request.Builder()
                     .url(url + "&offset=" + i)
                     .addHeader("accept", "application/json")
-                    .addHeader("Authorization", JesseKey)
+                    .addHeader("Authorization", EliKey)
                     .build();
             try {
                 Response response = client.newCall(request).execute();
@@ -101,7 +101,7 @@ public class RestaurantController {
         Request request = new Request.Builder()
                 .url("https://api.yelp.com/v3/businesses/" + code)
                 .addHeader("accept", "application/json")
-                .addHeader("Authorization", JesseKey)
+                .addHeader("Authorization", EliKey)
                 .build();
         try {
             Response response = client.newCall(request).execute();
@@ -135,7 +135,7 @@ public class RestaurantController {
         Request request = new Request.Builder()
                 .url("https://api.yelp.com/v3/businesses/" + code + "/reviews")
                 .addHeader("accept", "application/json")
-                .addHeader("Authorization", JesseKey)
+                .addHeader("Authorization", EliKey)
                 .build();
         try {
             Response response = client.newCall(request).execute();
@@ -175,7 +175,7 @@ public class RestaurantController {
             Request request = new Request.Builder()
                     .url(url + "&location=" + city + "&price=" + price + "&offset=" + i)
                     .addHeader("accept", "application/json")
-                    .addHeader("Authorization", JesseKey)
+                    .addHeader("Authorization", EliKey)
                     .build();
             try (Response response = client.newCall(request).execute()) {
                 if (response.isSuccessful()) {
