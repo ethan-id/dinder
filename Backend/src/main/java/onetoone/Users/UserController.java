@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -217,6 +219,25 @@ public class UserController {
         catch (Exception e) {
             return failure;
         }
+    }
+
+    @GetMapping("/admin/stats")
+    int getAdminStats(){
+        int userCount = 4;
+        int totalSwipes = 0;
+        int totalLikes = 0;
+        int totalMatches = 0;
+
+        String jsonString = "{\"name\":" + +  , \"userCount\":" + userCount + "}";
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode node = mapper.readTree(jsonString);
+            System.out.println(node);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 1;
     }
 
 
