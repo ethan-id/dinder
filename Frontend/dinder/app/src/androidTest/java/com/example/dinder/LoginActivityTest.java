@@ -10,6 +10,8 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
+import static com.example.dinder.utils.TestUtils.awaitTransition;
+
 import android.app.Activity;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -67,11 +69,7 @@ public class LoginActivityTest {
         // Click on the login button
         onView(withId(R.id.loginBtn)).perform(click());
 
-        try {
-            Thread.sleep(1000); // Wait for the screen transition to complete
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        awaitTransition(1000);
 
         // Check if the UserHomeActivity is started
         intended(hasComponent(UserHomeActivity.class.getName()));
@@ -86,11 +84,7 @@ public class LoginActivityTest {
         // Click on the login button
         onView(withId(R.id.loginBtn)).perform(click());
 
-        try {
-            Thread.sleep(1000); // Wait for the fade-in animation to complete
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        awaitTransition(1000);
 
         // Check if the error notification is displayed
         onView(withId(R.id.notification_layout)).check(matches(isDisplayed()));
