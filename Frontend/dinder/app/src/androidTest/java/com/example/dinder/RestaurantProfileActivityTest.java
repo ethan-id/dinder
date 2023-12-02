@@ -9,6 +9,8 @@ import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
+import static com.example.dinder.utils.TestUtils.awaitTransition;
+
 import android.app.Activity;
 import android.app.Instrumentation;
 
@@ -55,14 +57,6 @@ public class RestaurantProfileActivityTest {
 
     @Rule
     public ActivityScenarioRule<LoginActivity> loginScenario = new ActivityScenarioRule<>(LoginActivity.class);
-
-    public void awaitTransition(int time) {
-        try {
-            Thread.sleep(time); // Wait for the screen transition
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Test
     public void testNavigateToRestaurantProfile() {
