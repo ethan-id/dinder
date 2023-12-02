@@ -174,10 +174,12 @@ public class UserProfileActivity extends AppCompatActivity {
      * </p>
      */
     private void checkForPreferenceChanges() {
-        if (ogVegan != veganCheck.isChecked() || ogVegetarian != vegetarianCheck.isChecked() || ogHalal != halalCheck.isChecked()) {
-            runOnUiThread(() -> {
-                saveBtn.setEnabled(true);
-            });
+        if (ogVegan != null && ogVegetarian != null && ogHalal != null) {
+            if (ogVegan != veganCheck.isChecked() || ogVegetarian != vegetarianCheck.isChecked() || ogHalal != halalCheck.isChecked()) {
+                runOnUiThread(() -> {
+                    saveBtn.setEnabled(true);
+                });
+            }
         }
     }
 
