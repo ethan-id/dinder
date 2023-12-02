@@ -18,6 +18,7 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.android.volley.RequestQueue;
 import com.example.dinder.activities.LoginActivity;
@@ -28,7 +29,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(AndroidJUnit4.class)
 public class RestaurantProfileActivityTest {
     private VolleyIdlingResource idlingResource;
 
