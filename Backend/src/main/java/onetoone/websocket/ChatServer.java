@@ -1,16 +1,12 @@
 package onetoone.websocket;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import okhttp3.OkHttpClient;
-import okhttp3.Response;
+
 import onetoone.Favorites.Favorite;
 import onetoone.Favorites.FavoriteRepository;
 import onetoone.Likes.LikeRepository;
 import onetoone.Likes.Liked;
 import onetoone.Requests.Request;
 import onetoone.Requests.RequestRepository;
-import onetoone.Restaurants.Restaurant;
 import onetoone.Restaurants.RestaurantRepository;
 import onetoone.Users.User;
 import onetoone.Users.UserRepository;
@@ -22,10 +18,7 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -61,6 +54,13 @@ public class ChatServer {
     private static LikeRepository likeRepository;
     private static FavoriteRepository favoriteRepository;
     private static RequestRepository requestRepository;
+
+    private static Set<Liked> LikeMap = new HashSet<Liked>();
+    boolean match = false;
+    int likeId = 0;
+    int like_count = 100000000;
+    int numberOfLikes = 0;
+    String restaurantMatch = "";
 
     @Autowired
     public void setUserRepository(UserRepository repo) {
@@ -278,54 +278,44 @@ public class ChatServer {
             catch (Exception e) {
                 logger.info("[onError]" + username + ": " + "Could not find username in database");
             }
+
             String[] newMessage = message.split("@");
-            if (newMessage[0].equals("like")) {
+            if (newMessage[0].equals("dislike")) {
+               return;
+            }
+            else if (newMessage[0].equals("like")) {
                 Liked like = new Liked(newMessage[1]);
                 like.setUser(Objects.requireNonNull(user));
                 Objects.requireNonNull(user).setNewLike(Objects.requireNonNull(like));
                 likeRepository.save(like);
                 userRepository.save(user);
-            }
-            int like_count = 100000000;
-            int numberOfLikes = 0;
-            User userWithLeastLikes = new User();
-            if (groupUsernameSessionMap.size() >= 2) {
-                for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
-                    if (userRepository.findByUsername(GroupMember.getKey()).getLikes().size() < like_count) {
-                        userWithLeastLikes = userRepository.findByUsername(GroupMember.getKey());
-                    }
-                }
-                String restaurantMatch = "";
-                if (userWithLeastLikes.getUsername() != null) {
-                    for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
-                        for (Liked like : userRepository.findByUsername(GroupMember.getKey()).getLikes()) {
-                            if (like.getName().equals(newMessage[1])) {
-                                numberOfLikes++;
-                                restaurantMatch = like.getName();
-                                if (numberOfLikes == groupUsernameSessionMap.size()) {
-                                    break;
-                                }
-                            }
+                if (!LikeMap.isEmpty()) {
+                    if (LikeMap.stream().anyMatch(liked -> liked.getName().contains(like.getName())) && !match) {
+                        numberOfLikes++;
+                        if (numberOfLikes == groupUsernameSessionMap.size() - 1) {
+                            match = true;
+                            numberOfLikes = 0;
+                            restaurantMatch = like.getName();
                         }
                     }
-                    if (numberOfLikes == groupUsernameSessionMap.size()) {
+                    if (match || groupUsernameSessionMap.size() == 1) {
                         for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
                             sendMessageToPArticularUser(GroupMember.getKey(), "Match@" + restaurantMatch);
-                            Favorite favorite = new Favorite(newMessage[1]);
-                            userRepository.findByUsername(GroupMember.getKey()).addFavorite(favorite);
-                            userRepository.save(userRepository.findByUsername(GroupMember.getKey()));
+                            Favorite favorite = new Favorite(restaurantMatch);
+                            favorite.setUser(Objects.requireNonNull(user));
+                            userRepository.findByUsername(username).addFavorite(favorite);
+                            favoriteRepository.save(favorite);
+                            userRepository.save(userRepository.findByUsername(username));
+                            match = false;
                         }
                     }
-                    numberOfLikes = 0;
+                    else {
+                        LikeMap.add(like);
+                    }
                 }
-            }
-            else {
-                sendMessageToPArticularUser(username,"Match@" + newMessage[1]);
-                Favorite favorite = new Favorite(newMessage[1]);
-                favorite.setUser(Objects.requireNonNull(user));
-                userRepository.findByUsername(username).addFavorite(favorite);
-                favoriteRepository.save(favorite);
-                userRepository.save(userRepository.findByUsername(username));
+                else {
+                    LikeMap.add(like);
+                }
             }
         }
     }
