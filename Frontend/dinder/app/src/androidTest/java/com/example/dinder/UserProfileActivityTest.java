@@ -8,7 +8,10 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
+import static com.example.dinder.utils.TestUtils.awaitTransition;
+
 import android.app.Activity;
+import android.util.Log;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.IdlingRegistry;
@@ -51,28 +54,27 @@ public class UserProfileActivityTest {
         if (idlingResource != null) {
             IdlingRegistry.getInstance().unregister(idlingResource);
         }
-        homeScreenScenario.getScenario().onActivity(Activity::finish);
+        loginScenario.getScenario().onActivity(Activity::finish);
     }
 
     @Rule
-    public ActivityScenarioRule<UserHomeActivity> homeScreenScenario = new ActivityScenarioRule<>(UserHomeActivity.class);
+    public ActivityScenarioRule<LoginActivity> loginScenario = new ActivityScenarioRule<>(LoginActivity.class);
 
     @Test
     public void testNavigatingToUserProfile() {
-        try {
-            Thread.sleep(4000); // Wait for the screen transition to complete
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // Enter valid username and password
+        onView(withId(R.id.editTextUsername)).perform(typeText("MrEthan"), closeSoftKeyboard());
+        onView(withId(R.id.editTextPassword)).perform(typeText("johndeere"), closeSoftKeyboard());
+
+        // Click on the login button
+        onView(withId(R.id.loginBtn)).perform(click());
+
+        awaitTransition(5000);
 
         // Click on the user profile menu option
         onView(withId(R.id.userprofile)).perform(click());
 
-        try {
-            Thread.sleep(1000); // Wait for the screen transition to complete
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        awaitTransition(1000);
 
         // Check if the UserHomeActivity is started
         intended(hasComponent(UserProfileActivity.class.getName()));
@@ -80,20 +82,19 @@ public class UserProfileActivityTest {
 
     @Test
     public void testCheckingADietaryRestriction() {
-        try {
-            Thread.sleep(4000); // Wait for the screen transition to complete
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // Enter valid username and password
+        onView(withId(R.id.editTextUsername)).perform(typeText("MrEthan"), closeSoftKeyboard());
+        onView(withId(R.id.editTextPassword)).perform(typeText("johndeere"), closeSoftKeyboard());
+
+        // Click on the login button
+        onView(withId(R.id.loginBtn)).perform(click());
+
+        awaitTransition(5000);
 
         // Click on the user profile menu option
         onView(withId(R.id.userprofile)).perform(click());
 
-        try {
-            Thread.sleep(1000); // Wait for the screen transition to complete
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        awaitTransition(1000);
 
         onView(withId(R.id.vegetarianCheck)).perform(click());
         onView(withId(R.id.veganCheck)).perform(click());
