@@ -153,7 +153,6 @@ public class RestaurantController {
             return new ObjectMapper().readTree("Build unsuccessful");
         }
     }
-
     @ApiOperation(value = "Allows the user to completely customize the restaurants they see. They can update their location, radius, " +
             "update their accomodations and preferences, will auto update the url based on the user's wants", response = Iterable.class, tags = "CustomURLCallforUser")
     @ApiResponses(value = {
