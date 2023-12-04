@@ -4,11 +4,11 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+
+import static com.example.dinder.utils.TestUtils.awaitTransition;
 
 import android.app.Activity;
 
@@ -19,8 +19,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.android.volley.RequestQueue;
+import com.example.dinder.activities.LoginActivity;
 import com.example.dinder.activities.SocialActivity;
-import com.example.dinder.activities.UserHomeActivity;
 
 import org.junit.After;
 import org.junit.Before;
@@ -52,29 +52,48 @@ public class SocialActivityTest {
         if (idlingResource != null) {
             IdlingRegistry.getInstance().unregister(idlingResource);
         }
-        homeScreenScenario.getScenario().onActivity(Activity::finish);
+        loginScenario.getScenario().onActivity(Activity::finish);
     }
 
     @Rule
-    public ActivityScenarioRule<UserHomeActivity> homeScreenScenario = new ActivityScenarioRule<>(UserHomeActivity.class);
+    public ActivityScenarioRule<LoginActivity> loginScenario = new ActivityScenarioRule<>(LoginActivity.class);
 
     @Test
     public void testNavigateToSocialFromHome() {
-        try {
-            Thread.sleep(4000); // Wait for getAllRestaurants()
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // Enter valid username and password
+        onView(withId(R.id.editTextUsername)).perform(typeText("MrEthan"), closeSoftKeyboard());
+        onView(withId(R.id.editTextPassword)).perform(typeText("johndeere"), closeSoftKeyboard());
 
-        // Check if the UserHomeActivity is started
+        // Click on the login button
+        onView(withId(R.id.loginBtn)).perform(click());
+
+        awaitTransition(5000);
+
+        // Navigate to the social screen
         onView(withId(R.id.social)).perform(click());
 
-        try {
-            Thread.sleep(1000); // Wait for the screen transition to complete
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        awaitTransition(1000);
 
         intended(hasComponent(SocialActivity.class.getName()));
+    }
+
+    @Test
+    public void testSendFriendRequest() {
+        // Enter valid username and password
+        onView(withId(R.id.editTextUsername)).perform(typeText("MrEthan"), closeSoftKeyboard());
+        onView(withId(R.id.editTextPassword)).perform(typeText("johndeere"), closeSoftKeyboard());
+
+        // Click on the login button
+        onView(withId(R.id.loginBtn)).perform(click());
+
+        awaitTransition(5000);
+
+        // Navigate to the social screen
+        onView(withId(R.id.social)).perform(click());
+
+        awaitTransition(1000);
+
+        onView(withId(R.id.usernameInput)).perform(typeText("Jessticals"), closeSoftKeyboard());
+        onView(withId(R.id.sendRequestButton)).perform(click());
     }
 }
