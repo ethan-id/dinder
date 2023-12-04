@@ -12,6 +12,7 @@ import onetoone.Requests.Request;
 import onetoone.Requests.RequestRepository;
 import onetoone.Restaurants.Restaurant;
 import onetoone.Restaurants.RestaurantRepository;
+import onetoone.Statistics.StatisticRepository;
 import onetoone.Users.User;
 import onetoone.Users.UserRepository;
 import org.slf4j.Logger;
@@ -61,6 +62,7 @@ public class ChatServer {
     private static LikeRepository likeRepository;
     private static FavoriteRepository favoriteRepository;
     private static RequestRepository requestRepository;
+    private static StatisticRepository statisticRepository;
 
     @Autowired
     public void setUserRepository(UserRepository repo) {
@@ -82,6 +84,8 @@ public class ChatServer {
     public void setRequestRepository(RequestRepository repo) {
         requestRepository = repo;
     }
+    @Autowired
+    public void setStatisticRepository(StatisticRepository statisticRepository){ this.statisticRepository = statisticRepository;};
 
     /*
      * Grabs the MessageRepository singleton from the Spring Application
