@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -609,6 +610,9 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             String code = message.split("@")[1];
             matchCodes.add(code);
             Log.d("Code", code);
+        }
+        if (message.contains("invited")) {
+            runOnUiThread(() -> Toast.makeText(this, "You've received a group request!", Toast.LENGTH_LONG).show());
         }
         Log.d("Message", message);
     }
