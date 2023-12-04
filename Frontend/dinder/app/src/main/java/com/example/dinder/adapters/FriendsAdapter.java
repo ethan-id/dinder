@@ -6,14 +6,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dinder.R;
-import com.example.dinder.websocket.WebSocketManager;
 
 import java.util.List;
+
 
 /**
  * Adapter for the RecyclerView used on the Social Screen to display the user's
@@ -46,12 +47,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
     public void onBindViewHolder(@NonNull FriendViewHolder holder, int position) {
         String friendName = friendsList.get(position);
         holder.friendName.setText(friendName);
-        // Here, you can also set image resources, click listeners, etc.
+
         holder.invite.setOnClickListener(v -> {
-            WebSocketManager.getInstance().sendMessage("invite@" + friendName);
+            Toast.makeText(holder.itemView.getContext(), "Invite sent to " + friendName, Toast.LENGTH_SHORT).show();
         });
     }
-
     /**
      * Gets the size of the user's friends list
      *

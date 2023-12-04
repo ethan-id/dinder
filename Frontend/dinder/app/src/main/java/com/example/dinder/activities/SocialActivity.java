@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,7 +29,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -74,47 +74,48 @@ public class SocialActivity extends AppCompatActivity implements IncomingAdapter
         String url = "http://coms-309-055.class.las.iastate.edu:8080/users/" + id;
 
         queue.add(new JsonObjectRequest(
-            Request.Method.GET, url, null,
-            response -> {
-                try {
-                    JSONArray requestsArray = response.getJSONArray("requests");
-                    for (int i = 0; i < requestsArray.length(); i++) {
-                        JSONObject requestObject = requestsArray.getJSONObject(i);
-                        incoming.add(requestObject); // Add each JSONObject to the incoming list
+                Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        JSONArray requestsArray = response.getJSONArray("requests");
+                        for (int i = 0; i < requestsArray.length(); i++) {
+                            JSONObject requestObject = requestsArray.getJSONObject(i);
+                            incoming.add(requestObject); // Add each JSONObject to the incoming list
+                        }
+                        updateHeaders();
+
+                        // Set the adapter for the RecyclerView with the updated incoming list
+                        IncomingAdapter incAdapter = new IncomingAdapter(incoming, this.getApplicationContext(), this);
+                        incomingRequestsRecyclerView.setAdapter(incAdapter);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
                     }
-                    updateHeaders();
 
-                    // Set the adapter for the RecyclerView with the updated incoming list
-                    IncomingAdapter incAdapter = new IncomingAdapter(incoming, this.getApplicationContext(), this);
-                    incomingRequestsRecyclerView.setAdapter(incAdapter);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
+                    try {
+                        JSONArray iter = response.getJSONArray("allFriends");
+                        for (int i = 0; i < iter.length(); i++) {
+                            friendsList.add(iter.get(i).toString());
+                        }
+                        updateHeaders();
 
-                try {
-                    JSONArray iter = response.getJSONArray("allFriends");
-                    for (int i = 0; i < iter.length(); i++) {
-                        friendsList.add(iter.get(i).toString());
+                        FriendsAdapter adapter = new FriendsAdapter(friendsList);
+                        friendsRecyclerView.setAdapter(adapter);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
                     }
-                    updateHeaders();
-
-                    FriendsAdapter adapter = new FriendsAdapter(friendsList);
-                    friendsRecyclerView.setAdapter(adapter);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-            },
-            Throwable::printStackTrace
+                },
+                Throwable::printStackTrace
         ));
     }
 
-    public void sendFriendRequest(String username, String friend) {
+    private void sendFriendRequest(String username, String friend) {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
         String url = "http://coms-309-055.class.las.iastate.edu:8080/request/create/" + username + "/friend/" + friend;
 
         queue.add(new StringRequest(Request.Method.POST, url,
                 response -> {
                     Log.d("Friend Request: ", response);
+                    Toast.makeText(this, "Friend request sent", Toast.LENGTH_SHORT).show();
                 }, Throwable::printStackTrace));
     }
 
