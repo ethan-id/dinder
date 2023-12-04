@@ -68,4 +68,5 @@
     <string name="enter_username">Enter Username</string>
     <string name="friend_requests">Friend Requests</string>
     <string name="friends">Friends</string>
+    <string name="out_of_likes">You\'ve run out of likes</string>
 </resources>
