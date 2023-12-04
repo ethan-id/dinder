@@ -1,16 +1,12 @@
 package onetoone.websocket;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import okhttp3.OkHttpClient;
-import okhttp3.Response;
+
 import onetoone.Favorites.Favorite;
 import onetoone.Favorites.FavoriteRepository;
 import onetoone.Likes.LikeRepository;
 import onetoone.Likes.Liked;
 import onetoone.Requests.Request;
 import onetoone.Requests.RequestRepository;
-import onetoone.Restaurants.Restaurant;
 import onetoone.Restaurants.RestaurantRepository;
 import onetoone.Users.User;
 import onetoone.Users.UserRepository;
@@ -298,13 +294,11 @@ public class ChatServer {
                 String restaurantMatch = "";
                 if (userWithLeastLikes.getUsername() != null) {
                     for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
-                        for (Liked like : userRepository.findByUsername(GroupMember.getKey()).getLikes()) {
-                            if (like.getName().equals(newMessage[1])) {
-                                numberOfLikes++;
-                                restaurantMatch = like.getName();
-                                if (numberOfLikes == groupUsernameSessionMap.size()) {
-                                    break;
-                                }
+                       if (userRepository.findByUsername(GroupMember.getKey()).getLikes().stream().anyMatch(liked -> liked.getName().contains(newMessage[1]))) {
+                            numberOfLikes++;
+                            restaurantMatch = newMessage[1];
+                            if (numberOfLikes == groupUsernameSessionMap.size()) {
+                                break;
                             }
                         }
                     }
