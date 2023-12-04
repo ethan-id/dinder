@@ -86,8 +86,9 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     Homepage.putExtra("id", String.valueOf(response.getInt("id")));
                     Homepage.putExtra("username", response.getString("username"));
+                    Homepage.putExtra("plus", response.getBoolean("plus"));
                 } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                    Log.e("Error", e.toString());
                 }
                 startActivity(Homepage);
             },

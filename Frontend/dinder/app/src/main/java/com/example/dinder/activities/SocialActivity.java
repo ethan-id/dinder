@@ -145,10 +145,11 @@ public class SocialActivity extends AppCompatActivity implements IncomingAdapter
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         String username = intent.getStringExtra("username");
+        Boolean plus = intent.getBooleanExtra("plus", false);
         ArrayList<String> codes = intent.getStringArrayListExtra("codes");
 
         bottomNavigationView = findViewById(R.id.bottom_navigator);
-        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username);
+        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username, plus);
         bottomNavigationView.setSelectedItemId(R.id.social);
 
         friendsRecyclerView = findViewById(R.id.friendsRecyclerView);

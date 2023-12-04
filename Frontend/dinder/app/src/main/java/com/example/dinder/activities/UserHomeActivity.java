@@ -135,6 +135,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      * The current restaurant being displayed to the user
      */
     JSONObject currentRestaurant;
+    int likeCount;
     /**
      * Dialog used to display loading symbol while the restaurant's are being fetched
      */
@@ -148,6 +149,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      * LinearLayout containing a notification to be displayed when the user has a new match
      */
     LinearLayout notificationContainer;
+    BottomNavigationView bottomNavigationView;
 
     /**
      * Sets the text content for a specific chip based on its index and ensures its visibility.
@@ -364,6 +366,8 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         String username = intent.getStringExtra("username");
+        Boolean plus = intent.getBooleanExtra("plus", false);
+        Log.d("plus", plus.toString());
         ArrayList<String> receivedCodes = intent.getStringArrayListExtra("codes");
         if (receivedCodes != null) {
             matchCodes = receivedCodes;
@@ -413,17 +417,18 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             getRestaurants(queue);
         }
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
-        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, matchCodes, username);
+        bottomNavigationView = findViewById(R.id.bottom_navigator);
+        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, matchCodes, username, plus);
         bottomNavigationView.setSelectedItemId(R.id.home);
 
         dislike.setOnClickListener(v -> dislikeRestaurant());
-        favorite.setOnClickListener(v -> likeRestaurant());
+        favorite.setOnClickListener(v -> likeRestaurant(plus));
         centerImage.setOnClickListener(v -> {
             try {
                 Intent restaurant = new Intent(UserHomeActivity.this, RestaurantProfileActivity.class);
                 restaurant.putExtra("id", id);
                 restaurant.putExtra("username", username);
+                restaurant.putExtra("plus", plus);
                 restaurant.putExtra("code", currentRestaurant.getString("id"));
                 startActivity(restaurant);
             } catch (JSONException e) {
@@ -443,7 +448,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
                     // Horizontal swipe detected
                     if (diffX > 0) {
                         // Right swipe
-                        likeRestaurant();
+                        likeRestaurant(plus);
                     } else {
                         // Left swipe
                         dislikeRestaurant();
@@ -475,11 +480,19 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      *
      * @throws RuntimeException if there is an error parsing the current restaurant's JSON object.
      */
-    private void likeRestaurant() {
+    private void likeRestaurant(Boolean isPlus) {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
         try {
             String code = currentRestaurant.getString("id");
             sendLikeThroughWebSocket(code);
+            likeCount++;
+            if (!isPlus) {
+                if (likeCount >= 10) {
+                    Log.d("Likes", "You're out of likes! :(");
+                    startActivity(new Intent(UserHomeActivity.this, OutOfLikesActivity.class));
+                }
+            }
+            Log.d("Like Count", String.valueOf(likeCount));
             Log.d("Like", "like@" + code);
             populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
         } catch (JSONException e) {
@@ -491,7 +504,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     /**
      * Sends a "dislike" action for the current restaurant through a WebSocket connection and
      * prepares the next restaurant's information to be displayed.
-     * This method performs an operation similar to {@link #likeRestaurant()} but for a "dislike" action.
+     * This method performs an operation similar to likeRestaurant() but for a "dislike" action.
      * It retrieves the unique identifier of the current restaurant, sends a "dislike" message through
      * the WebSocket, and logs this action. Subsequently, it moves to display the next restaurant's details.
      * If the current restaurant's ID cannot be obtained due to a JSON parsing error, the method throws
