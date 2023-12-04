@@ -39,13 +39,12 @@ public class SocialActivity extends AppCompatActivity implements IncomingAdapter
     /**
      * RecyclerView used to dynamically display the user's friends
      */
-    RecyclerView friendsRecyclerView;
-    RecyclerView incomingRequestsRecyclerView;
-
+    RecyclerView friendsRecyclerView, incomingRequestsRecyclerView, groupRequestsRecyclerView;
     EditText usernameInput;
     ImageView sendRequestButton;
     TextView friendRequestsHeader;
     TextView friendsHeader;
+    TextView groupsHeader;
     /**
      * Private field representing the View displaying the bottom navigation menu on the screen
      */
@@ -53,6 +52,7 @@ public class SocialActivity extends AppCompatActivity implements IncomingAdapter
 
     List<String> friendsList = new ArrayList<>();
     List<JSONObject> incoming = new ArrayList<>();
+    List<JSONObject> groupReqs = new ArrayList<>();
 
     public void updateHeaders() {
         runOnUiThread(() -> {
@@ -65,6 +65,11 @@ public class SocialActivity extends AppCompatActivity implements IncomingAdapter
                 friendsHeader.setVisibility(View.GONE);
             } else {
                 friendsHeader.setVisibility(View.VISIBLE);
+            }
+            if (groupReqs.isEmpty()) {
+                groupsHeader.setVisibility(View.GONE);
+            } else {
+                groupsHeader.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -80,13 +85,19 @@ public class SocialActivity extends AppCompatActivity implements IncomingAdapter
                         JSONArray requestsArray = response.getJSONArray("requests");
                         for (int i = 0; i < requestsArray.length(); i++) {
                             JSONObject requestObject = requestsArray.getJSONObject(i);
-                            incoming.add(requestObject); // Add each JSONObject to the incoming list
+                            String type = requestObject.getString("parameter");
+                            if (type.equals("friend")) incoming.add(requestObject); // Add each JSONObject to the incoming list
+                            if (type.equals("group")) groupReqs.add(requestObject); // Add each JSONObject to the groupReqs list
                         }
                         updateHeaders();
 
                         // Set the adapter for the RecyclerView with the updated incoming list
                         IncomingAdapter incAdapter = new IncomingAdapter(incoming, this.getApplicationContext(), this);
                         incomingRequestsRecyclerView.setAdapter(incAdapter);
+
+                        // Set the adapter for the RecyclerView with the updated incoming list
+                        IncomingAdapter groupAdapter = new IncomingAdapter(groupReqs, this.getApplicationContext(), this);
+                        groupRequestsRecyclerView.setAdapter(groupAdapter);
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
@@ -142,6 +153,7 @@ public class SocialActivity extends AppCompatActivity implements IncomingAdapter
         sendRequestButton = findViewById(R.id.sendRequestButton);
         friendRequestsHeader = findViewById(R.id.friendRequestsHeader);
         friendsHeader = findViewById(R.id.friendsHeader);
+        groupsHeader = findViewById(R.id.groupRequestsHeader);
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
@@ -158,6 +170,9 @@ public class SocialActivity extends AppCompatActivity implements IncomingAdapter
 
         incomingRequestsRecyclerView = findViewById(R.id.incomingRequestsRecyclerView);
         incomingRequestsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        groupRequestsRecyclerView = findViewById(R.id.incomingGroupRequestsRecyclerView);
+        groupRequestsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         sendRequestButton.setOnClickListener(v -> {
             String friendToAdd = usernameInput.getText().toString();
