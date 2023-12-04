@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -56,10 +57,6 @@ public class LoginActivity extends AppCompatActivity {
      * Dialog for loading icon to be shown after user clicks "Login"
      */
     private Dialog loadingDialog;
-    /**
-     * LinearLayout for notification to be displayed if there is an error while logging in
-     */
-    LinearLayout notificationContainer;
 
     /**
      * Creates a JSON Object request to login a user.
@@ -137,7 +134,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         setupLoadingDialog();
 
-        notificationContainer = findViewById(R.id.notification_layout);
         loginBtn = findViewById(R.id.loginBtn);
         signUpBtn = findViewById(R.id.mainSignUpBtn);
         username = findViewById(R.id.editTextUsername);
@@ -212,28 +208,6 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void showNotification() {
         // Fade in the notification
-        notificationContainer.animate()
-            .alpha(1f)
-            .setDuration(500) // 500ms
-            .setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    notificationContainer.setVisibility(View.VISIBLE);
-                }
-            });
-
-        // Hide the notification after 3 seconds
-        notificationContainer.postDelayed(() -> {
-            // Fade out the notification
-            notificationContainer.animate()
-                .alpha(0f)
-                .setDuration(500)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        notificationContainer.setVisibility(View.GONE);
-                    }
-                });
-        }, 3000); // 3 seconds
+        Toast.makeText(this, "Login failed. Please try again.", Toast.LENGTH_LONG).show();
     }
 }
