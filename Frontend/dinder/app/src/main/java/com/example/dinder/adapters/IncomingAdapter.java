@@ -76,6 +76,7 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
     public void acceptFriendRequest(int requestId, int position) {
         RequestQueue queue = VolleySingleton.getInstance(context.getApplicationContext()).getRequestQueue();
         String url = "http://coms-309-055.class.las.iastate.edu:8080/request/accept/" + requestId;
+        WebSocketManager.getInstance().sendMessage("accept@" + requestId);
 
         queue.add(new StringRequest(Request.Method.POST, url,
             response -> {
