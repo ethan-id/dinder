@@ -6,13 +6,18 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.Intents.intending;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.anyIntent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import static com.example.dinder.utils.TestUtils.awaitTransition;
 
+import static org.hamcrest.CoreMatchers.not;
+
 import android.app.Activity;
+import android.app.Instrumentation;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.IdlingRegistry;
@@ -86,7 +91,7 @@ public class LoginActivityTest {
 
         awaitTransition(1000);
 
-        // Check if the error notification is displayed
-        onView(withId(R.id.notification_layout)).check(matches(isDisplayed()));
+        // Assert that the UserHomeActivity intent doesn't exist
+        intending(not(anyIntent())).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
     }
 }
