@@ -160,6 +160,10 @@ public class ChatServer {
                 broadcast("user does not exist");
                 return;
             }
+            if (groupSessionUsernameMap.size() < 2 || groupUsernameSessionMap.size() < 2) {
+                sendMessageToPArticularUser(username, "There is no other user active currently :(");
+                return;
+            }
 
             groupSessionUsernameMap.putIfAbsent(session, username);
             groupUsernameSessionMap.putIfAbsent(username, session);
