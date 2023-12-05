@@ -1,5 +1,6 @@
 package onetoone;
 
+import static io.restassured.RestAssured.delete;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -16,9 +17,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -58,9 +62,13 @@ public class RequestControllerTest {
                 .andExpect(status().isOk());
     }
     @Test
+    @Transactional
+    @Rollback
     public void testDeletingRequests() throws Exception {
-        controller.perform(post("/request/accept/162").contentType(MediaType.APPLICATION_JSON))
+        int id = 162;
+        controller.perform(MockMvcRequestBuilders.delete("/request/delete/{id}", id))
                 .andExpect(status().isOk());
+
     }
 
 }
