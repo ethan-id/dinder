@@ -15,9 +15,14 @@ public class Statistic  {
     public static int totalFavorites;
     public static int totalSwipes;
     public static int totalMatches;
+
     public static int likesBeforeMatch;
+
     public static double avgSwipesBeforeMatch;
     public static double avgLikesPerMatch;
+    public static double avgSwipesBeforeLike;
+    public static double avgLikesPerUser;
+    public static double avgMatchesPerUser;
 
 
 
@@ -30,7 +35,10 @@ public class Statistic  {
 
     public static void calculate() {
         avgLikesPerMatch = ( (double) totalMatches / totalLikes);
-        avgSwipesBeforeMatch = ( (double) likesBeforeMatch / totalMatches);
+        avgSwipesBeforeMatch = ( (double) totalSwipes / totalMatches);
+        avgSwipesBeforeLike = ( (double) totalSwipes / totalLikes);
+        avgLikesPerUser = ( (double) totalLikes / totalUsers);
+        avgMatchesPerUser = ( (double) totalMatches / totalUsers);
 
     }
 }

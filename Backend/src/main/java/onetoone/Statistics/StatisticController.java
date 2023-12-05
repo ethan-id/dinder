@@ -31,8 +31,24 @@ public class StatisticController {
     public int getTotalFavorites() {
         return Statistic.totalFavorites;
     }
-    @GetMapping(path = "/stats/getTotalSwipes")
-    public int getTotalSwipes() {
-        return Statistic.totalSwipes;
+    @GetMapping(path = "/stats/getAvgSwipesBeforeMatch")
+    public double getAvgSwipesBeforeMatch() {
+        return Statistic.avgSwipesBeforeMatch;
+    }
+    @GetMapping(path = "/stats/getAvgLikesPerMatch")
+    public double getAvgLikesPerMatch() {
+        return Statistic.avgLikesPerMatch;
+    }
+    @GetMapping(path = "/stats/getAvgSwipesBeforeLike")
+    public double getAvgSwipesBeforeLike() {
+        return Statistic.avgSwipesBeforeLike;
+    }
+    @GetMapping(path = "/stats/getAvgLikesPerUser")
+    public double getAvgLikesPerUser() {
+        return Statistic.avgLikesPerUser;
+    }
+    @GetMapping(path = "/stats/getAvgMatchesPerUser")
+    public double getAvgMatchesPerUser() {
+        return Statistic.avgMatchesPerUser;
     }
 }
