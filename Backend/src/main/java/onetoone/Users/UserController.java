@@ -137,8 +137,8 @@ public class UserController {
         user.setPasskey(request.getPasskey());
         user.setHalal(request.isHalal());
         user.setVegan(request.isVegan());
-        user.setVegitarian(request.isVegitarian());
         Statistic.totalUsers++;
+        user.setVegitarian(request.isVegitarian());
         userRepository.save(user);
         return userRepository.findById(id);
     }
