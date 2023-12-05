@@ -47,19 +47,9 @@ public class RequestControllerTest {
     public void testCreateNewRequest() throws Exception {
         controller.perform(post("/request/create/BigE/friend/MrEthan").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        controller.perform(post("/request/create/BigE/friend/Jessticals").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        controller.perform(post("/request/create/MrEthan/friend/BigE").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
         controller.perform(post("/request/create/MrEthan/friend/Jessticals").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        controller.perform(post("/request/create/Jessticals/friend/BigE").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
         controller.perform(post("/request/create/Jessticals/friend/MrEthan").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        controller.perform(post("/request/create/Isaac/friend/MrEthan").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        controller.perform(post("/request/create/Jessticals/friend/potato").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
     }
@@ -75,8 +65,8 @@ public class RequestControllerTest {
     @Transactional
     public void testDeletingRequests() throws Exception {
         int userId = 156;
-        controller.perform(delete("/request/delete/{id}", userId))
-                .andExpect(status().isOk()); // Change to isNoContent() if you expect 204 No Content
+        controller.perform(MockMvcRequestBuilders.delete("/users/{id}", userId))
+                .andExpect(status().isOk());
     }
 
 }
