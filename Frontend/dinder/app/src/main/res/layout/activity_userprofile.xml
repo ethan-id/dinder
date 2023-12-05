@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:text="@string/recent_likes"
-                android:textSize="40sp"
+                android:textSize="36sp"
                 app:layout_constraintStart_toStartOf="@+id/dietRestrict"
                 app:layout_constraintTop_toBottomOf="@+id/halalCheck" />
 
@@ -30,12 +30,13 @@
                 android:layout_width="312dp"
                 android:layout_height="250dp"
                 android:layout_below="@+id/recentLikes"
-                android:layout_marginStart="13dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="14dp"
                 android:layout_marginBottom="19dp"
                 app:layout_constraintBottom_toTopOf="@+id/saveBtn"
                 app:layout_constraintStart_toStartOf="@+id/recentLikes"
-                app:layout_constraintTop_toBottomOf="@+id/recentLikes" />
+                app:layout_constraintTop_toBottomOf="@+id/recentLikes"
+                app:layout_constraintVertical_bias="0.312" />
 
             <Button
                 android:id="@+id/saveBtn"
@@ -55,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="46dp"
+                android:layout_marginTop="40dp"
                 android:textSize="30sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/profilePicture"
@@ -79,7 +80,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="18dp"
                 android:text="@string/dietRest"
-                android:textSize="40sp"
+                android:textSize="36sp"
                 app:layout_constraintStart_toStartOf="@+id/profilePicture"
                 app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
 
@@ -110,6 +111,17 @@
                 android:text="@string/halal"
                 app:layout_constraintStart_toStartOf="@+id/veganCheck"
                 app:layout_constraintTop_toBottomOf="@+id/vegetarianCheck" />
+
+            <Button
+                android:id="@+id/logoutButton"
+                style="@style/Button.Secondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="28dp"
+                android:text="@string/log_out"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Bottom Navigation View -->
