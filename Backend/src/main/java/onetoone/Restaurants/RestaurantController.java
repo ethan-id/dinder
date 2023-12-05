@@ -62,7 +62,7 @@ public class RestaurantController {
     @GetMapping(path="/restaurant/{city}/all")
     @ResponseBody
     @NonNull
-        ArrayList<JsonNode> getAllRestaurants(@PathVariable String city) {
+    ArrayList<JsonNode> getAllRestaurants(@PathVariable String city) {
         ArrayList<JsonNode> restaurants = new ArrayList<JsonNode>();
         String url = ("https://api.yelp.com/v3/businesses/search?&limit=50&term=restaurants&location=" + city);
         for (int i = 0; i < 1; i++) {

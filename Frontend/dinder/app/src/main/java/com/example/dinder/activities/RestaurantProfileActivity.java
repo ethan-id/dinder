@@ -22,6 +22,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
 import com.example.dinder.adapters.ReviewAdapter;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -158,6 +164,23 @@ public class RestaurantProfileActivity extends AppCompatActivity {
                 address.setText(location.getString("address1"));
                 phone.setText(restaurant.getString("display_phone"));
                 revCount.setText(String.format("(%s)", restaurant.getString("review_count")));
+
+                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.map);
+                mapFragment.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        // Add markers here
+                        try {
+                            JSONObject coords = restaurant.getJSONObject("coordinates");
+                            LatLng restaurantLocation = new LatLng(coords.getDouble("latitude"), coords.getDouble("longitude"));
+                            googleMap.addMarker(new MarkerOptions().position(restaurantLocation).title(restaurant.getString("name")));
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(restaurantLocation, 20)); // 15 here is the zoom level
+                        } catch (JSONException e) {
+                            Log.e("Maps Error", e.toString());
+                        }
+                    }
+                });
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
@@ -209,6 +232,7 @@ public class RestaurantProfileActivity extends AppCompatActivity {
 
         backBtn.setOnClickListener(v -> {
             Intent homeScreen = new Intent(RestaurantProfileActivity.this, UserHomeActivity.class);
+            homeScreen.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             homeScreen.putExtra("id", id);
             homeScreen.putExtra("username", username);
             homeScreen.putExtra("plus", plus);

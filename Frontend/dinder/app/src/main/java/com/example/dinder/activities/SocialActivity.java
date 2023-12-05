@@ -35,7 +35,7 @@ import java.util.List;
  * The Social Screen displays the user's friends list, allows the user to invite friends to their group, and allows
  * the user to send friend requests to other users.
  */
-public class SocialActivity extends AppCompatActivity implements IncomingAdapter.AdapterCallback {
+public class SocialActivity extends AppCompatActivity implements IncomingAdapter.AdapterCallback, FriendsAdapter.AdapterCallback {
     /**
      * RecyclerView used to dynamically display the user's friends
      */
@@ -49,7 +49,6 @@ public class SocialActivity extends AppCompatActivity implements IncomingAdapter
      * Private field representing the View displaying the bottom navigation menu on the screen
      */
     private BottomNavigationView bottomNavigationView;
-
     List<String> friendsList = new ArrayList<>();
     List<JSONObject> incoming = new ArrayList<>();
     List<JSONObject> groupReqs = new ArrayList<>();
@@ -74,7 +73,7 @@ public class SocialActivity extends AppCompatActivity implements IncomingAdapter
         });
     }
 
-    private void getUsersFriendsAndRequests(String id) {
+    private void getUsersFriendsAndRequests(String id, String username) {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
         String url = "http://coms-309-055.class.las.iastate.edu:8080/users/" + id;
 
@@ -109,7 +108,7 @@ public class SocialActivity extends AppCompatActivity implements IncomingAdapter
                         }
                         updateHeaders();
 
-                        FriendsAdapter adapter = new FriendsAdapter(friendsList);
+                        FriendsAdapter adapter = new FriendsAdapter(friendsList, this.getApplicationContext(), username, this);
                         friendsRecyclerView.setAdapter(adapter);
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
@@ -180,11 +179,16 @@ public class SocialActivity extends AppCompatActivity implements IncomingAdapter
             usernameInput.setText("");
         });
 
-        getUsersFriendsAndRequests(id);
+        getUsersFriendsAndRequests(id, username);
     }
 
     @Override
     public void onListChanged() {
+        updateHeaders();
+    }
+
+    @Override
+    public void onFriendsListChanged() {
         updateHeaders();
     }
 }
