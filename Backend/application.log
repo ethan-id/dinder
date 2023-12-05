@@ -1440,6 +1440,42 @@ Caused by: java.lang.IllegalArgumentException: Not a managed type: class onetoon
 2023-12-05 00:56:59.667  INFO 11176 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
 2023-12-05 00:56:59.668  INFO 11176 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2023-12-05 00:56:59.691  INFO 11176 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-12-05 02:01:41.814  INFO 12044 --- [main] onetoone.Main                            : Starting Main using Java 11.0.21 on Jesses-Surface-Pro with PID 12044 (C:\Dinder\fromgitagain\sd_322\Backend\target\classes started by vwill in C:\Dinder\fromgitagain\sd_322\Backend)
+2023-12-05 02:01:41.817  INFO 12044 --- [main] onetoone.Main                            : No active profile set, falling back to default profiles: default
+2023-12-05 02:01:42.278  WARN 12044 --- [background-preinit] o.s.h.c.j.Jackson2ObjectMapperBuilder    : For Jackson Kotlin classes support please add "com.fasterxml.jackson.module:jackson-module-kotlin" to the classpath
+2023-12-05 02:01:42.844  INFO 12044 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFERRED mode.
+2023-12-05 02:01:42.920  INFO 12044 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 63 ms. Found 5 JPA repository interfaces.
+2023-12-05 02:01:43.771  INFO 12044 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-12-05 02:01:43.782  INFO 12044 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-12-05 02:01:43.783  INFO 12044 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.39]
+2023-12-05 02:01:43.890  INFO 12044 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-12-05 02:01:43.891  INFO 12044 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2017 ms
+2023-12-05 02:01:44.051  INFO 12044 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2023-12-05 02:01:44.119  INFO 12044 --- [task-1] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-12-05 02:01:44.211  INFO 12044 --- [task-1] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.23.Final
+2023-12-05 02:01:44.439  INFO 12044 --- [task-1] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-12-05 02:01:44.608  INFO 12044 --- [task-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-12-05 02:01:44.817  WARN 12044 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-12-05 02:01:44.887  INFO 12044 --- [task-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-12-05 02:01:44.928  INFO 12044 --- [task-1] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL55Dialect
+2023-12-05 02:01:45.369  INFO 12044 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-12-05 02:01:45.781  INFO 12044 --- [main] DeferredRepositoryInitializationListener : Triggering deferred initialization of Spring Data repositories…
+2023-12-05 02:01:46.235  INFO 12044 --- [task-1] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-12-05 02:01:46.244  INFO 12044 --- [task-1] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-12-05 02:01:46.640  INFO 12044 --- [main] DeferredRepositoryInitializationListener : Spring Data repositories initialized!
+2023-12-05 02:01:46.650  INFO 12044 --- [main] onetoone.Main                            : Started Main in 5.34 seconds (JVM running for 5.851)
+2023-12-05 02:01:58.695  INFO 12044 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-12-05 02:01:58.696  INFO 12044 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-12-05 02:01:58.698  INFO 12044 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2023-12-05 02:01:58.749  INFO 12044 --- [http-nio-8080-exec-1] onetoone.websocket.ChatServer            : [onOpen] BigE
+2023-12-05 02:02:03.106  INFO 12044 --- [http-nio-8080-exec-2] onetoone.websocket.ChatServer            : [onMessage] BigE: like@mom
+2023-12-05 02:02:07.788  INFO 12044 --- [http-nio-8080-exec-3] onetoone.websocket.ChatServer            : [onMessage] BigE: like@man
+2023-12-05 02:02:10.524  INFO 12044 --- [http-nio-8080-exec-4] onetoone.websocket.ChatServer            : [onMessage] BigE: like@mike
+2023-12-05 02:03:05.473  INFO 12044 --- [SpringContextShutdownHook] onetoone.websocket.ChatServer            : [onClose] BigE
+2023-12-05 02:03:05.515  INFO 12044 --- [SpringContextShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-12-05 02:03:05.517  INFO 12044 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2023-12-05 02:03:05.518  INFO 12044 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-12-05 02:03:05.532  INFO 12044 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
 2023-12-05 01:10:56.077  INFO 16116 --- [main] onetoone.Main                            : Starting Main using Java 11.0.21 on Jesses-Surface-Pro with PID 16116 (C:\Dinder\fromgitagain\sd_322\Backend\target\classes started by vwill in C:\Dinder\fromgitagain\sd_322\Backend)
 2023-12-05 01:10:56.080  INFO 16116 --- [main] onetoone.Main                            : No active profile set, falling back to default profiles: default
 2023-12-05 01:10:56.555  WARN 16116 --- [background-preinit] o.s.h.c.j.Jackson2ObjectMapperBuilder    : For Jackson Kotlin classes support please add "com.fasterxml.jackson.module:jackson-module-kotlin" to the classpath
@@ -1471,3 +1507,70 @@ Caused by: java.lang.IllegalArgumentException: Not a managed type: class onetoon
 2023-12-05 01:13:34.464  INFO 16116 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
 2023-12-05 01:13:34.464  INFO 16116 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2023-12-05 01:13:34.479  INFO 16116 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-12-05 02:03:39.234  INFO 4644 --- [main] onetoone.Main                            : Starting Main using Java 11.0.21 on Jesses-Surface-Pro with PID 4644 (C:\Dinder\fromgitagain\sd_322\Backend\target\classes started by vwill in C:\Dinder\fromgitagain\sd_322\Backend)
+2023-12-05 02:03:39.238  INFO 4644 --- [main] onetoone.Main                            : No active profile set, falling back to default profiles: default
+2023-12-05 02:03:39.706  WARN 4644 --- [background-preinit] o.s.h.c.j.Jackson2ObjectMapperBuilder    : For Jackson Kotlin classes support please add "com.fasterxml.jackson.module:jackson-module-kotlin" to the classpath
+2023-12-05 02:03:40.269  INFO 4644 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFERRED mode.
+2023-12-05 02:03:40.344  INFO 4644 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 64 ms. Found 5 JPA repository interfaces.
+2023-12-05 02:03:41.117  INFO 4644 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-12-05 02:03:41.127  INFO 4644 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-12-05 02:03:41.127  INFO 4644 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.39]
+2023-12-05 02:03:41.229  INFO 4644 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-12-05 02:03:41.229  INFO 4644 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1933 ms
+2023-12-05 02:03:41.359  INFO 4644 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2023-12-05 02:03:41.425  INFO 4644 --- [task-1] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-12-05 02:03:41.488  INFO 4644 --- [task-1] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.23.Final
+2023-12-05 02:03:41.647  INFO 4644 --- [task-1] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-12-05 02:03:41.809  INFO 4644 --- [task-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-12-05 02:03:42.031  INFO 4644 --- [task-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-12-05 02:03:42.031  WARN 4644 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-12-05 02:03:42.066  INFO 4644 --- [task-1] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL55Dialect
+2023-12-05 02:03:42.550  INFO 4644 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-12-05 02:03:42.976  INFO 4644 --- [main] DeferredRepositoryInitializationListener : Triggering deferred initialization of Spring Data repositories…
+2023-12-05 02:03:43.174  INFO 4644 --- [task-1] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-12-05 02:03:43.186  INFO 4644 --- [task-1] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-12-05 02:03:43.514  INFO 4644 --- [main] DeferredRepositoryInitializationListener : Spring Data repositories initialized!
+2023-12-05 02:03:43.523  INFO 4644 --- [main] onetoone.Main                            : Started Main in 4.73 seconds (JVM running for 5.191)
+2023-12-05 02:03:47.215  INFO 4644 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-12-05 02:03:47.215  INFO 4644 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-12-05 02:03:47.217  INFO 4644 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2023-12-05 02:03:47.272  INFO 4644 --- [http-nio-8080-exec-1] onetoone.websocket.ChatServer            : [onOpen] BigE
+2023-12-05 02:03:50.921  INFO 4644 --- [http-nio-8080-exec-2] onetoone.websocket.ChatServer            : [onMessage] BigE: like@john
+2023-12-05 02:03:54.188  INFO 4644 --- [http-nio-8080-exec-3] onetoone.websocket.ChatServer            : [onMessage] BigE: like@brad
+2023-12-05 02:03:57.680  INFO 4644 --- [http-nio-8080-exec-7] onetoone.websocket.ChatServer            : [onMessage] BigE: like@coop
+2023-12-05 02:05:44.066  INFO 4644 --- [SpringContextShutdownHook] onetoone.websocket.ChatServer            : [onClose] BigE
+2023-12-05 02:05:44.134  INFO 4644 --- [SpringContextShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-12-05 02:05:44.136  INFO 4644 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2023-12-05 02:05:44.137  INFO 4644 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-12-05 02:05:44.148  INFO 4644 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-12-05 02:05:51.192  INFO 14992 --- [main] onetoone.Main                            : Starting Main using Java 11.0.21 on Jesses-Surface-Pro with PID 14992 (C:\Dinder\fromgitagain\sd_322\Backend\target\classes started by vwill in C:\Dinder\fromgitagain\sd_322\Backend)
+2023-12-05 02:05:51.196  INFO 14992 --- [main] onetoone.Main                            : No active profile set, falling back to default profiles: default
+2023-12-05 02:05:51.651  WARN 14992 --- [background-preinit] o.s.h.c.j.Jackson2ObjectMapperBuilder    : For Jackson Kotlin classes support please add "com.fasterxml.jackson.module:jackson-module-kotlin" to the classpath
+2023-12-05 02:05:52.177  INFO 14992 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFERRED mode.
+2023-12-05 02:05:52.247  INFO 14992 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 58 ms. Found 5 JPA repository interfaces.
+2023-12-05 02:05:53.021  INFO 14992 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-12-05 02:05:53.031  INFO 14992 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-12-05 02:05:53.032  INFO 14992 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.39]
+2023-12-05 02:05:53.130  INFO 14992 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-12-05 02:05:53.131  INFO 14992 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1879 ms
+2023-12-05 02:05:53.270  INFO 14992 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2023-12-05 02:05:53.325  INFO 14992 --- [task-1] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-12-05 02:05:53.392  INFO 14992 --- [task-1] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.23.Final
+2023-12-05 02:05:53.550  INFO 14992 --- [task-1] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-12-05 02:05:53.706  INFO 14992 --- [task-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-12-05 02:05:53.918  WARN 14992 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-12-05 02:05:53.964  INFO 14992 --- [task-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-12-05 02:05:54.001  INFO 14992 --- [task-1] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL55Dialect
+2023-12-05 02:05:54.464  INFO 14992 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-12-05 02:05:54.893  INFO 14992 --- [main] DeferredRepositoryInitializationListener : Triggering deferred initialization of Spring Data repositories…
+2023-12-05 02:05:55.087  INFO 14992 --- [task-1] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-12-05 02:05:55.100  INFO 14992 --- [task-1] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-12-05 02:05:55.426  INFO 14992 --- [main] DeferredRepositoryInitializationListener : Spring Data repositories initialized!
+2023-12-05 02:05:55.436  INFO 14992 --- [main] onetoone.Main                            : Started Main in 4.7 seconds (JVM running for 5.16)
+2023-12-05 02:06:10.131  INFO 14992 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-12-05 02:06:10.133  INFO 14992 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-12-05 02:06:10.137  INFO 14992 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
+2023-12-05 02:07:45.784  INFO 14992 --- [SpringContextShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-12-05 02:07:45.787  INFO 14992 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2023-12-05 02:07:45.787  INFO 14992 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-12-05 02:07:45.805  INFO 14992 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
