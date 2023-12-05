@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import onetoone.Statistics.Statistic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -137,6 +138,7 @@ public class UserController {
         user.setHalal(request.isHalal());
         user.setVegan(request.isVegan());
         user.setVegitarian(request.isVegitarian());
+        Statistic.totalUsers++;
         userRepository.save(user);
         return userRepository.findById(id);
     }

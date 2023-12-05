@@ -81,7 +81,6 @@ public class User {
     }
 
     public User() {
-        Statistic.totalUsers++;
     }
 
     // =============================== Getters and Setters for each field ================================== //
