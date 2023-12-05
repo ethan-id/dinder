@@ -10,31 +10,22 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.CheckBox;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
 import com.example.dinder.activities.utils.NavigationUtils;
-import com.example.dinder.adapters.AdminRestaurantAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -43,8 +34,6 @@ import java.util.Objects;
 public class AdminHomeActivity extends AppCompatActivity {
 
     List<JSONObject> list;
-    RecyclerView restaurantList;
-    AdminRestaurantAdapter restaurantListAdapter;
     private Dialog loadingDialog;
 
     private void getRestaurants(RequestQueue queue) {
@@ -73,9 +62,6 @@ public class AdminHomeActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-
-                    restaurantList = findViewById(R.id.listOfCards);
-                    restaurantListAdapter = new AdminRestaurantAdapter(list);
                 },
                 error -> {
                     Log.e("Error", String.valueOf(error));
@@ -100,8 +86,14 @@ public class AdminHomeActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_admin_home);
 
+        Intent intent = getIntent();
+        String id = intent.getStringExtra("id");
+        String username = intent.getStringExtra("username");
+        Boolean isAdmin = intent.getBooleanExtra("isAdmin", false);
+        ArrayList<String> codes = intent.getStringArrayListExtra("codes");
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
-        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username);
+        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username, plus, isAdmin);
         bottomNavigationView.setSelectedItemId(R.id.userprofile);
 
         setupLoadingDialog();

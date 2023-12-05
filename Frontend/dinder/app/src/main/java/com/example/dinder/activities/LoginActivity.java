@@ -79,14 +79,14 @@ public class LoginActivity extends AppCompatActivity {
                 // Handle response
                 hideLoadingDialog();
                 Log.d("Response", response.toString());
-
                 // Eventually check the user type here and then we can either start the default home page,
                 // restaurant home page or the dev home page.
-                Intent Homepage = new Intent(LoginActivity.this, UserHomeActivity.class);
+                Intent Homepage = new Intent(LoginActivity.this, AdminHomeActivity.class);
                 try {
                     Homepage.putExtra("id", String.valueOf(response.getInt("id")));
                     Homepage.putExtra("username", response.getString("username"));
                     Homepage.putExtra("plus", response.getBoolean("plus"));
+                    Homepage.putExtra("isAdmin", response.getBoolean("admin"));
                 } catch (JSONException e) {
                     Log.e("Error", e.toString());
                 }

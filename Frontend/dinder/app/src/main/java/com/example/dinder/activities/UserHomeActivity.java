@@ -314,7 +314,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         String id = intent.getStringExtra("id");
         String username = intent.getStringExtra("username");
         Boolean plus = intent.getBooleanExtra("plus", false);
-        Log.d("plus", plus.toString());
+        Boolean isAdmin = intent.getBooleanExtra("isAdmin", false);
         ArrayList<String> receivedCodes = intent.getStringArrayListExtra("codes");
         if (receivedCodes != null) {
             matchCodes = receivedCodes;
@@ -358,7 +358,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         }
 
         bottomNavigationView = findViewById(R.id.bottom_navigator);
-        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, matchCodes, username, plus);
+        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, matchCodes, username, plus, isAdmin);
         bottomNavigationView.setSelectedItemId(R.id.home);
 
         dislike.setOnClickListener(v -> dislikeRestaurant());
