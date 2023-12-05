@@ -33,7 +33,7 @@ import java.util.Objects;
  */
 public class AdminHomeActivity extends AppCompatActivity {
 
-    List<JSONObject> list;
+    List<JSONObject> list = new ArrayList<>();
     private Dialog loadingDialog;
 
     private void getRestaurants(RequestQueue queue) {
@@ -89,6 +89,7 @@ public class AdminHomeActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         String username = intent.getStringExtra("username");
+        Boolean plus = intent.getBooleanExtra("plus", false);
         Boolean isAdmin = intent.getBooleanExtra("isAdmin", false);
         ArrayList<String> codes = intent.getStringArrayListExtra("codes");
 

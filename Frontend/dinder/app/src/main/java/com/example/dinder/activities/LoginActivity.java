@@ -81,12 +81,19 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("Response", response.toString());
                 // Eventually check the user type here and then we can either start the default home page,
                 // restaurant home page or the dev home page.
-                Intent Homepage = new Intent(LoginActivity.this, AdminHomeActivity.class);
+                Boolean isAdmin = false;
+                try {
+                    isAdmin = response.getBoolean("admin");
+                } catch (JSONException e) {
+                    Log.e("Error getting admin type", e.toString());
+//                    throw new RuntimeException(e);
+                }
+                Intent Homepage = new Intent(LoginActivity.this, UserHomeActivity.class);
                 try {
                     Homepage.putExtra("id", String.valueOf(response.getInt("id")));
                     Homepage.putExtra("username", response.getString("username"));
                     Homepage.putExtra("plus", response.getBoolean("plus"));
-                    Homepage.putExtra("isAdmin", response.getBoolean("admin"));
+                    Homepage.putExtra("isAdmin", isAdmin);
                 } catch (JSONException e) {
                     Log.e("Error", e.toString());
                 }
