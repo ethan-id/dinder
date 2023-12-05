@@ -70,4 +70,5 @@
     <string name="friends">Friends</string>
     <string name="out_of_likes">You\'ve run out of likes</string>
     <string name="group_requests">Group Requests</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
