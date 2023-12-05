@@ -32,50 +32,10 @@ import java.util.Objects;
  * The Sign-Up screen; The user can enter their account information here and request to sign-up to Dinder
  */
 public class AdminHomeActivity extends AppCompatActivity {
-
-    List<JSONObject> list = new ArrayList<>();
     private Dialog loadingDialog;
 
-    private void getRestaurants(RequestQueue queue) {
-        showLoadingDialog();
+    private void getStats() {
 
-        JsonArrayRequest request = new JsonArrayRequest(
-                Request.Method.GET,
-                "http://coms-309-055.class.las.iastate.edu:8080/restaurant/Ames/all",
-                null,
-                response -> {
-                    hideLoadingDialog();
-                    Log.d("Response", response.toString());
-                    JSONArray receivedRestaurants;
-                    try {
-                        receivedRestaurants = response.getJSONObject(0).getJSONArray("businesses");
-                        Log.d("rest", receivedRestaurants.toString());
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                    // Handle the JSON array response
-                    for (int i = 0; i < receivedRestaurants.length(); i++) {
-                        try {
-                            JSONObject restaurantObject = receivedRestaurants.getJSONObject(i);
-                            list.add(restaurantObject);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                error -> {
-                    Log.e("Error", String.valueOf(error));
-                    hideLoadingDialog();
-                    startActivity(new Intent(AdminHomeActivity.this, ErrorScreen.class));
-                }
-        );
-
-        request.setRetryPolicy(new DefaultRetryPolicy(
-                5000, 3,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-        ));
-
-        queue.add(request);
     }
 
     @Override
@@ -95,11 +55,8 @@ public class AdminHomeActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
         NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username, plus, isAdmin);
-        bottomNavigationView.setSelectedItemId(R.id.userprofile);
 
         setupLoadingDialog();
-
-        getRestaurants(queue);
     }
 
     /**

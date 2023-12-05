@@ -73,4 +73,5 @@
     <string name="title_activity_maps">MapsActivity</string>
     <string name="log_out">Log Out</string>
     <string name="remove_friend">Remove Friend</string>
+    <string name="settings_icon">Settings Icon</string>
 </resources>

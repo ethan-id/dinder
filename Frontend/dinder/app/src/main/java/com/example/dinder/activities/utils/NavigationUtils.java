@@ -21,11 +21,7 @@ public class NavigationUtils extends AppCompatActivity {
             int itemId = item.getItemId();
 
             if (itemId == R.id.home) {
-                if (isAdmin) {
-                    startAdminHomeScreen(context, id, matchCodes, username, plus, isAdmin);
-                } else {
-                    startHomeScreen(context, id, matchCodes, username, plus, isAdmin);
-                }
+                startHomeScreen(context, id, matchCodes, username, plus, isAdmin);
             } else if (itemId == R.id.match) {
                 startMatchesScreen(context, id, matchCodes, username, plus, isAdmin);
             } else if (itemId == R.id.social) {
