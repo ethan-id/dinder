@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoginActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.dinder.activities</a> &gt; <span class="el_source">LoginActivity.java</span></div><h1>LoginActivity.java</h1><pre class="source lang-java linenums">package com.example.dinder.activities;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.dinder.R;
+import com.example.dinder.VolleySingleton;
+
+import org.json.JSONException;
+
+import java.util.Objects;
+
+/**
+ * An activity class for the Login Screen, used to handle logic so the user can enter their login
+ * information and attempt to login.
+ */
+<span class="fc" id="L34">public class LoginActivity extends AppCompatActivity {</span>
+    /**
+     * A Button that sends an HTTP request requesting the user be logged in when it is clicked
+     */
+    Button loginBtn;
+    /**
+     * A Button that takes the user to the sign-up screen
+     */
+    Button signUpBtn;
+    /**
+     * A text field allowing the user to enter their username
+     */
+    EditText username;
+    /**
+     * A text field allowing the user to enter their password
+     */
+    EditText password;
+    /**
+     * The logo displayed at the top of the login screen
+     */
+    ImageView logo;
+
+    /**
+     * Dialog for loading icon to be shown after user clicks &quot;Login&quot;
+     */
+    private Dialog loadingDialog;
+
+    /**
+     * Creates a JSON Object request to login a user.
+     * &lt;p&gt;
+     * This method sends a request to the server to authenticate the provided username and password.
+     * Upon a successful response, it retrieves the user's ID and username and starts the UserHomeActivity,
+     * passing the retrieved information to it.
+     * &lt;/p&gt;
+     *
+     * @param username The username of the user attempting to log in.
+     * @param password The password of the user attempting to log in.
+     * @return A JsonObjectRequest for user authentication.
+     */
+    private JsonObjectRequest createUserLoginRequest(String username, String password) {
+<span class="fc" id="L74">        String url = String.format(&quot;http://coms-309-055.class.las.iastate.edu:8080/users/login/%s,%s&quot;, username, password);</span>
+
+        // Handle error
+<span class="fc" id="L77">        return new JsonObjectRequest(url,</span>
+            response -&gt; {
+                // Handle response
+<span class="fc" id="L80">                hideLoadingDialog();</span>
+<span class="fc" id="L81">                Log.d(&quot;Response&quot;, response.toString());</span>
+                // Eventually check the user type here and then we can either start the default home page,
+                // restaurant home page or the dev home page.
+<span class="fc" id="L84">                Boolean isAdmin = false;</span>
+                try {
+<span class="fc" id="L86">                    isAdmin = response.getBoolean(&quot;admin&quot;);</span>
+<span class="nc" id="L87">                } catch (JSONException e) {</span>
+<span class="nc" id="L88">                    Log.e(&quot;Error getting admin type&quot;, e.toString());</span>
+//                    throw new RuntimeException(e);
+<span class="fc" id="L90">                }</span>
+<span class="fc" id="L91">                Intent Homepage = new Intent(LoginActivity.this, UserHomeActivity.class);</span>
+                try {
+<span class="fc" id="L93">                    Homepage.putExtra(&quot;id&quot;, String.valueOf(response.getInt(&quot;id&quot;)));</span>
+<span class="fc" id="L94">                    Homepage.putExtra(&quot;username&quot;, response.getString(&quot;username&quot;));</span>
+<span class="fc" id="L95">                    Homepage.putExtra(&quot;plus&quot;, response.getBoolean(&quot;plus&quot;));</span>
+<span class="fc" id="L96">                    Homepage.putExtra(&quot;isAdmin&quot;, isAdmin);</span>
+<span class="nc" id="L97">                } catch (JSONException e) {</span>
+<span class="nc" id="L98">                    Log.e(&quot;Error&quot;, e.toString());</span>
+<span class="fc" id="L99">                }</span>
+<span class="fc" id="L100">                startActivity(Homepage);</span>
+<span class="fc" id="L101">            },</span>
+            error -&gt; {
+<span class="fc" id="L103">                Log.e(&quot;Login Error&quot;, String.valueOf(error));</span>
+<span class="fc" id="L104">                hideLoadingDialog();</span>
+<span class="fc" id="L105">                showNotification();</span>
+<span class="fc" id="L106">            }</span>
+        );
+    }
+
+    /**
+     * Validates the provided login credentials.
+     * &lt;p&gt;
+     * This method checks if the given username and password are not empty
+     * to determine if they are valid for login purposes.
+     * &lt;/p&gt;
+     *
+     * @param username The username to validate.
+     * @param password The password to validate.
+     * @return true if both username and password are non-empty, false otherwise.
+     */
+    protected boolean validLogin(String username, String password) {
+<span class="pc bpc" id="L122" title="2 of 4 branches missed.">        return !Objects.equals(username, &quot;&quot;) &amp;&amp; !Objects.equals(password, &quot;&quot;);</span>
+    }
+
+    /**
+     * Initializes the LoginActivity and sets up UI event listeners.
+     * &lt;p&gt;
+     * This method is invoked when the LoginActivity is created. It sets the content view,
+     * initializes UI components, and establishes click listeners for the login and sign up buttons.
+     * The login button sends a login request after validating the username and password, while
+     * the sign up button navigates the user to the SignUpActivity.
+     * &lt;/p&gt;
+     *
+     * @param savedInstanceState A bundle containing the most recent saved instance of the activity.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L138">        super.onCreate(savedInstanceState);</span>
+
+<span class="fc" id="L140">        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();</span>
+
+<span class="fc" id="L142">        setContentView(R.layout.activity_login);</span>
+<span class="fc" id="L143">        setupLoadingDialog();</span>
+
+<span class="fc" id="L145">        loginBtn = findViewById(R.id.loginBtn);</span>
+<span class="fc" id="L146">        signUpBtn = findViewById(R.id.mainSignUpBtn);</span>
+<span class="fc" id="L147">        username = findViewById(R.id.editTextUsername);</span>
+<span class="fc" id="L148">        password = findViewById(R.id.editTextPassword);</span>
+<span class="fc" id="L149">        logo = findViewById(R.id.appLogo);</span>
+<span class="fc" id="L150">        logo.setImageResource(R.drawable.temporary_logo);</span>
+
+<span class="fc" id="L152">        loginBtn.setOnClickListener(v -&gt; {</span>
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">            if (validLogin(username.getText().toString(), password.getText().toString())) {</span>
+<span class="fc" id="L154">                JsonObjectRequest loginRequest = createUserLoginRequest(username.getText().toString(), password.getText().toString());</span>
+<span class="fc" id="L155">                showLoadingDialog();</span>
+<span class="fc" id="L156">                queue.add(loginRequest);</span>
+            }
+
+            // Reset password input after clicking the button
+<span class="fc" id="L160">            runOnUiThread(() -&gt; password.setText(&quot;&quot;));</span>
+<span class="fc" id="L161">        });</span>
+
+<span class="fc" id="L163">        signUpBtn.setOnClickListener(v -&gt; {</span>
+<span class="fc" id="L164">            Intent signUpScreen = new Intent(LoginActivity.this, SignUpActivity.class);</span>
+<span class="fc" id="L165">            startActivity(signUpScreen);</span>
+<span class="fc" id="L166">        });</span>
+<span class="fc" id="L167">    }</span>
+
+    /**
+     * Initializes and configures a non-cancellable loading dialog.
+     *
+     * This method sets up a new dialog intended to indicate that a loading process is ongoing. The dialog is
+     * made non-cancellable, meaning the user cannot dismiss it by pressing back or touching outside the dialog.
+     * This is often used to prevent user interaction while waiting for a background task to complete.
+     * The dialog uses a custom layout defined in `R.layout.loading` and has a transparent background.
+     */
+    private void setupLoadingDialog() {
+<span class="fc" id="L178">        loadingDialog = new Dialog(this);</span>
+<span class="fc" id="L179">        loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);</span>
+<span class="fc" id="L180">        loadingDialog.setContentView(R.layout.loading);</span>
+<span class="fc" id="L181">        loadingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));</span>
+<span class="fc" id="L182">        loadingDialog.setCancelable(false); // prevents users from cancelling the dialog</span>
+<span class="fc" id="L183">    }</span>
+
+    /**
+     * Displays a loading dialog on the screen if it is not already showing.
+     * This method checks the current state of the loadingDialog instance and
+     * ensures that the dialog is shown only if it is not already visible on the screen,
+     * avoiding multiple instances of the dialog being displayed over each other.
+     */
+    private void showLoadingDialog() {
+<span class="pc bpc" id="L192" title="2 of 4 branches missed.">        if (loadingDialog != null &amp;&amp; !loadingDialog.isShowing()) {</span>
+<span class="fc" id="L193">            loadingDialog.show();</span>
+        }
+<span class="fc" id="L195">    }</span>
+
+    /**
+     * Hides the loading dialog if it is currently displayed on the screen.
+     * This method checks the current state of the loadingDialog instance and
+     * dismisses it if it is visible. This is typically called when an operation
+     * that requires a loading indicator is completed or cancelled.
+     */
+    private void hideLoadingDialog() {
+<span class="pc bpc" id="L204" title="2 of 4 branches missed.">        if (loadingDialog != null &amp;&amp; loadingDialog.isShowing()) {</span>
+<span class="fc" id="L205">            loadingDialog.dismiss();</span>
+        }
+<span class="fc" id="L207">    }</span>
+
+    /**
+     * Shows a notification with a fade-in effect, then automatically hides it after a specified time with a fade-out effect.
+     * The notification will become visible with a fade-in animation over 500 milliseconds,
+     * stay on the screen for 3 seconds, and then fade out with a 500 milliseconds animation.
+     *
+     * During the fade-in animation, the visibility of the notification container is set to VISIBLE.
+     * After the fade-out animation completes, the visibility is switched to GONE.
+     */
+    private void showNotification() {
+        // Fade in the notification
+<span class="fc" id="L219">        Toast.makeText(this, &quot;Login failed. Please try again.&quot;, Toast.LENGTH_LONG).show();</span>
+<span class="fc" id="L220">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>Generated by the Android Gradle plugin 8.1.3</div></body></html>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NavigationUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.dinder.activities.utils</a> &gt; <span class="el_source">NavigationUtils.java</span></div><h1>NavigationUtils.java</h1><pre class="source lang-java linenums">package com.example.dinder.activities.utils;
+
+import android.content.Context;
+import android.content.Intent;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.dinder.R;
+import com.example.dinder.activities.AdminHomeActivity;
+import com.example.dinder.activities.MatchesScreen;
+import com.example.dinder.activities.SocialActivity;
+import com.example.dinder.activities.UserHomeActivity;
+import com.example.dinder.activities.UserProfileActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+
+<span class="nc" id="L18">public class NavigationUtils extends AppCompatActivity {</span>
+    public static void setupBottomNavigation(BottomNavigationView bottomNavigationView, Context context, String id, ArrayList&lt;String&gt; matchCodes, String username, Boolean plus, Boolean isAdmin) {
+<span class="fc" id="L20">        bottomNavigationView.setOnItemSelectedListener(item -&gt; {</span>
+<span class="fc" id="L21">            int itemId = item.getItemId();</span>
+
+<span class="fc bfc" id="L23" title="All 2 branches covered.">            if (itemId == R.id.home) {</span>
+<span class="fc" id="L24">                startHomeScreen(context, id, matchCodes, username, plus, isAdmin);</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">            } else if (itemId == R.id.match) {</span>
+<span class="fc" id="L26">                startMatchesScreen(context, id, matchCodes, username, plus, isAdmin);</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">            } else if (itemId == R.id.social) {</span>
+<span class="fc" id="L28">                startSocialActivity(context, id, matchCodes, username, plus, isAdmin);</span>
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">            } else if (itemId == R.id.userprofile) {</span>
+<span class="fc" id="L30">                startUserProfileActivity(context, id, matchCodes, username, plus, isAdmin);</span>
+            }
+<span class="fc" id="L32">            return true;</span>
+        });
+<span class="fc" id="L34">    }</span>
+
+    private static void startAdminHomeScreen(Context context, String id, ArrayList&lt;String&gt; matchCodes, String username, Boolean plus, Boolean isAdmin) {
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        if (!(context instanceof AdminHomeActivity)) {</span>
+<span class="nc" id="L38">            Intent intent = new Intent(context, AdminHomeActivity.class);</span>
+<span class="nc" id="L39">            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);</span>
+<span class="nc" id="L40">            intent.putExtra(&quot;id&quot;, id);</span>
+<span class="nc" id="L41">            intent.putStringArrayListExtra(&quot;codes&quot;, matchCodes);</span>
+<span class="nc" id="L42">            intent.putExtra(&quot;username&quot;, username);</span>
+<span class="nc" id="L43">            intent.putExtra(&quot;plus&quot;, plus);</span>
+<span class="nc" id="L44">            intent.putExtra(&quot;admin&quot;, isAdmin);</span>
+<span class="nc" id="L45">            context.startActivity(intent);</span>
+        }
+<span class="nc" id="L47">    }</span>
+
+    private static void startHomeScreen(Context context, String id, ArrayList&lt;String&gt; matchCodes, String username, Boolean plus, Boolean isAdmin) {
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if (!(context instanceof UserHomeActivity)) {</span>
+<span class="nc" id="L51">            Intent intent = new Intent(context, UserHomeActivity.class);</span>
+<span class="nc" id="L52">            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);</span>
+<span class="nc" id="L53">            intent.putExtra(&quot;id&quot;, id);</span>
+<span class="nc" id="L54">            intent.putStringArrayListExtra(&quot;codes&quot;, matchCodes);</span>
+<span class="nc" id="L55">            intent.putExtra(&quot;username&quot;, username);</span>
+<span class="nc" id="L56">            intent.putExtra(&quot;plus&quot;, plus);</span>
+<span class="nc" id="L57">            intent.putExtra(&quot;admin&quot;, isAdmin);</span>
+<span class="nc" id="L58">            context.startActivity(intent);</span>
+        }
+<span class="fc" id="L60">    }</span>
+
+    private static void startMatchesScreen(Context context, String id, ArrayList&lt;String&gt; matchCodes, String username, Boolean plus, Boolean isAdmin) {
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">        if (!(context instanceof MatchesScreen)) {</span>
+<span class="nc" id="L64">            Intent intent = new Intent(context, MatchesScreen.class);</span>
+<span class="nc" id="L65">            intent.putExtra(&quot;id&quot;, id);</span>
+<span class="nc" id="L66">            intent.putStringArrayListExtra(&quot;codes&quot;, matchCodes);</span>
+<span class="nc" id="L67">            intent.putExtra(&quot;username&quot;, username);</span>
+<span class="nc" id="L68">            intent.putExtra(&quot;plus&quot;, plus);</span>
+<span class="nc" id="L69">            intent.putExtra(&quot;admin&quot;, isAdmin);</span>
+<span class="nc" id="L70">            context.startActivity(intent);</span>
+        }
+<span class="fc" id="L72">    }</span>
+    private static void startSocialActivity(Context context, String id, ArrayList&lt;String&gt; matchCodes, String username, Boolean plus, Boolean isAdmin) {
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (!(context instanceof SocialActivity)) {</span>
+<span class="fc" id="L75">            Intent intent = new Intent(context, SocialActivity.class);</span>
+<span class="fc" id="L76">            intent.putExtra(&quot;id&quot;, id);</span>
+<span class="fc" id="L77">            intent.putStringArrayListExtra(&quot;codes&quot;, matchCodes);</span>
+<span class="fc" id="L78">            intent.putExtra(&quot;username&quot;, username);</span>
+<span class="fc" id="L79">            intent.putExtra(&quot;plus&quot;, plus);</span>
+<span class="fc" id="L80">            intent.putExtra(&quot;admin&quot;, isAdmin);</span>
+<span class="fc" id="L81">            context.startActivity(intent);</span>
+        }
+<span class="fc" id="L83">    }</span>
+
+    private static void startUserProfileActivity(Context context, String id, ArrayList&lt;String&gt; matchCodes, String username, Boolean plus, Boolean isAdmin) {
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (!(context instanceof UserProfileActivity)) {</span>
+<span class="fc" id="L87">            Intent intent = new Intent(context, UserProfileActivity.class);</span>
+<span class="fc" id="L88">            intent.putExtra(&quot;id&quot;, id);</span>
+<span class="fc" id="L89">            intent.putStringArrayListExtra(&quot;codes&quot;, matchCodes);</span>
+<span class="fc" id="L90">            intent.putExtra(&quot;username&quot;, username);</span>
+<span class="fc" id="L91">            intent.putExtra(&quot;plus&quot;, plus);</span>
+<span class="fc" id="L92">            intent.putExtra(&quot;admin&quot;, isAdmin);</span>
+<span class="fc" id="L93">            context.startActivity(intent);</span>
+        }
+<span class="fc" id="L95">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>Generated by the Android Gradle plugin 8.1.3</div></body></html>

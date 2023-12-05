@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SocialActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.dinder.activities</a> &gt; <span class="el_source">SocialActivity.java</span></div><h1>SocialActivity.java</h1><pre class="source lang-java linenums">package com.example.dinder.activities;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.example.dinder.R;
+import com.example.dinder.VolleySingleton;
+import com.example.dinder.activities.utils.NavigationUtils;
+import com.example.dinder.adapters.FriendsAdapter;
+import com.example.dinder.adapters.IncomingAdapter;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * The Social Screen displays the user's friends list, allows the user to invite friends to their group, and allows
+ * the user to send friend requests to other users.
+ */
+<span class="fc" id="L38">public class SocialActivity extends AppCompatActivity implements IncomingAdapter.AdapterCallback, FriendsAdapter.AdapterCallback {</span>
+    /**
+     * RecyclerView used to dynamically display the user's friends
+     */
+    RecyclerView friendsRecyclerView, incomingRequestsRecyclerView, groupRequestsRecyclerView;
+    EditText usernameInput;
+    ImageView sendRequestButton;
+    TextView friendRequestsHeader;
+    TextView friendsHeader;
+    TextView groupsHeader;
+    /**
+     * Private field representing the View displaying the bottom navigation menu on the screen
+     */
+    private BottomNavigationView bottomNavigationView;
+<span class="fc" id="L52">    List&lt;String&gt; friendsList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L53">    List&lt;JSONObject&gt; incoming = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L54">    List&lt;JSONObject&gt; groupReqs = new ArrayList&lt;&gt;();</span>
+
+    public void updateHeaders() {
+<span class="fc" id="L57">        runOnUiThread(() -&gt; {</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">            if (incoming.isEmpty()) {</span>
+<span class="fc" id="L59">                friendRequestsHeader.setVisibility(View.GONE);</span>
+            } else {
+<span class="nc" id="L61">                friendRequestsHeader.setVisibility(View.VISIBLE);</span>
+            }
+<span class="fc bfc" id="L63" title="All 2 branches covered.">            if (friendsList.isEmpty()) {</span>
+<span class="fc" id="L64">                friendsHeader.setVisibility(View.GONE);</span>
+            } else {
+<span class="fc" id="L66">                friendsHeader.setVisibility(View.VISIBLE);</span>
+            }
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">            if (groupReqs.isEmpty()) {</span>
+<span class="nc" id="L69">                groupsHeader.setVisibility(View.GONE);</span>
+            } else {
+<span class="fc" id="L71">                groupsHeader.setVisibility(View.VISIBLE);</span>
+            }
+<span class="fc" id="L73">        });</span>
+<span class="fc" id="L74">    }</span>
+
+    private void getUsersFriendsAndRequests(String id, String username) {
+<span class="fc" id="L77">        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();</span>
+<span class="fc" id="L78">        String url = &quot;http://coms-309-055.class.las.iastate.edu:8080/users/&quot; + id;</span>
+
+<span class="fc" id="L80">        queue.add(new JsonObjectRequest(</span>
+                Request.Method.GET, url, null,
+                response -&gt; {
+                    try {
+<span class="fc" id="L84">                        JSONArray requestsArray = response.getJSONArray(&quot;requests&quot;);</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">                        for (int i = 0; i &lt; requestsArray.length(); i++) {</span>
+<span class="fc" id="L86">                            JSONObject requestObject = requestsArray.getJSONObject(i);</span>
+<span class="fc" id="L87">                            String type = requestObject.getString(&quot;parameter&quot;);</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">                            if (type.equals(&quot;friend&quot;)) incoming.add(requestObject); // Add each JSONObject to the incoming list</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">                            if (type.equals(&quot;group&quot;)) groupReqs.add(requestObject); // Add each JSONObject to the groupReqs list</span>
+                        }
+<span class="fc" id="L91">                        updateHeaders();</span>
+
+                        // Set the adapter for the RecyclerView with the updated incoming list
+<span class="fc" id="L94">                        IncomingAdapter incAdapter = new IncomingAdapter(incoming, this.getApplicationContext(), this);</span>
+<span class="fc" id="L95">                        incomingRequestsRecyclerView.setAdapter(incAdapter);</span>
+
+                        // Set the adapter for the RecyclerView with the updated incoming list
+<span class="fc" id="L98">                        IncomingAdapter groupAdapter = new IncomingAdapter(groupReqs, this.getApplicationContext(), this);</span>
+<span class="fc" id="L99">                        groupRequestsRecyclerView.setAdapter(groupAdapter);</span>
+<span class="nc" id="L100">                    } catch (JSONException e) {</span>
+<span class="nc" id="L101">                        throw new RuntimeException(e);</span>
+<span class="fc" id="L102">                    }</span>
+
+                    try {
+<span class="fc" id="L105">                        JSONArray iter = response.getJSONArray(&quot;allFriends&quot;);</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">                        for (int i = 0; i &lt; iter.length(); i++) {</span>
+<span class="fc" id="L107">                            friendsList.add(iter.get(i).toString());</span>
+                        }
+<span class="fc" id="L109">                        updateHeaders();</span>
+
+<span class="fc" id="L111">                        FriendsAdapter adapter = new FriendsAdapter(friendsList, this.getApplicationContext(), username, this);</span>
+<span class="fc" id="L112">                        friendsRecyclerView.setAdapter(adapter);</span>
+<span class="nc" id="L113">                    } catch (JSONException e) {</span>
+<span class="nc" id="L114">                        throw new RuntimeException(e);</span>
+<span class="fc" id="L115">                    }</span>
+<span class="fc" id="L116">                },</span>
+                Throwable::printStackTrace
+        ));
+<span class="fc" id="L119">    }</span>
+
+    private void sendFriendRequest(String username, String friend) {
+<span class="fc" id="L122">        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();</span>
+<span class="fc" id="L123">        String url = &quot;http://coms-309-055.class.las.iastate.edu:8080/request/create/&quot; + username + &quot;/friend/&quot; + friend;</span>
+
+<span class="fc" id="L125">        queue.add(new StringRequest(Request.Method.POST, url,</span>
+                response -&gt; {
+<span class="fc" id="L127">                    Log.d(&quot;Friend Request: &quot;, response);</span>
+<span class="fc" id="L128">                    Toast.makeText(this, &quot;Friend request sent&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="fc" id="L129">                }, Throwable::printStackTrace));</span>
+<span class="fc" id="L130">    }</span>
+
+    /**
+     * Initializes the SocialActivity. This method:
+     * &lt;ul&gt;
+     *     &lt;li&gt;Sets the content view layout.&lt;/li&gt;
+     *     &lt;li&gt;Initializes UI components including the search bar and friends' RecyclerView.&lt;/li&gt;
+     *     &lt;li&gt;Populates the friends' RecyclerView with a static list of friend names.&lt;/li&gt;
+     *     &lt;li&gt;Retrieves user ID from the intent.&lt;/li&gt;
+     *     &lt;li&gt;Handles the back button click event, which navigates to the UserHomeActivity and passes the user ID to it.&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *                           previously being shut down, this Bundle contains the data it most recently
+     *                           supplied in {@link #onSaveInstanceState}. Otherwise, it is null.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L148">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L149">        setContentView(R.layout.activity_social);</span>
+
+<span class="fc" id="L151">        usernameInput = findViewById(R.id.usernameInput);</span>
+<span class="fc" id="L152">        sendRequestButton = findViewById(R.id.sendRequestButton);</span>
+<span class="fc" id="L153">        friendRequestsHeader = findViewById(R.id.friendRequestsHeader);</span>
+<span class="fc" id="L154">        friendsHeader = findViewById(R.id.friendsHeader);</span>
+<span class="fc" id="L155">        groupsHeader = findViewById(R.id.groupRequestsHeader);</span>
+
+<span class="fc" id="L157">        Intent intent = getIntent();</span>
+<span class="fc" id="L158">        String id = intent.getStringExtra(&quot;id&quot;);</span>
+<span class="fc" id="L159">        String username = intent.getStringExtra(&quot;username&quot;);</span>
+<span class="fc" id="L160">        Boolean plus = intent.getBooleanExtra(&quot;plus&quot;, false);</span>
+<span class="fc" id="L161">        Boolean isAdmin = intent.getBooleanExtra(&quot;isAdmin&quot;, false);</span>
+<span class="fc" id="L162">        ArrayList&lt;String&gt; codes = intent.getStringArrayListExtra(&quot;codes&quot;);</span>
+
+<span class="fc" id="L164">        bottomNavigationView = findViewById(R.id.bottom_navigator);</span>
+<span class="fc" id="L165">        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username, plus, isAdmin);</span>
+<span class="fc" id="L166">        bottomNavigationView.setSelectedItemId(R.id.social);</span>
+
+<span class="fc" id="L168">        friendsRecyclerView = findViewById(R.id.friendsRecyclerView);</span>
+<span class="fc" id="L169">        friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));</span>
+
+<span class="fc" id="L171">        incomingRequestsRecyclerView = findViewById(R.id.incomingRequestsRecyclerView);</span>
+<span class="fc" id="L172">        incomingRequestsRecyclerView.setLayoutManager(new LinearLayoutManager(this));</span>
+
+<span class="fc" id="L174">        groupRequestsRecyclerView = findViewById(R.id.incomingGroupRequestsRecyclerView);</span>
+<span class="fc" id="L175">        groupRequestsRecyclerView.setLayoutManager(new LinearLayoutManager(this));</span>
+
+<span class="fc" id="L177">        sendRequestButton.setOnClickListener(v -&gt; {</span>
+<span class="fc" id="L178">            String friendToAdd = usernameInput.getText().toString();</span>
+<span class="fc" id="L179">            sendFriendRequest(username, friendToAdd);</span>
+<span class="fc" id="L180">            usernameInput.setText(&quot;&quot;);</span>
+<span class="fc" id="L181">        });</span>
+
+<span class="fc" id="L183">        getUsersFriendsAndRequests(id, username);</span>
+<span class="fc" id="L184">    }</span>
+
+    @Override
+    public void onListChanged() {
+<span class="nc" id="L188">        updateHeaders();</span>
+<span class="nc" id="L189">    }</span>
+
+    @Override
+    public void onFriendsListChanged() {
+<span class="nc" id="L193">        updateHeaders();</span>
+<span class="nc" id="L194">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>Generated by the Android Gradle plugin 8.1.3</div></body></html>
