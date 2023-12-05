@@ -292,9 +292,13 @@ public class ChatServer {
                 logger.info("[onError]" + username + ": " + "Could not find username in database");
             }
             String[] newMessage = message.split("@");
-            if (newMessage[0].equals("like")) {
+            if (newMessage[0].equals("dislike")) {
+                Statistic.totalSwipes++;
+            }
+            else if (newMessage[0].equals("like")) {
                 Liked like = new Liked(newMessage[1]);
                 Statistic.totalLikes++;
+                Statistic.totalSwipes++;
                 like.setUser(Objects.requireNonNull(user));
                 Objects.requireNonNull(user).setNewLike(Objects.requireNonNull(like));
                 likeRepository.save(like);
@@ -305,6 +309,7 @@ public class ChatServer {
                         for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
                             if (userRepository.findByUsername(GroupMember.getKey()).getLikes().stream().anyMatch(liked -> liked.getName().contains(newMessage[1]))) {
                                 numberOfLikes++;
+                                Statistic.likesBeforeMatch++;
                             }
                             if (numberOfLikes == groupUsernameSessionMap.size()) {
                                 break;
@@ -337,6 +342,9 @@ public class ChatServer {
                         favoriteRepository.save(favorite);
                         userRepository.save(userRepository.findByUsername(username));
                         Statistic.totalFavorites++;
+                        Statistic.totalMatches++;
+                        Statistic.calculate();
+                        Statistic.likesBeforeMatch = 0;
                         match = false;
                     }
                 }

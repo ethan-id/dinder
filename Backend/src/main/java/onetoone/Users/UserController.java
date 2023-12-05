@@ -220,7 +220,18 @@ public class UserController {
             return failure;
         }
     }
-
+    @PostMapping(path = "/admin/{username}")
+    String makeMeAdmin(@PathVariable String username) {
+        if (userRepository.findByUsername(username) == null) {
+             return failure;
+        }
+        if (userRepository.findByUsername(username).isAdmin()) {
+            return exists;
+        }
+        userRepository.findByUsername(username).setAdmin(true);
+        userRepository.save(userRepository.findByUsername(username));
+        return success;
+    }
     @GetMapping("/admin/stats")
     int getAdminStats(){
         int userCount = 4;
