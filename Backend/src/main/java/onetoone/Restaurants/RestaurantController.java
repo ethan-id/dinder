@@ -20,12 +20,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  *
@@ -34,6 +38,7 @@ import org.springframework.web.client.RestTemplate;
  */
 
 @Api(value = "RestaurantController", description = "REST API's related to restaurants and receiving information from Yelp's API about them")
+@EnableCaching
 @RestController
 public class RestaurantController {
 
@@ -59,6 +64,7 @@ public class RestaurantController {
             @ApiResponse(code = 403, message = "Forbidden!"),
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 510, message = "Internal server error")})
+    @Cacheable("getAllRestaurants")
     @GetMapping(path="/restaurant/{city}/all")
     @ResponseBody
     @NonNull
@@ -95,6 +101,7 @@ public class RestaurantController {
             @ApiResponse(code = 403, message = "Forbidden!"),
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 510, message = "Internal server error")})
+    @Cacheable("findRestaurantByCode")
     @GetMapping(path = "/restaurant/find/{code}")
     @ResponseBody
     JsonNode findRestaurantByCode(@PathVariable String code) throws JsonProcessingException {
@@ -129,6 +136,7 @@ public class RestaurantController {
             @ApiResponse(code = 403, message = "Forbidden!"),
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 510, message = "Internal server error")})
+    @Cacheable("getRestaurantByReviews")
     @GetMapping(path = "/restaurant/reviews/{code}")
     @ResponseBody
     JsonNode getRestaurantByReviews(@PathVariable String code) throws JsonProcessingException {
@@ -162,6 +170,7 @@ public class RestaurantController {
             @ApiResponse(code = 403, message = "Forbidden!"),
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 510, message = "Internal server error")})
+    @Cacheable("getSwiping")
     @GetMapping(path = "/home/{city}/{price}/{categories}/{attributes}")
     @ResponseBody
     ArrayList<JsonNode> getSwiping(@PathVariable String city, @PathVariable Integer price, @PathVariable String categories,
