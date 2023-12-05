@@ -65,7 +65,7 @@ public class RestaurantController {
         ArrayList<JsonNode> getAllRestaurants(@PathVariable String city) {
         ArrayList<JsonNode> restaurants = new ArrayList<JsonNode>();
         String url = ("https://api.yelp.com/v3/businesses/search?&limit=50&term=restaurants&location=" + city);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url(url + "&offset=" + i)
@@ -170,7 +170,7 @@ public class RestaurantController {
         categories = categories.replaceAll(",", "%2C");
         attributes = attributes.replaceAll(",", "%20");
         String url = ("https://api.yelp.com/v3/businesses/search?&limit=50&term=restaurants&categories=" + categories + "&attributes=" + attributes);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url(url + "&location=" + city + "&price=" + price + "&offset=" + i)
