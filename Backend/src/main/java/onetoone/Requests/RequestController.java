@@ -33,9 +33,6 @@ public class RequestController {
             return failure;
         }
         try {
-//            Request creatorRequest = new Request(parameter, creator, userRepository.findByUsername(invited));
-//            userRepository.findByUsername(creator).setNewRequest(creatorRequest);
-//            requestRepository.save(creatorRequest);
             Request invitedRequest = new Request(parameter, creator, userRepository.findByUsername(invited));
             userRepository.findByUsername(invited).setNewRequest(invitedRequest);
             requestRepository.save(invitedRequest);
