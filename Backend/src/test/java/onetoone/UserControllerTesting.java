@@ -1,8 +1,7 @@
 package onetoone;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import io.restassured.RestAssured;
@@ -15,8 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -56,7 +57,42 @@ public class UserControllerTesting {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("username", is("Jessticals")));
     }
+
     @Test
+    public void testGetUserByUsername() throws Exception {
+        String sent = "BigE,1234";
+        controller.perform(get("/users/login/{sent}", sent).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("username", is("BigE")));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testAddingUser() throws Exception {
+        // Example JSON, adjust fields according to your User entity
+        String userJson = "{\"name\":\"test\", \"username\":\"testuser\", \"passkey\":\"5555\"}";
+
+        controller.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testRemovingUser() throws Exception {
+        // Assuming there's a user with ID 49 in your test environment
+        int userId = 49;
+
+        controller.perform(delete("/users/{id}", userId))
+                .andExpect(status().isOk()); // Change to isNoContent() if you expect 204 No Content
+    }
+
+    @Test
+    @Transactional
+    @Rollback
     public void testAddingFriends() throws Exception {
         controller.perform(post("/friend/addFriend/BigE,Jessticals").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -96,6 +132,27 @@ public class UserControllerTesting {
                 .andExpect(status().isOk());
 
     }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testMakingUserDinderPlus() throws Exception {
+        String username = "Jessticals";
+        int id = 3;
+        boolean value = true;
+
+        // Update the user's Dinder Plus status
+        controller.perform(post("/users/{username}/plus/{value}", username, value)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        // Fetch the user's details and verify the update
+        controller.perform(get("/users/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.plus", is(value)));
+    }
+
 
 
 }
