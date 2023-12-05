@@ -1,14 +1,17 @@
 package onetoone.websocket;
 
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
 import onetoone.Favorites.Favorite;
 import onetoone.Favorites.FavoriteRepository;
 import onetoone.Likes.LikeRepository;
 import onetoone.Likes.Liked;
 import onetoone.Requests.Request;
 import onetoone.Requests.RequestRepository;
+import onetoone.Restaurants.Restaurant;
 import onetoone.Restaurants.RestaurantRepository;
-import onetoone.Statistics.StatisticRepository;
 import onetoone.Users.User;
 import onetoone.Users.UserRepository;
 import org.slf4j.Logger;
@@ -19,7 +22,10 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 
 /**
@@ -63,6 +69,7 @@ public class ChatServer {
     int like_count = 100000000;
     int numberOfLikes = 0;
     String restaurantMatch = "";
+    private static StatisticRepository statisticRepository;
 
     @Autowired
     public void setUserRepository(UserRepository repo) {
@@ -164,6 +171,7 @@ public class ChatServer {
                 sendMessageToPArticularUser(username, "user does not exist");
                 return;
             }
+
             groupSessionUsernameMap.putIfAbsent(session, username);
             groupUsernameSessionMap.putIfAbsent(username, session);
 
@@ -281,7 +289,6 @@ public class ChatServer {
             catch (Exception e) {
                 logger.info("[onError]" + username + ": " + "Could not find username in database");
             }
-
             String[] newMessage = message.split("@");
             if (newMessage[0].equals("like")) {
                 Liked like = new Liked(newMessage[1]);
