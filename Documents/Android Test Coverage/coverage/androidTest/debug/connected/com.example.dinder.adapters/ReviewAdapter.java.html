@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReviewAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.dinder.adapters</a> &gt; <span class="el_source">ReviewAdapter.java</span></div><h1>ReviewAdapter.java</h1><pre class="source lang-java linenums">package com.example.dinder.adapters;
+
+import android.graphics.Bitmap;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageRequest;
+import com.example.dinder.R;
+import com.example.dinder.VolleySingleton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Locale;
+
+public class ReviewAdapter extends RecyclerView.Adapter&lt;ReviewAdapter.ViewHolder&gt; {
+    private ArrayList&lt;JSONObject&gt; reviews;
+
+    // Provide a suitable constructor
+<span class="fc" id="L30">    public ReviewAdapter(ArrayList&lt;JSONObject&gt; myDataset) {</span>
+<span class="fc" id="L31">        reviews = myDataset;</span>
+<span class="fc" id="L32">    }</span>
+
+    // Create new views (invoked by the layout manager)
+    @Override
+    public ReviewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        // create a new view
+<span class="fc" id="L38">        View view = LayoutInflater.from(parent.getContext())</span>
+<span class="fc" id="L39">                .inflate(R.layout.review_item, parent, false);</span>
+
+<span class="fc" id="L41">        return new ViewHolder(view);</span>
+    }
+
+    // Replace the contents of a view (invoked by the layout manager)
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        // Get element from your dataset at this position
+        // Replace the contents of the view with that element
+<span class="fc" id="L49">        JSONObject item = reviews.get(position);</span>
+        try {
+<span class="fc" id="L51">            String reviewText = item.getString(&quot;text&quot;);</span>
+<span class="fc" id="L52">            String timeCreated = item.getString(&quot;time_created&quot;);</span>
+<span class="fc" id="L53">            String formattedTime = formatDateString(timeCreated);</span>
+<span class="fc" id="L54">            JSONObject user = item.getJSONObject(&quot;user&quot;);</span>
+<span class="fc" id="L55">            String name = user.getString(&quot;name&quot;);</span>
+<span class="fc" id="L56">            String imageUrl = user.getString(&quot;image_url&quot;); // Replace with the correct JSON path</span>
+
+<span class="fc" id="L58">            holder.user_review.setText(reviewText);</span>
+<span class="fc" id="L59">            holder.rating_time.setText(&quot;Posted on: &quot; + formattedTime);</span>
+
+<span class="pc bpc" id="L61" title="2 of 4 branches missed.">            if (imageUrl != null &amp;&amp; !imageUrl.isEmpty()) {</span>
+<span class="fc" id="L62">                ImageRequest imageRequest = new ImageRequest(</span>
+                        imageUrl,
+                        response -&gt; {
+<span class="fc" id="L65">                            holder.userImage.setImageBitmap(response);</span>
+<span class="fc" id="L66">                        }, 0, 0, ImageView.ScaleType.CENTER_CROP, Bitmap.Config.RGB_565,</span>
+<span class="fc" id="L67">                        error -&gt; Log.e(&quot;Image Load Error&quot;, &quot;Error loading image: &quot; + error.getMessage())</span>
+                );
+                // Add the request to the RequestQueue.
+<span class="fc" id="L70">                VolleySingleton.getInstance(holder.userImage.getContext()).addToRequestQueue(imageRequest);</span>
+<span class="fc" id="L71">            } else {</span>
+                // Set a default image or clear the current image
+<span class="nc" id="L73">                holder.userImage.setImageResource(R.drawable.account_circle); // Replace with your default image resource</span>
+            }
+
+<span class="fc" id="L76">            holder.userName.setText(name);</span>
+<span class="fc" id="L77">            holder.user_review.setText(reviewText);</span>
+<span class="fc" id="L78">            holder.rating_time.setText(&quot;Posted on: &quot; + formattedTime);</span>
+
+<span class="nc" id="L80">        } catch (JSONException e) {</span>
+<span class="nc" id="L81">            Log.e(&quot;Error&quot;, e.toString());</span>
+<span class="fc" id="L82">        }</span>
+<span class="fc" id="L83">    }</span>
+
+    /**
+     * Converts the JSON date string to a more readable format.
+     *
+     * @param dateString The date string from the JSON object.
+     * @return A formatted date string.
+     */
+    private String formatDateString(String dateString) {
+        try {
+<span class="fc" id="L93">            SimpleDateFormat jsonDateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;, Locale.getDefault());</span>
+<span class="fc" id="L94">            SimpleDateFormat displayFormat = new SimpleDateFormat(&quot;MMM dd, yyyy HH:mm&quot;, Locale.getDefault());</span>
+
+<span class="fc" id="L96">            return displayFormat.format(jsonDateFormat.parse(dateString));</span>
+<span class="nc" id="L97">        } catch (ParseException e) {</span>
+<span class="nc" id="L98">            Log.e(&quot;Date Parsing&quot;, &quot;Error parsing date: &quot; + e.getMessage());</span>
+<span class="nc" id="L99">            return dateString; // return the original string in case of parsing error</span>
+        }
+    }
+
+
+    // Return the size of your dataset (invoked by the layout manager)
+    @Override
+    public int getItemCount() {
+<span class="fc" id="L107">        return reviews.size();</span>
+    }
+
+    // Provide a reference to the views for each data item
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public ImageView userImage;
+        public TextView userName;
+        public TextView user_review;
+        public TextView rating_time;
+
+        public ViewHolder(View view) {
+<span class="fc" id="L118">            super(view);</span>
+<span class="fc" id="L119">            userImage = view.findViewById(R.id.image_user);</span>
+<span class="fc" id="L120">            userName = view.findViewById(R.id.text_user_name);</span>
+<span class="fc" id="L121">            user_review = view.findViewById(R.id.text_review);</span>
+<span class="fc" id="L122">            rating_time = view.findViewById(R.id.text_rating_time);</span>
+<span class="fc" id="L123">        }</span>
+    }}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>Generated by the Android Gradle plugin 8.1.3</div></body></html>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RestaurantAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.dinder.adapters</a> &gt; <span class="el_source">RestaurantAdapter.java</span></div><h1>RestaurantAdapter.java</h1><pre class="source lang-java linenums">package com.example.dinder.adapters;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.dinder.R;
+import com.example.dinder.adapters.model.Restaurant;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+
+/**
+ * Adapter for the RecyclerView to display a list of liked restaurants.
+ */
+public class RestaurantAdapter extends RecyclerView.Adapter&lt;RestaurantAdapter.ViewHolder&gt; {
+
+    /**
+     * List of {@link Restaurant} objects that represent the user's recent likes
+     */
+    private List&lt;Restaurant&gt; likes;
+
+    /**
+     * Constructs a RestaurantAdapter with a list of liked restaurants.
+     *
+     * @param likes A list of Restaurant objects that have been liked.
+     */
+<span class="fc" id="L36">    public RestaurantAdapter(List&lt;Restaurant&gt; likes) {</span>
+<span class="fc" id="L37">        this.likes = likes;</span>
+<span class="fc" id="L38">    }</span>
+
+    /**
+     * Called when RecyclerView needs a new ViewHolder of the given type to represent an item.
+     *
+     * @param parent   The ViewGroup into which the new View will be added after it is bound to an adapter position.
+     * @param viewType The view type of the new View.
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+<span class="fc" id="L50">        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.like_item, parent, false);</span>
+<span class="fc" id="L51">        return new ViewHolder(view);</span>
+    }
+
+    /**
+     * Called by RecyclerView to display the data at the specified position.
+     * This method should update the contents of the ViewHolder to reflect the item at the given position.
+     *
+     * @param holder   The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+<span class="fc" id="L63">        Restaurant like = likes.get(position);</span>
+<span class="fc" id="L64">        holder.restaurantName.setText(like.getName());</span>
+        try {
+<span class="fc" id="L66">            holder.restaurantAddress.setText(like.getLocation().getString(&quot;address1&quot;));</span>
+<span class="fc" id="L67">            holder.ratingBar.setRating((float) like.getRating());</span>
+<span class="nc" id="L68">        } catch (JSONException e) {</span>
+<span class="nc" id="L69">            throw new RuntimeException(e);</span>
+<span class="fc" id="L70">        }</span>
+<span class="fc" id="L71">    }</span>
+
+    /**
+     * Returns the total number of items in the data set held by the adapter.
+     *
+     * @return The total number of items in this adapter.
+     */
+    @Override
+    public int getItemCount() {
+<span class="fc" id="L80">        return likes.size();</span>
+    }
+
+    /**
+     * ViewHolder class for layout of each item in the RecyclerView.
+     */
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        /**
+         * The name of the restaurant and the address of the restaurant
+         */
+        TextView restaurantName, restaurantAddress;
+        /**
+         * ImageView widget for the heart icon
+         */
+        ImageView heartIcon;
+        /**
+         * A rating bar widget for displaying the restaurant's rating
+         */
+        RatingBar ratingBar;
+
+        /**
+         * Constructs a ViewHolder for the item layout.
+         *
+         * @param itemView The View that you inflated in onCreateViewHolder().
+         */
+<span class="fc" id="L105">        public ViewHolder(@NonNull View itemView) {</span>
+<span class="fc" id="L106">            super(itemView);</span>
+<span class="fc" id="L107">            restaurantName = itemView.findViewById(R.id.likeName);</span>
+<span class="fc" id="L108">            restaurantAddress = itemView.findViewById(R.id.likeAddress);</span>
+<span class="fc" id="L109">            heartIcon = itemView.findViewById(R.id.recentLikeHeart);</span>
+<span class="fc" id="L110">            ratingBar = itemView.findViewById(R.id.likeRatingBar);</span>
+<span class="fc" id="L111">        }</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>Generated by the Android Gradle plugin 8.1.3</div></body></html>

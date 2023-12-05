@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IncomingAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.dinder.adapters</a> &gt; <span class="el_source">IncomingAdapter.java</span></div><h1>IncomingAdapter.java</h1><pre class="source lang-java linenums">package com.example.dinder.adapters;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
+import com.example.dinder.R;
+import com.example.dinder.VolleySingleton;
+import com.example.dinder.websocket.WebSocketManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+
+/**
+ * Adapter for the RecyclerView used on the Social Screen to display the user's
+ * list of friends
+ */
+public class IncomingAdapter extends RecyclerView.Adapter&lt;IncomingAdapter.FriendViewHolder&gt; {
+
+    /**
+     * A list of strings containing the user's friends
+     */
+    private List&lt;JSONObject&gt; incomingRequests;
+    private Context context;
+
+    public interface AdapterCallback {
+        void onListChanged();
+    }
+
+    private AdapterCallback callback;
+
+<span class="fc" id="L45">    public IncomingAdapter(List&lt;JSONObject&gt; incomingRequests, Context ctx, AdapterCallback callback) {</span>
+<span class="fc" id="L46">        this.incomingRequests = incomingRequests;</span>
+<span class="fc" id="L47">        this.context = ctx;</span>
+<span class="fc" id="L48">        this.callback = callback;</span>
+<span class="fc" id="L49">    }</span>
+
+    @NonNull
+    @Override
+    public FriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+<span class="fc" id="L54">        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.friend_item, parent, false);</span>
+<span class="fc" id="L55">        return new FriendViewHolder(view);</span>
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull FriendViewHolder holder, int position) {
+<span class="fc" id="L60">        JSONObject friend = incomingRequests.get(position);</span>
+        try {
+<span class="fc" id="L62">            holder.friendName.setText(friend.getString(&quot;creator&quot;));</span>
+<span class="nc" id="L63">        } catch (JSONException e) {</span>
+<span class="nc" id="L64">            throw new RuntimeException(e);</span>
+<span class="fc" id="L65">        }</span>
+<span class="fc" id="L66">        holder.invite.setText(&quot;Accept&quot;);</span>
+<span class="fc" id="L67">        holder.invite.setOnClickListener(v -&gt; {</span>
+            try {
+<span class="nc" id="L69">                acceptFriendRequest(friend.getInt(&quot;id&quot;), position, friend.getString(&quot;parameter&quot;));</span>
+<span class="nc" id="L70">            } catch (JSONException e) {</span>
+<span class="nc" id="L71">                throw new RuntimeException(e);</span>
+<span class="nc" id="L72">            }</span>
+<span class="nc" id="L73">        });</span>
+<span class="fc" id="L74">    }</span>
+
+    public void acceptFriendRequest(int requestId, int position, String type) {
+<span class="nc" id="L77">        RequestQueue queue = VolleySingleton.getInstance(context.getApplicationContext()).getRequestQueue();</span>
+
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (type.equals(&quot;friend&quot;)) {</span>
+<span class="nc" id="L80">            String url = &quot;http://coms-309-055.class.las.iastate.edu:8080/request/accept/&quot; + requestId;</span>
+
+<span class="nc" id="L82">            queue.add(new StringRequest(Request.Method.POST, url,</span>
+                response -&gt; {
+<span class="nc" id="L84">                    incomingRequests.remove(position);</span>
+<span class="nc" id="L85">                    notifyItemRemoved(position);</span>
+<span class="nc" id="L86">                    notifyItemRangeChanged(position, incomingRequests.size());</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">                    if (callback != null) {</span>
+<span class="nc" id="L88">                        callback.onListChanged(); // Notify the activity that the list has changed</span>
+                    }
+<span class="nc" id="L90">                }, Throwable::printStackTrace));</span>
+        }
+
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (type.equals(&quot;group&quot;)) {</span>
+<span class="nc" id="L94">            WebSocketManager.getInstance().sendMessage(&quot;accept@&quot; + requestId);</span>
+        }
+<span class="nc" id="L96">    }</span>
+
+    /**
+     * Gets the size of the user's friends list
+     *
+     * @return The size of the user's friends list as an integer
+     */
+    @Override
+    public int getItemCount() {
+<span class="fc" id="L105">        return incomingRequests.size();</span>
+    }
+
+    /**
+     * A FriendViewHolder used to populate the friends list
+     */
+    class FriendViewHolder extends RecyclerView.ViewHolder {
+        String type;
+        /**
+         * TextView used to hold the friend's name
+         */
+        TextView friendName;
+
+        /**
+         * ImageView used to hold the friend's profile picture/icon
+         */
+        ImageView friendImage;
+
+        /**
+         * A Button for sending an invite to the friend to join the user's group
+         */
+        Button invite;
+
+        /**
+         * Constructor for a FriendViewHolder that takes in a View to populate the FriendViewHolder
+         * @param itemView      A View containing the elements to be used in the FriendViewHolder
+         */
+<span class="fc" id="L132">        public FriendViewHolder(@NonNull View itemView) {</span>
+<span class="fc" id="L133">            super(itemView);</span>
+<span class="fc" id="L134">            friendName = itemView.findViewById(R.id.friendName);</span>
+<span class="fc" id="L135">            friendImage = itemView.findViewById(R.id.friendImage);</span>
+<span class="fc" id="L136">            invite = itemView.findViewById(R.id.inviteBtn);</span>
+<span class="fc" id="L137">        }</span>
+
+        public String getType() {
+<span class="nc" id="L140">            return type;</span>
+        }
+
+        public void setType(String type) {
+<span class="nc" id="L144">            this.type = type;</span>
+<span class="nc" id="L145">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>Generated by the Android Gradle plugin 8.1.3</div></body></html>

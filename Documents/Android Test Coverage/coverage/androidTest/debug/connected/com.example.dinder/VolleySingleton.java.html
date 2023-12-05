@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VolleySingleton.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.dinder</a> &gt; <span class="el_source">VolleySingleton.java</span></div><h1>VolleySingleton.java</h1><pre class="source lang-java linenums">package com.example.dinder;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.LruCache;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.Volley;
+
+/**
+ * VolleySingleton using Android Volley to manage HTTP Requests being sent to and from the Springboot Server
+ */
+public class VolleySingleton {
+    /**
+     * The instance of the VolleySingleton class; Static so that there are not more than one instances within the app
+     */
+    private static VolleySingleton instance;
+    /**
+     * The RequestQueue used by Volley to execute requests added to it
+     */
+    private RequestQueue requestQueue;
+    /**
+     * The ImageLoader used by Volley to load images
+     */
+    private ImageLoader imageLoader;
+    /**
+     * Static context provided to the Singleton on instantiation
+     */
+    private static Context ctx;
+
+    /**
+     * Constructor used to instantiate the VolleySingleton class
+     * @param context  Conetext of the Android Application
+     */
+<span class="fc" id="L37">    private VolleySingleton(Context context) {</span>
+<span class="fc" id="L38">        ctx = context;</span>
+<span class="fc" id="L39">        requestQueue = getRequestQueue();</span>
+
+<span class="fc" id="L41">        imageLoader = new ImageLoader(requestQueue, new ImageLoader.ImageCache() {</span>
+<span class="fc" id="L42">            private final LruCache&lt;String, Bitmap&gt; cache = new LruCache&lt;String, Bitmap&gt;(20);</span>
+
+            @Override
+            public Bitmap getBitmap(String url) {
+<span class="nc" id="L46">                return cache.get(url);</span>
+            }
+
+            @Override
+            public void putBitmap(String url, Bitmap bitmap) {
+<span class="nc" id="L51">                cache.put(url, bitmap);</span>
+<span class="nc" id="L52">            }</span>
+        });
+<span class="fc" id="L54">    }</span>
+
+    /**
+     * Retrieves the singleton instance of the VolleySingleton class, initializing it if necessary.
+     *
+     * @param context The application's context, used for initializing the VolleySingleton if needed.
+     * @return The singleton instance of the VolleySingleton class.
+     */
+    public static synchronized VolleySingleton getInstance(Context context) {
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (instance == null) {</span>
+<span class="fc" id="L64">            instance = new VolleySingleton(context);</span>
+        }
+<span class="fc" id="L66">        return instance;</span>
+    }
+
+    /**
+     * Retrieves the request queue for handling network requests. If the request queue is not initialized,
+     * it creates a new one using the application's context.
+     *
+     * @return The request queue used for handling network requests.
+     */
+    public RequestQueue getRequestQueue() {
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (requestQueue == null) {</span>
+            // getApplicationContext() is key, it keeps you from leaking the
+            // Activity or BroadcastReceiver if someone passes one in.
+<span class="fc" id="L79">            requestQueue = Volley.newRequestQueue(ctx.getApplicationContext());</span>
+        }
+<span class="fc" id="L81">        return requestQueue;</span>
+    }
+
+    /**
+     * Adds a given request to the request queue for execution.
+     *
+     * @param req The request to be executed.
+     * @param &lt;T&gt; The type of the parsed response this request expects.
+     */
+    public &lt;T&gt; void addToRequestQueue(Request&lt;T&gt; req) {
+<span class="fc" id="L91">        getRequestQueue().add(req);</span>
+<span class="fc" id="L92">    }</span>
+
+    /**
+     * Retrieves the image loader used for loading and caching images.
+     *
+     * @return The image loader instance.
+     */
+    public ImageLoader getImageLoader() {
+<span class="nc" id="L100">        return imageLoader;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>Generated by the Android Gradle plugin 8.1.3</div></body></html>

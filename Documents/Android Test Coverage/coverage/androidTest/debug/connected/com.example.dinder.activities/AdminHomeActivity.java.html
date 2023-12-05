@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdminHomeActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.dinder.activities</a> &gt; <span class="el_source">AdminHomeActivity.java</span></div><h1>AdminHomeActivity.java</h1><pre class="source lang-java linenums">package com.example.dinder.activities;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Window;
+import android.widget.TextView;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.example.dinder.R;
+import com.example.dinder.VolleySingleton;
+import com.example.dinder.activities.utils.NavigationUtils;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * The Sign-Up screen; The user can enter their account information here and request to sign-up to Dinder
+ */
+<span class="fc" id="L39">public class AdminHomeActivity extends AppCompatActivity {</span>
+    private Dialog loadingDialog;
+
+    private void getStats(RequestQueue queue) {
+<span class="fc" id="L43">        showLoadingDialog(); // Show loading dialog before starting requests</span>
+<span class="fc" id="L44">        getStat(&quot;stats/get/Likes&quot;, R.id.tvTotalLikes, queue);</span>
+<span class="fc" id="L45">        getStat(&quot;stats/get/Users&quot;, R.id.tvTotalUsers, queue);</span>
+<span class="fc" id="L46">        getStat(&quot;stats/get/Favorites&quot;, R.id.tvTotalFavorites, queue);</span>
+<span class="fc" id="L47">        getStat(&quot;stats/get/SwipesBeforeMatch&quot;, R.id.tvAvgSwipesBeforeMatch, queue);</span>
+<span class="fc" id="L48">        getStat(&quot;stats/get/LikesPerMatch&quot;, R.id.tvAvgLikesPerMatch, queue);</span>
+<span class="fc" id="L49">        getStat(&quot;stats/get/SwipesBeforeLike&quot;, R.id.tvAvgSwipesBeforeLike, queue);</span>
+<span class="fc" id="L50">        getStat(&quot;stats/get/LikesPerUser&quot;, R.id.tvAvgLikesPerUser, queue);</span>
+<span class="fc" id="L51">        getStat(&quot;stats/get/MatchesPerUser&quot;, R.id.tvAvgMatchesPerUser, queue);</span>
+<span class="fc" id="L52">    }</span>
+
+    private void getStat(String endpoint, int textViewId, RequestQueue queue) {
+<span class="fc" id="L55">        String url = &quot;http://coms-309-055.class.las.iastate.edu:8080/&quot; + endpoint; // Replace with your server address</span>
+
+<span class="fc" id="L57">        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,</span>
+                response -&gt; {
+<span class="fc" id="L59">                    updateTextView(textViewId, response);</span>
+<span class="fc" id="L60">                    hideLoadingDialog(); // Hide loading dialog when all requests are completed</span>
+<span class="fc" id="L61">                }, error -&gt; {</span>
+<span class="nc" id="L62">                    Log.e(&quot;Volley&quot;, &quot;Error: &quot; + error.getMessage());</span>
+<span class="nc" id="L63">                    hideLoadingDialog(); // Hide loading dialog in case of error</span>
+<span class="nc" id="L64">                });</span>
+
+        // Set retry policy to handle timeouts and retries in case of failure
+<span class="fc" id="L67">        stringRequest.setRetryPolicy(new DefaultRetryPolicy(</span>
+                5000, // Timeout in ms
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, // Number of retries
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+<span class="fc" id="L72">        queue.add(stringRequest);</span>
+<span class="fc" id="L73">    }</span>
+
+    private void updateTextView(int id, String value) {
+<span class="fc" id="L76">        TextView textView = findViewById(id);</span>
+<span class="fc" id="L77">        String currentValue = textView.getText().toString();</span>
+<span class="fc" id="L78">        textView.setText(MessageFormat.format(&quot;{0}{1}&quot;, currentValue, value));</span>
+<span class="fc" id="L79">    }</span>
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L83">        super.onCreate(savedInstanceState);</span>
+
+<span class="fc" id="L85">        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();</span>
+
+<span class="fc" id="L87">        setContentView(R.layout.activity_admin_home);</span>
+
+<span class="fc" id="L89">        Intent intent = getIntent();</span>
+<span class="fc" id="L90">        String id = intent.getStringExtra(&quot;id&quot;);</span>
+<span class="fc" id="L91">        String username = intent.getStringExtra(&quot;username&quot;);</span>
+<span class="fc" id="L92">        Boolean plus = intent.getBooleanExtra(&quot;plus&quot;, false);</span>
+<span class="fc" id="L93">        Boolean isAdmin = intent.getBooleanExtra(&quot;isAdmin&quot;, false);</span>
+<span class="fc" id="L94">        ArrayList&lt;String&gt; codes = intent.getStringArrayListExtra(&quot;codes&quot;);</span>
+
+<span class="fc" id="L96">        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);</span>
+<span class="fc" id="L97">        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username, plus, isAdmin);</span>
+
+<span class="fc" id="L99">        setupLoadingDialog();</span>
+
+<span class="fc" id="L101">        getStats(queue);</span>
+<span class="fc" id="L102">    }</span>
+
+    private void setupLoadingDialog() {
+<span class="fc" id="L105">        loadingDialog = new Dialog(this);</span>
+<span class="fc" id="L106">        loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);</span>
+<span class="fc" id="L107">        loadingDialog.setContentView(R.layout.loading);</span>
+<span class="fc" id="L108">        Objects.requireNonNull(loadingDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));</span>
+<span class="fc" id="L109">        loadingDialog.setCancelable(false); // prevents users from cancelling the dialog</span>
+<span class="fc" id="L110">    }</span>
+
+    private void showLoadingDialog() {
+<span class="pc bpc" id="L113" title="2 of 4 branches missed.">        if (loadingDialog != null &amp;&amp; !loadingDialog.isShowing()) {</span>
+<span class="fc" id="L114">            loadingDialog.show();</span>
+        }
+<span class="fc" id="L116">    }</span>
+
+    private void hideLoadingDialog() {
+<span class="pc bpc" id="L119" title="2 of 6 branches missed.">        if (loadingDialog != null &amp;&amp; loadingDialog.isShowing() &amp;&amp; isActivityAttached()) {</span>
+<span class="fc" id="L120">            loadingDialog.dismiss();</span>
+        }
+<span class="fc" id="L122">    }</span>
+
+    private boolean isActivityAttached() {
+<span class="pc bpc" id="L125" title="2 of 4 branches missed.">        return getWindow() != null &amp;&amp; getWindow().getDecorView().getWindowToken() != null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>Generated by the Android Gradle plugin 8.1.3</div></body></html>
