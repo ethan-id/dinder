@@ -9,6 +9,7 @@ import onetoone.Requests.RequestRepository;
 import onetoone.Statistics.Statistic;
 import onetoone.Users.User;
 import onetoone.Users.UserRepository;
+import org.hibernate.tool.schema.internal.StandardTableExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -283,67 +284,59 @@ public class ChatServer {
                 logger.info("[onError]" + username + ": " + "Could not find username in database");
             }
             String[] newMessage = message.split("@");
+            String restaurantMatch;
             if (newMessage[0].equals("dislike")) {
+                restaurantMatch = "";
                 Statistic.totalSwipes++;
             }
             else if (newMessage[0].equals("like")) {
-                numberOfLikes = 0;
                 Liked like = new Liked(newMessage[1]);
-                Statistic.totalLikes++;
                 Statistic.totalSwipes++;
+                Statistic.totalLikes++;
                 like.setUser(Objects.requireNonNull(user));
-                Objects.requireNonNull(user).setNewLike(Objects.requireNonNull(like));
+                Objects.requireNonNull(user).setNewLike(like);
                 likeRepository.save(like);
+                restaurantMatch = newMessage[1];
                 userRepository.save(user);
-                if (!LikeMap.isEmpty()) {
-                    if (LikeMap.stream().anyMatch(liked -> liked.getName().contains(like.getName())) && !match) {
+            } else {
+                restaurantMatch = "";
+            }
+            User userWithLeastLikes = new User();
+            if (groupUsernameSessionMap.size() >= 2) {
+                int numberOfLikes = 0;
+                for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
+                    if (userRepository.findByUsername(GroupMember.getKey()).getLikes().stream().anyMatch(liked -> liked.getName().equals(restaurantMatch))) {
                         numberOfLikes++;
-                        for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
-                            if (userRepository.findByUsername(GroupMember.getKey()).getLikes().stream().anyMatch(liked -> liked.getName().contains(newMessage[1]))) {
-                                numberOfLikes++;
-                                Statistic.likesBeforeMatch++;
-                            }
-                            if (numberOfLikes == groupUsernameSessionMap.size()) {
-                                break;
-                            }
-                        }
                         if (numberOfLikes == groupUsernameSessionMap.size()) {
-                            match = true;
-                            numberOfLikes = 0;
-                            restaurantMatch = like.getName();
+                            break;
                         }
                     }
-                    else {
-                        LikeMap.add(like);
-                    }
-                    numberOfLikes = 0;
                 }
-                else {
-                    LikeMap.add(like);
-                }
-                if (match || groupUsernameSessionMap.size() < 2 || groupSessionUsernameMap.size() < 2) {
-                    if (groupUsernameSessionMap.size() < 2 || groupSessionUsernameMap.size() < 2) {
-                        sendMessageToPArticularUser(username, "Match@" + newMessage[1]);
-                    }
-                    else {
+                if (numberOfLikes == groupUsernameSessionMap.size()) {
                     for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
                         sendMessageToPArticularUser(GroupMember.getKey(), "Match@" + restaurantMatch);
-                    }
-                        Favorite favorite = new Favorite(restaurantMatch);
-                        favorite.setUser(Objects.requireNonNull(user));
-                        userRepository.findByUsername(username).addFavorite(favorite);
-                        favoriteRepository.save(favorite);
-                        userRepository.save(userRepository.findByUsername(username));
+                        Favorite favorite = new Favorite(newMessage[1]);
+                        userRepository.findByUsername(GroupMember.getKey()).addFavorite(favorite);
+                        userRepository.save(userRepository.findByUsername(GroupMember.getKey()));
                         Statistic.totalFavorites++;
                         Statistic.totalMatches++;
                         Statistic.calculate();
                         Statistic.likesBeforeMatch = 0;
-                        match = false;
                     }
                 }
             }
+            else  {
+                    sendMessageToPArticularUser(username, "Match@" + restaurantMatch);
+                    Favorite favorite = new Favorite(newMessage[1]);
+                    user.addFavorite(favorite);
+                    userRepository.save(user);
+                    Statistic.totalFavorites++;
+                    Statistic.totalMatches++;
+                    Statistic.calculate();
+                    Statistic.likesBeforeMatch = 0;
+                }
+            }
         }
-    }
 
     /**
      * Handles the closure of a WebSocket connection.
