@@ -157,18 +157,18 @@ public class ChatServer {
                 userToAdd = userRepository.findByUsername(usernameToAdd);
             }
             catch (Exception e) {
-                broadcast("user does not exist");
+                sendMessageToPArticularUser(username, "user does not exist");
                 return;
             }
             groupSessionUsernameMap.putIfAbsent(session, username);
             groupUsernameSessionMap.putIfAbsent(username, session);
 
-            if (!user.isPlus() && (groupSessionUsernameMap.size() >= 2 || groupUsernameSessionMap.size() >= 2)) {
-                sendMessageToPArticularUser(username, "Upgrade to Dinder+ to be able to add more than 2 people to your group!");
-                return;
-            }
             if (groupUsernameSessionMap.containsKey(usernameToAdd)) {
                 sendMessageToPArticularUser(username, usernameToAdd + " is already Dindering with you, silly!");
+                return;
+            }
+            if (!user.isPlus() && (groupSessionUsernameMap.size() >= 2 || groupUsernameSessionMap.size() >= 2)) {
+                sendMessageToPArticularUser(username, "Upgrade to Dinder+ to be able to add more than 2 people to your group!");
                 return;
             }
             for (Request request : userToAdd.getRequests()) {
@@ -288,11 +288,22 @@ public class ChatServer {
                 if (!LikeMap.isEmpty()) {
                     if (LikeMap.stream().anyMatch(liked -> liked.getName().contains(like.getName())) && !match) {
                         numberOfLikes++;
-                        if (numberOfLikes == groupUsernameSessionMap.size() - 1) {
+                        for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
+                            if (userRepository.findByUsername(GroupMember.getKey()).getLikes().stream().anyMatch(liked -> liked.getName().contains(newMessage[1]))) {
+                                numberOfLikes++;
+                            }
+                            if (numberOfLikes == groupUsernameSessionMap.size()) {
+                                break;
+                            }
+                        }
+                        if (numberOfLikes == groupUsernameSessionMap.size()) {
                             match = true;
                             numberOfLikes = 0;
                             restaurantMatch = like.getName();
                         }
+                    }
+                    else {
+                        LikeMap.add(like);
                     }
                 }
                 else {
