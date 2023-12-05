@@ -2,6 +2,7 @@ package com.example.dinder;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.swipeRight;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
@@ -95,6 +96,39 @@ public class HomeScreenTest {
 
         // Perform the action that changes the text
         onView(withId(R.id.heartBtn)).perform(click());
+
+        awaitTransition(3500);
+
+        // Assert that the text has changed
+        onView(withId(R.id.address)).check(matches(not(withText(initialText[0]))));
+    }
+
+    @Test
+    public void testLikingBySwipingRestaurantWithButtonUpdatesScreen() {
+        awaitTransition(3500); // Wait for getAllRestaurants()
+
+        // Capture initial text
+        final String[] initialText = new String[1];
+        onView(withId(R.id.address)).perform(new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return isAssignableFrom(TextView.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "capture text";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                TextView textView = (TextView) view;
+                initialText[0] = textView.getText().toString();
+            }
+        });
+
+        // Perform the action that changes the text
+        onView(withId(R.id.centerRestaurantImage)).perform(swipeRight());
 
         awaitTransition(3500);
 
