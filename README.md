@@ -14,7 +14,7 @@ Coming to the Play Store soon! *(Hopefully)*
 ---
 
 ## Video Demo
-*replace with short video assignment*
+[![Project Demo Video](https://img.youtube.com/vi/DoNjafJZINw/0.jpg)](https://www.youtube.com/watch?v=DoNjafJZINw&list=PL6BdlkdKLEB8J5pL2OWCXCARAfUM5MOA5&index=10&ab_channel=EthanHancock)
 
 ---
 
