@@ -286,8 +286,8 @@ public class ChatServer {
             String[] newMessage = message.split("@");
             String restaurantMatch;
             if (newMessage[0].equals("dislike")) {
-                restaurantMatch = "";
                 Statistic.totalSwipes++;
+                return;
             }
             else if (newMessage[0].equals("like")) {
                 Liked like = new Liked(newMessage[1]);
