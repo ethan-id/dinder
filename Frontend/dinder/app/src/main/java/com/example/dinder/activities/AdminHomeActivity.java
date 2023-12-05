@@ -10,11 +10,15 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
+import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
 import com.example.dinder.activities.utils.NavigationUtils;
@@ -24,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,8 +39,43 @@ import java.util.Objects;
 public class AdminHomeActivity extends AppCompatActivity {
     private Dialog loadingDialog;
 
-    private void getStats() {
+    private void getStats(RequestQueue queue) {
+        showLoadingDialog(); // Show loading dialog before starting requests
+        getStat("stats/get/Likes", R.id.tvTotalLikes, queue);
+        getStat("stats/get/Users", R.id.tvTotalUsers, queue);
+        getStat("stats/get/Favorites", R.id.tvTotalFavorites, queue);
+        getStat("stats/get/SwipesBeforeMatch", R.id.tvAvgSwipesBeforeMatch, queue);
+        getStat("stats/get/LikesPerMatch", R.id.tvAvgLikesPerMatch, queue);
+        getStat("stats/get/SwipesBeforeLike", R.id.tvAvgSwipesBeforeLike, queue);
+        getStat("stats/get/LikesPerUser", R.id.tvAvgLikesPerUser, queue);
+        getStat("stats/get/MatchesPerUser", R.id.tvAvgMatchesPerUser, queue);
+    }
 
+    private void getStat(String endpoint, int textViewId, RequestQueue queue) {
+        String url = "http://coms-309-055.class.las.iastate.edu:8080/" + endpoint; // Replace with your server address
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    updateTextView(textViewId, response);
+                    hideLoadingDialog(); // Hide loading dialog when all requests are completed
+                }, error -> {
+                    Log.e("Volley", "Error: " + error.getMessage());
+                    hideLoadingDialog(); // Hide loading dialog in case of error
+                });
+
+        // Set retry policy to handle timeouts and retries in case of failure
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                5000, // Timeout in ms
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, // Number of retries
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        queue.add(stringRequest);
+    }
+
+    private void updateTextView(int id, String value) {
+        TextView textView = findViewById(id);
+        String currentValue = textView.getText().toString();
+        textView.setText(MessageFormat.format("{0}{1}", currentValue, value));
     }
 
     @Override
@@ -57,15 +97,10 @@ public class AdminHomeActivity extends AppCompatActivity {
         NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username, plus, isAdmin);
 
         setupLoadingDialog();
+
+        getStats(queue);
     }
 
-    /**
-     * Initializes and configures a non-cancellable loading dialog.
-     * This method sets up a new dialog intended to indicate that a loading process is ongoing. The dialog is
-     * made non-cancellable, meaning the user cannot dismiss it by pressing back or touching outside the dialog.
-     * This is often used to prevent user interaction while waiting for a background task to complete.
-     * The dialog uses a custom layout defined in `R.layout.loading` and has a transparent background.
-     */
     private void setupLoadingDialog() {
         loadingDialog = new Dialog(this);
         loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -74,38 +109,18 @@ public class AdminHomeActivity extends AppCompatActivity {
         loadingDialog.setCancelable(false); // prevents users from cancelling the dialog
     }
 
-    /**
-     * Displays a loading dialog on the screen if it is not already showing.
-     * This method checks the current state of the loadingDialog instance and
-     * ensures that the dialog is shown only if it is not already visible on the screen,
-     * avoiding multiple instances of the dialog being displayed over each other.
-     */
     private void showLoadingDialog() {
         if (loadingDialog != null && !loadingDialog.isShowing()) {
             loadingDialog.show();
         }
     }
 
-    /**
-     * Hides the loading dialog if it is currently displayed on the screen.
-     * This method checks the current state of the loadingDialog instance and
-     * dismisses it if it is visible. Additionally, it checks if the activity
-     * is still attached to the window before dismissing the dialog to prevent
-     * illegal state exceptions.
-     */
     private void hideLoadingDialog() {
         if (loadingDialog != null && loadingDialog.isShowing() && isActivityAttached()) {
             loadingDialog.dismiss();
         }
     }
 
-    /**
-     * Checks if the activity is currently attached to the window.
-     * This is useful to ensure that we are not attempting to perform UI
-     * operations on a detached activity.
-     *
-     * @return true if the activity is attached to the window, false otherwise.
-     */
     private boolean isActivityAttached() {
         return getWindow() != null && getWindow().getDecorView().getWindowToken() != null;
     }
