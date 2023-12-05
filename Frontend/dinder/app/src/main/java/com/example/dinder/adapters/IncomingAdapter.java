@@ -71,6 +71,14 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
                 throw new RuntimeException(e);
             }
         });
+        holder.close.setOnClickListener(v -> {
+            incomingRequests.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, incomingRequests.size());
+            if (callback != null) {
+                callback.onListChanged(); // Notify the activity that the list has changed
+            }
+        });
     }
 
     public void acceptFriendRequest(int requestId, int position, String type) {
@@ -119,6 +127,7 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
          * ImageView used to hold the friend's profile picture/icon
          */
         ImageView friendImage;
+        ImageView close;
 
         /**
          * A Button for sending an invite to the friend to join the user's group
@@ -134,6 +143,8 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
             friendName = itemView.findViewById(R.id.friendName);
             friendImage = itemView.findViewById(R.id.friendImage);
             invite = itemView.findViewById(R.id.inviteBtn);
+            close = itemView.findViewById(R.id.removeFriendIcon);
+
         }
 
         public String getType() {
