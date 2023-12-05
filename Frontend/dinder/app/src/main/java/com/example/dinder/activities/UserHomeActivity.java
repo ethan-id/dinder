@@ -2,8 +2,6 @@ package com.example.dinder.activities;
 
 import static java.lang.Float.parseFloat;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
@@ -12,8 +10,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -335,7 +333,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         centerImage = findViewById(R.id.centerRestaurantImage);
         centerImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
         locationIcon = findViewById(R.id.locationIcon);
-        ratingIcon = findViewById(R.id.ratingIcon);
+//        ratingIcon = findViewById(R.id.ratingIcon);
         restaurantName = findViewById(R.id.restName);
         rating = findViewById(R.id.ratingBar);
         ratingCount = findViewById(R.id.ratingCount);
@@ -435,6 +433,8 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             Log.d("Like Count", String.valueOf(likeCount));
             Log.d("Like", "like@" + code);
             populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
+
+            Toast.makeText(this, "Liked!", Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -459,6 +459,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             sendDislikeThroughWebSocket(code);
             Log.d("Dislike", "dislike@" + code);
             populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);
+            Toast.makeText(this, "Disliked!", Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -496,31 +497,9 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      * notification container once the animation ends. This provides a transient visual feedback to the user.
      */
     private void showNotification() {
-        Log.d("Animation", "playing animation");
-        // Fade in the notification
-        notificationContainer.animate()
-                .alpha(1f)
-                .setDuration(500) // 500ms
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        notificationContainer.setVisibility(View.VISIBLE);
-                    }
-                });
-
-        // Hide the notification after 3 seconds
-        notificationContainer.postDelayed(() -> {
-            // Fade out the notification
-            notificationContainer.animate()
-                    .alpha(0f)
-                    .setDuration(500)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            notificationContainer.setVisibility(View.GONE);
-                        }
-                    });
-        }, 3000); // 3 seconds
+        Toast toast = Toast.makeText(getApplicationContext(), "You Have A Match", Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0); // Center both horizontally and vertically
+        toast.show();
     }
 
     /**
