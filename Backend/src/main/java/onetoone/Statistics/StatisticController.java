@@ -1,11 +1,9 @@
 package onetoone.Statistics;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
 public class StatisticController {
 
     StatisticRepository statisticRepository;
@@ -19,35 +17,35 @@ public class StatisticController {
         statisticRepository.save(statistic);
         return "success";
     }
-    @GetMapping(path = "/stats/getTotalLikes")
+    @GetMapping(path = "/stats/get/Likes")
     public int getTotalLikes() {
         return Statistic.totalLikes;
     }
-    @GetMapping(path = "/stats/getTotalUsers")
+    @GetMapping(path = "/stats/get/Users")
     public int getTotalUsers() {
         return Statistic.totalUsers;
     }
-    @GetMapping(path = "/stats/getTotalFavorites")
+    @GetMapping(path = "/stats/get/Favorites")
     public int getTotalFavorites() {
         return Statistic.totalFavorites;
     }
-    @GetMapping(path = "/stats/getAvgSwipesBeforeMatch")
+    @GetMapping(path = "/stats/get/SwipesBeforeMatch")
     public double getAvgSwipesBeforeMatch() {
         return Statistic.avgSwipesBeforeMatch;
     }
-    @GetMapping(path = "/stats/getAvgLikesPerMatch")
+    @GetMapping(path = "/stats/get/LikesPerMatch")
     public double getAvgLikesPerMatch() {
         return Statistic.avgLikesPerMatch;
     }
-    @GetMapping(path = "/stats/getAvgSwipesBeforeLike")
+    @GetMapping(path = "/stats/get/SwipesBeforeLike")
     public double getAvgSwipesBeforeLike() {
         return Statistic.avgSwipesBeforeLike;
     }
-    @GetMapping(path = "/stats/getAvgLikesPerUser")
+    @GetMapping(path = "/stats/get/LikesPerUser")
     public double getAvgLikesPerUser() {
         return Statistic.avgLikesPerUser;
     }
-    @GetMapping(path = "/stats/getAvgMatchesPerUser")
+    @GetMapping(path = "/stats/get/MatchesPerUser")
     public double getAvgMatchesPerUser() {
         return Statistic.avgMatchesPerUser;
     }
