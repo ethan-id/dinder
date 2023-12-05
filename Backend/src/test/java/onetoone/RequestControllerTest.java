@@ -1,8 +1,7 @@
 package onetoone;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -16,9 +15,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
+
+import javax.transaction.Transactional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -37,6 +39,8 @@ public class RequestControllerTest {
     @Autowired
     private MockMvc controller;
     @Test
+    @Transactional
+    @Rollback
     public void testCreateNewRequest() throws Exception {
         controller.perform(post("/request/create/BigE/friend/MrEthan").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -50,17 +54,26 @@ public class RequestControllerTest {
                 .andExpect(status().isOk());
         controller.perform(post("/request/create/Jessticals/friend/MrEthan").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+        controller.perform(post("/request/create/Isaac/friend/MrEthan").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        controller.perform(post("/request/create/Jessticals/friend/potato").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
     }
    @Test
+   @Transactional
+   @Rollback
     public void testAcceptingRequests() throws Exception {
         controller.perform(post("/request/accept/156").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
     @Test
+    @Rollback
+    @Transactional
     public void testDeletingRequests() throws Exception {
-        controller.perform(post("/request/accept/162").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        int userId = 156;
+        controller.perform(delete("/request/delete/{id}", userId))
+                .andExpect(status().isOk()); // Change to isNoContent() if you expect 204 No Content
     }
 
 }

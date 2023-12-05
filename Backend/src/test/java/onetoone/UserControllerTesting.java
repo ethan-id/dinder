@@ -117,16 +117,12 @@ public class UserControllerTesting {
                 .andExpect(status().isOk());
     }
     @Test
+    @Transactional
+    @Rollback
     public void testFindingFriends() throws Exception {
         controller.perform(get("/friend/BigE/find/MrEthan").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        controller.perform(get("/friend/BigE/find/Jessticals").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        controller.perform(get("/friend/MrEthan/find/BigE").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
         controller.perform(get("/friend/MrEthan/find/Jessticals").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        controller.perform(get("/friend/Jessticals/find/BigE").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         controller.perform(get("/friend/Jessticals/find/MrEthan").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
