@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -95,11 +96,19 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
                     if (callback != null) {
                         callback.onListChanged(); // Notify the activity that the list has changed
                     }
+                    Toast.makeText(context, "Added Friend", Toast.LENGTH_SHORT).show();
                 }, Throwable::printStackTrace));
         }
 
         if (type.equals("group")) {
             WebSocketManager.getInstance().sendMessage("accept@" + requestId);
+            incomingRequests.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, incomingRequests.size());
+            if (callback != null) {
+                callback.onListChanged(); // Notify the activity that the list has changed
+            }
+            Toast.makeText(context, "Joined Group", Toast.LENGTH_SHORT).show();
         }
     }
 
