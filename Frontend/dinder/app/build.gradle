@@ -2,7 +2,6 @@ import com.android.build.gradle.BaseExtension
 
 plugins {
     id 'com.android.application'
-    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {

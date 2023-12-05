@@ -232,6 +232,7 @@ public class RestaurantProfileActivity extends AppCompatActivity {
 
         backBtn.setOnClickListener(v -> {
             Intent homeScreen = new Intent(RestaurantProfileActivity.this, UserHomeActivity.class);
+            homeScreen.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             homeScreen.putExtra("id", id);
             homeScreen.putExtra("username", username);
             homeScreen.putExtra("plus", plus);
