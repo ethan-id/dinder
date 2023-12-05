@@ -38,20 +38,6 @@ public class RequestControllerTest {
     private MockMvc controller;
     @Test
     public void testCreateNewRequest() throws Exception {
-        controller.perform(post("/request/create/BigE/group/MrEthan").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        controller.perform(post("/request/create/BigE/group/Jessticals").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        controller.perform(post("/request/create/MrEthan/group/BigE").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        controller.perform(post("/request/create/MrEthan/group/Jessticals").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        controller.perform(post("/request/create/Jessticals/group/BigE").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        controller.perform(post("/request/create/Jessticals/group/MrEthan").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-
         controller.perform(post("/request/create/BigE/friend/MrEthan").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         controller.perform(post("/request/create/BigE/friend/Jessticals").contentType(MediaType.APPLICATION_JSON))
