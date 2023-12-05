@@ -9,14 +9,7 @@ public class StatisticController {
     StatisticRepository statisticRepository;
 
 
-    @PostMapping(path = "/add/{Statistic}")
-    public String addStatistic(@PathVariable Statistic statistic){
-        if (statistic == null)
-            return "failure";
 
-        statisticRepository.save(statistic);
-        return "success";
-    }
     @GetMapping(path = "/stats/get/Likes")
     public int getTotalLikes() {
         return Statistic.totalLikes;
