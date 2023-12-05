@@ -66,27 +66,33 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
         holder.invite.setText("Accept");
         holder.invite.setOnClickListener(v -> {
             try {
-                acceptFriendRequest(friend.getInt("id"), position);
+                acceptFriendRequest(friend.getInt("id"), position, friend.getString("parameter"));
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    public void acceptFriendRequest(int requestId, int position) {
+    public void acceptFriendRequest(int requestId, int position, String type) {
         RequestQueue queue = VolleySingleton.getInstance(context.getApplicationContext()).getRequestQueue();
-        String url = "http://coms-309-055.class.las.iastate.edu:8080/request/accept/" + requestId;
-        WebSocketManager.getInstance().sendMessage("accept@" + requestId);
 
-        queue.add(new StringRequest(Request.Method.POST, url,
-            response -> {
-                incomingRequests.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, incomingRequests.size());
-                if (callback != null) {
-                    callback.onListChanged(); // Notify the activity that the list has changed
-                }
-            }, Throwable::printStackTrace));
+        if (type.equals("friend")) {
+            String url = "http://coms-309-055.class.las.iastate.edu:8080/request/accept/" + requestId;
+
+            queue.add(new StringRequest(Request.Method.POST, url,
+                response -> {
+                    incomingRequests.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, incomingRequests.size());
+                    if (callback != null) {
+                        callback.onListChanged(); // Notify the activity that the list has changed
+                    }
+                }, Throwable::printStackTrace));
+        }
+
+        if (type.equals("group")) {
+            WebSocketManager.getInstance().sendMessage("accept@" + requestId);
+        }
     }
 
     /**
@@ -103,6 +109,7 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
      * A FriendViewHolder used to populate the friends list
      */
     class FriendViewHolder extends RecyclerView.ViewHolder {
+        String type;
         /**
          * TextView used to hold the friend's name
          */
@@ -127,6 +134,14 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
             friendName = itemView.findViewById(R.id.friendName);
             friendImage = itemView.findViewById(R.id.friendImage);
             invite = itemView.findViewById(R.id.inviteBtn);
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
         }
     }
 }

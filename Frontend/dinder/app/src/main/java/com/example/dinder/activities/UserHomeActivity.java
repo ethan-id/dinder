@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -32,6 +33,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
 import com.example.dinder.activities.utils.NavigationUtils;
+import com.example.dinder.adapters.CategoriesAdapter;
 import com.example.dinder.websocket.WebSocketListener;
 import com.example.dinder.websocket.WebSocketManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -43,6 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -153,75 +156,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
     BottomNavigationView bottomNavigationView;
 
     /**
-     * Sets the text content for a specific chip based on its index and ensures its visibility.
-     * The method takes in an index corresponding to a chip position and a tag to set as the
-     * chip's text content. UI operations are executed on the main thread to ensure
-     * that the user interface updates smoothly.
-     *
-     * @param index the position of the chip to update, starting from 0
-     * @param tag   the text content to set for the specified chip
-     */
-    private void setChip(int index, String tag) {
-        switch (index) {
-            case 0 -> runOnUiThread(() -> {
-                chip2.setText(tag);
-                chip2.setVisibility(View.VISIBLE);
-            });
-            case 1 -> runOnUiThread(() -> {
-                chip3.setText(tag);
-                chip3.setVisibility(View.VISIBLE);
-            });
-            case 2 -> runOnUiThread(() -> {
-                chip4.setText(tag);
-                chip4.setVisibility(View.VISIBLE);
-            });
-            case 3 -> runOnUiThread(() -> {
-                chip5.setText(tag);
-                chip5.setVisibility(View.VISIBLE);
-            });
-            case 4 -> runOnUiThread(() -> {
-                chip6.setText(tag);
-                chip6.setVisibility(View.VISIBLE);
-            });
-            case 5 -> runOnUiThread(() -> {
-                chip7.setText(tag);
-                chip7.setVisibility(View.VISIBLE);
-            });
-        }
-    }
-
-    /**
-     * Checks each chip's text content and hides those that are empty. This method ensures
-     * that only chips with valid content are displayed to the user. UI operations are
-     * performed on the main thread to ensure smooth user experience.
-     */
-    private void hideEmptyChips() {
-        runOnUiThread(() -> {
-            if (chip1.getText().toString().equals("")) {
-                chip1.setVisibility(View.GONE);
-            }
-            if (chip2.getText().toString().equals("")) {
-                chip2.setVisibility(View.GONE);
-            }
-            if (chip3.getText().toString().equals("")) {
-                chip3.setVisibility(View.GONE);
-            }
-            if (chip4.getText().toString().equals("")) {
-                chip4.setVisibility(View.GONE);
-            }
-            if (chip5.getText().toString().equals("")) {
-                chip5.setVisibility(View.GONE);
-            }
-            if (chip6.getText().toString().equals("")) {
-                chip6.setVisibility(View.GONE);
-            }
-            if (chip7.getText().toString().equals("")) {
-                chip7.setVisibility(View.GONE);
-            }
-        });
-    }
-
-    /**
      * Populates the user interface with information about a restaurant at a specified index
      * from the `restaurants` list. This method fetches the restaurant data, sets the UI elements
      * with the appropriate values, and handles any JSON exceptions that might arise. If there
@@ -249,9 +183,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
                         Log.e("Error", "Error populating restaurant data");
                     }
                     try {
-                        chip1.setText(currentRestaurant.getString("price"));
-                    } catch (JSONException ignored) {}
-                    try {
                         rating.setRating(parseFloat(currentRestaurant.getString("rating")));
                     } catch (JSONException e) {
                         Log.e("Error", "Error populating restaurant data");
@@ -262,17 +193,32 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
                         Log.e("Error", "Error populating restaurant data");
                     }
                 });
-//                JSONArray titles = currentRestaurant.getJSONArray("_titles");
-//                for (int i = 0; i < titles.length(); i++) {
-//                    setChip(i, titles.get(i).toString());
-//                }
-                hideEmptyChips();
+                try {
+                    JSONArray categoriesArray = currentRestaurant.getJSONArray("categories");
+                    List<String> categories = new ArrayList<>();
+                    categories.add(currentRestaurant.getString("price"));
+                    for (int i = 0; i < categoriesArray.length(); i++) {
+                        categories.add(categoriesArray.getJSONObject(i).getString("title"));
+                    }
+                    CategoriesAdapter adapter = new CategoriesAdapter(categories);
+                    RecyclerView categoriesRecyclerView = findViewById(R.id.chipContainer);
+                    categoriesRecyclerView.setAdapter(adapter);
+                } catch (JSONException e) {
+                    Log.e("Chip Error:", e.toString());
+                }
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
         } else {
             // Tell user there are no more restaurants :(
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // When the activity resumes, make sure the correct item in the BottomNavigationView is selected
+        bottomNavigationView.setSelectedItemId(R.id.home); // Replace 'home' with the actual ID of your home icon in the BottomNavigationView
     }
 
     /**
@@ -396,13 +342,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         address = findViewById(R.id.address);
         dislike = findViewById(R.id.dislikeBtn);
         favorite = findViewById(R.id.heartBtn);
-        chip1 = findViewById(R.id.chip);
-        chip2 = findViewById(R.id.chip2);
-        chip3 = findViewById(R.id.chip3);
-        chip4 = findViewById(R.id.chip4);
-        chip5 = findViewById(R.id.chip5);
-        chip6 = findViewById(R.id.chip6);
-        chip7 = findViewById(R.id.chip7);
         logo = findViewById(R.id.restLogo);
         notificationContainer = findViewById(R.id.match_notif_layout);
 
