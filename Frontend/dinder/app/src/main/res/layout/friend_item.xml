@@ -14,22 +14,36 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"/>
 
-    <!-- Button on the right side -->
+    <!-- Remove friend icon on the right side -->
+    <ImageView
+        android:id="@+id/removeFriendIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/close"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/remove_friend"
+        android:clickable="true"
+        android:focusable="true"/>
+
+    <!-- Button next to the remove icon -->
     <Button
         android:id="@+id/inviteBtn"
         style="@style/Button.Secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/invite"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"/>
+        android:layout_toStartOf="@id/removeFriendIcon"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"/>
 
     <!-- Username TextView in the center -->
     <TextView
         android:id="@+id/friendName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
         android:layout_toEndOf="@id/friendImage"
         android:layout_toStartOf="@id/inviteBtn"
         android:layout_marginStart="8dp"
