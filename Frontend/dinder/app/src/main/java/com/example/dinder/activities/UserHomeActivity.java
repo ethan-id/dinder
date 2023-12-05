@@ -275,6 +275,14 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // When the activity resumes, make sure the correct item in the BottomNavigationView is selected
+        bottomNavigationView.setSelectedItemId(R.id.home); // Replace 'home' with the actual ID of your home icon in the BottomNavigationView
+    }
+
+
     /**
      * Fetches the list of restaurants from the server and populates the `restaurants` list.
      * If the list is not empty, it triggers the `populateScreen` method to display the content.
