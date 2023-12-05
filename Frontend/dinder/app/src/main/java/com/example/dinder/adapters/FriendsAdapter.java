@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dinder.R;
+import com.example.dinder.websocket.WebSocketManager;
 
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         holder.friendName.setText(friendName);
 
         holder.invite.setOnClickListener(v -> {
+            WebSocketManager.getInstance().sendMessage("invite@" + friendName);
             Toast.makeText(holder.itemView.getContext(), "Invite sent to " + friendName, Toast.LENGTH_SHORT).show();
         });
     }
