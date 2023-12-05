@@ -40,6 +40,7 @@ public class RestaurantController {
     String JesseKey = "Bearer MVfL5KGDWbaFAwn7beZaNIdCJZ95r8o09YFJgksy9pN8Q7bgqEhRbJKdtBdLPPmss6xv9mz3s3OTEAAu3oWaCJu5J838o1Aouy68aK2--ugkynfBSbLHKqqfVRr5ZHYx";
     String EliKey = "Bearer tBTnB2sqqEgwDw8eWPa3VoOhvXZAd-wCEQ6qKzocvrknlkmD4e-8wvQzDFWghKQKAWe1KGFyhL7j-6bb9JYjHpPJ9h2cApdhsSPdwMUZlOKHUjUhSaIL4RvR9sVCZXYx";
     String EthanKey = "Bearer WCsvt3PJkVizdHqlMBf8vnsfb0sA5z7LN0d8c8edwj8H1idNi0Zav0Qm4ZntAW5sv8TfdjLL7C30kLYLKQUxPAQmW-nNb2GDj_WRxq3AW4NFylBXSGJXPc0TGE1uZXYx";
+    String LaliKey = "Bearer FhNQ_ij5Fs-nZRXlXrAbTDPVM38T3qNH1R3HkioxTm2u9j3Z07aKzQFDYO0_XRDFU11NlT2fTY-thzpb1C1TF_1nzFVx1qmjvLmsexGvOIVpr9bXy3XRcEv7mI1uZXYx";
     @Autowired
     RestaurantRepository RestaurantRepository;
 
@@ -61,7 +62,7 @@ public class RestaurantController {
     @GetMapping(path="/restaurant/{city}/all")
     @ResponseBody
     @NonNull
-        ArrayList<JsonNode> getAllRestaurants(@PathVariable String city) {
+    ArrayList<JsonNode> getAllRestaurants(@PathVariable String city) {
         ArrayList<JsonNode> restaurants = new ArrayList<JsonNode>();
         String url = ("https://api.yelp.com/v3/businesses/search?&limit=50&term=restaurants&location=" + city);
         for (int i = 0; i < 5; i++) {
@@ -69,7 +70,7 @@ public class RestaurantController {
             Request request = new Request.Builder()
                     .url(url + "&offset=" + i)
                     .addHeader("accept", "application/json")
-                    .addHeader("Authorization", EthanKey)
+                    .addHeader("Authorization", LaliKey)
                     .build();
             try {
                 Response response = client.newCall(request).execute();
@@ -101,7 +102,7 @@ public class RestaurantController {
         Request request = new Request.Builder()
                 .url("https://api.yelp.com/v3/businesses/" + code)
                 .addHeader("accept", "application/json")
-                .addHeader("Authorization",EthanKey)
+                .addHeader("Authorization",LaliKey)
                 .build();
         try {
             Response response = client.newCall(request).execute();
@@ -135,7 +136,7 @@ public class RestaurantController {
         Request request = new Request.Builder()
                 .url("https://api.yelp.com/v3/businesses/" + code + "/reviews")
                 .addHeader("accept", "application/json")
-                .addHeader("Authorization", EthanKey)
+                .addHeader("Authorization", LaliKey)
                 .build();
         try {
             Response response = client.newCall(request).execute();
@@ -174,7 +175,7 @@ public class RestaurantController {
             Request request = new Request.Builder()
                     .url(url + "&location=" + city + "&price=" + price + "&offset=" + i)
                     .addHeader("accept", "application/json")
-                    .addHeader("Authorization", EthanKey)
+                    .addHeader("Authorization", LaliKey)
                     .build();
             try (Response response = client.newCall(request).execute()) {
                 if (response.isSuccessful()) {
