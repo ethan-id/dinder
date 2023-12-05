@@ -42,8 +42,7 @@ public class RestaurantController {
     String EthanKey = "Bearer WCsvt3PJkVizdHqlMBf8vnsfb0sA5z7LN0d8c8edwj8H1idNi0Zav0Qm4ZntAW5sv8TfdjLL7C30kLYLKQUxPAQmW-nNb2GDj_WRxq3AW4NFylBXSGJXPc0TGE1uZXYx";
     String LaliKey = "Bearer FhNQ_ij5Fs-nZRXlXrAbTDPVM38T3qNH1R3HkioxTm2u9j3Z07aKzQFDYO0_XRDFU11NlT2fTY-thzpb1C1TF_1nzFVx1qmjvLmsexGvOIVpr9bXy3XRcEv7mI1uZXYx";
     String KeyNo5 = "Bearer U7N18hwm1r_RX7Yq5ySj5aoDgbQEfyjGSOeiVz95d8YiGkfxosJZUpZNTtFEndtgvwTzISHesehj_VcewbhjLUJGWI1YoaLll62z3YALqApY3mwk5z8wmqsZOrFuZXYx";
-    @Autowired
-    RestaurantRepository RestaurantRepository;
+
 
     private final Logger logger = LoggerFactory.getLogger(RestaurantController.class);
 
@@ -191,49 +190,7 @@ public class RestaurantController {
         return restaurants;
     }
 
-    @ApiOperation(value = "Create a new restaurant object", response = Iterable.class, tags = "CreateRestaurant")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success!"),
-            @ApiResponse(code = 401, message = "Not authorized!"),
-            @ApiResponse(code = 403, message = "Forbidden!"),
-            @ApiResponse(code = 404, message = "Not found"),
-            @ApiResponse(code = 510, message = "Internal server error")})
-    @PutMapping(path = "/restaurant/new-restaurant")
-    String createRestaurant(@RequestBody Restaurant Restaurant) {
-        if (Restaurant == null)
-            return failure;
-        RestaurantRepository.save(Restaurant);
-        return success;
-    }
 
-    @ApiOperation(value = "Update a restaurant object", response = Iterable.class, tags = "UpdateRestaurant")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success!"),
-            @ApiResponse(code = 401, message = "Not authorized!"),
-            @ApiResponse(code = 403, message = "Forbidden!"),
-            @ApiResponse(code = 404, message = "Not found"),
-            @ApiResponse(code = 510, message = "Internal server error")})
-    @PutMapping("/restaurant/{code}")
-    Restaurant updateRestaurant(@PathVariable String code, @RequestBody Restaurant request) {
-        Restaurant Restaurant = RestaurantRepository.findByCode(code);
-        if (Restaurant == null)
-            return null;
-        RestaurantRepository.save(request);
-        return RestaurantRepository.findByCode(code);
-    }
-
-    @ApiOperation(value = "Delete a restaurant object from the database", response = Iterable.class, tags = "DeleteRestaurant")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success!"),
-            @ApiResponse(code = 401, message = "Not authorized!"),
-            @ApiResponse(code = 403, message = "Forbidden!"),
-            @ApiResponse(code = 404, message = "Not found"),
-            @ApiResponse(code = 510, message = "Internal server error")})
-    @DeleteMapping(path = "/restaurant/{code}")
-    String deleteRestaurant(@PathVariable String code) {
-        RestaurantRepository.deleteByCode(code);
-        return success;
-    }
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();

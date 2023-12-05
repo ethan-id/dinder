@@ -1,6 +1,5 @@
 package onetoone;
 
-import onetoone.Restaurants.RestaurantRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,7 +24,7 @@ class Main {
      *                       Creates a commandLine runner to enter dummy data into the database
      */
     @Bean
-    CommandLineRunner initUser(UserRepository userRepository, RestaurantRepository restaurantRepository) {
+    CommandLineRunner initUser(UserRepository userRepository) {
         return args -> {};
     }
 }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import onetoone.Favorites.Favorite;
 import onetoone.Likes.Liked;
 import onetoone.Requests.Request;
-import onetoone.Restaurants.Restaurant;
 import onetoone.Statistics.Statistic;
 import org.springframework.transaction.annotation.Transactional;
 

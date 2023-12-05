@@ -1,17 +1,11 @@
 package onetoone.websocket;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import okhttp3.OkHttpClient;
-import okhttp3.Response;
 import onetoone.Favorites.Favorite;
 import onetoone.Favorites.FavoriteRepository;
 import onetoone.Likes.LikeRepository;
 import onetoone.Likes.Liked;
 import onetoone.Requests.Request;
 import onetoone.Requests.RequestRepository;
-import onetoone.Restaurants.Restaurant;
-import onetoone.Restaurants.RestaurantRepository;
 import onetoone.Statistics.Statistic;
 import onetoone.Users.User;
 import onetoone.Users.UserRepository;
@@ -60,7 +54,7 @@ public class ChatServer {
 //    private static ArrayList <SessionLikingList> groupSessionLikingList = new ArrayList<SessionLikingList>();
 
     private static UserRepository userRepository;
-    private static RestaurantRepository restaurantRepository;
+
     private static LikeRepository likeRepository;
     private static FavoriteRepository favoriteRepository;
     private static RequestRepository requestRepository;
@@ -77,10 +71,7 @@ public class ChatServer {
     public void setUserRepository(UserRepository repo) {
         userRepository = repo;
     }
-    @Autowired
-    public void setRestaurantRepository(RestaurantRepository restrepo) {
-        restaurantRepository = restrepo;
-    }
+
     @Autowired
     public void setLikeRepository(LikeRepository likeRepository) {
         this.likeRepository = likeRepository;
