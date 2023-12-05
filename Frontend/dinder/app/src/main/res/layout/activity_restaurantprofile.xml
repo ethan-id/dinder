@@ -123,24 +123,37 @@
         app:layout_constraintTop_toBottomOf="@+id/restaurantAddress"
         app:srcCompat="@drawable/star" />
 
+
     <!-- layout/activity_main.xml -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reviewCount" />
 
     <TextView
         android:id="@+id/reviews"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="23dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="18dp"
         android:text="@string/reviews"
         android:textSize="40sp"
-        app:layout_constraintStart_toStartOf="@+id/phoneIcon"
-        app:layout_constraintTop_toBottomOf="@+id/reviewCount" />
+        app:layout_constraintStart_toStartOf="@+id/map"
+        app:layout_constraintTop_toBottomOf="@+id/map" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/reviewList"
         android:layout_width="300dp"
-        android:layout_height="400dp"
-        android:layout_marginTop="17dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="@+id/reviews"
         app:layout_constraintTop_toBottomOf="@+id/reviews" />
 
