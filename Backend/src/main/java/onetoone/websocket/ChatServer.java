@@ -160,11 +160,6 @@ public class ChatServer {
                 broadcast("user does not exist");
                 return;
             }
-            if (groupSessionUsernameMap.size() < 2 || groupUsernameSessionMap.size() < 2) {
-                sendMessageToPArticularUser(username, "There is no other user active currently :(");
-                return;
-            }
-
             groupSessionUsernameMap.putIfAbsent(session, username);
             groupUsernameSessionMap.putIfAbsent(username, session);
 
@@ -284,10 +279,7 @@ public class ChatServer {
             }
 
             String[] newMessage = message.split("@");
-            if (newMessage[0].equals("dislike")) {
-               return;
-            }
-            else if (newMessage[0].equals("like")) {
+            if (newMessage[0].equals("like")) {
                 Liked like = new Liked(newMessage[1]);
                 like.setUser(Objects.requireNonNull(user));
                 Objects.requireNonNull(user).setNewLike(Objects.requireNonNull(like));
@@ -302,23 +294,25 @@ public class ChatServer {
                             restaurantMatch = like.getName();
                         }
                     }
-                    if (match || groupUsernameSessionMap.size() == 1) {
-                        for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
-                            sendMessageToPArticularUser(GroupMember.getKey(), "Match@" + restaurantMatch);
-                            Favorite favorite = new Favorite(restaurantMatch);
-                            favorite.setUser(Objects.requireNonNull(user));
-                            userRepository.findByUsername(username).addFavorite(favorite);
-                            favoriteRepository.save(favorite);
-                            userRepository.save(userRepository.findByUsername(username));
-                            match = false;
-                        }
-                    }
-                    else {
-                        LikeMap.add(like);
-                    }
                 }
                 else {
                     LikeMap.add(like);
+                }
+                if (match || groupUsernameSessionMap.size() < 2 || groupSessionUsernameMap.size() < 2) {
+                    if (groupUsernameSessionMap.size() < 2 || groupSessionUsernameMap.size() < 2) {
+                        sendMessageToPArticularUser(username, "Match@" + newMessage[1]);
+                    }
+                    else {
+                    for (Map.Entry<String, Session> GroupMember : groupUsernameSessionMap.entrySet()) {
+                        sendMessageToPArticularUser(GroupMember.getKey(), "Match@" + restaurantMatch);
+                    }
+                        Favorite favorite = new Favorite(restaurantMatch);
+                        favorite.setUser(Objects.requireNonNull(user));
+                        userRepository.findByUsername(username).addFavorite(favorite);
+                        favoriteRepository.save(favorite);
+                        userRepository.save(userRepository.findByUsername(username));
+                        match = false;
+                    }
                 }
             }
         }
