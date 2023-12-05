@@ -12,18 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
 import com.example.dinder.activities.utils.NavigationUtils;
-import com.example.dinder.adapters.IncomingAdapter;
 import com.example.dinder.adapters.MatchAdapter;
 import com.example.dinder.websocket.WebSocketListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.java_websocket.handshake.ServerHandshake;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -44,21 +41,7 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
     ArrayList<JSONObject> restaurants = new ArrayList<>();
     RecyclerView matchesRecyclerView;
     private MatchAdapter matchAdapter;
-    /**
-     * Initiates an HTTP request to load an image from a URL and sets it to the central ImageView of the restaurant.
-     *
-     * @param imageUrl the URL of the image to be loaded.
-     * @param queue the RequestQueue used for sending the image request.
-     */
-    private void sendImageRequest(String imageUrl, RequestQueue queue) {
-        queue.add(new ImageRequest(
-                imageUrl,
-                response -> {
-                    runOnUiThread(() -> centerRestaurantImage.setImageBitmap(response));
-                }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,
-                Throwable::printStackTrace
-        ));
-    }
+
 
     /**
      * Called when the activity is starting. This is where most initialization should go:
@@ -84,7 +67,7 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
         matchesRecyclerView = findViewById(R.id.matchesRecyclerView);
         matchesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         getRestaurants(codes);
-        matchAdapter = new MatchAdapter(restaurants);
+        matchAdapter = new MatchAdapter(restaurants,this.getApplicationContext());
         matchesRecyclerView.setAdapter(matchAdapter);
 
 

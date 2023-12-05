@@ -1,5 +1,6 @@
 package com.example.dinder.adapters;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,14 +12,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageRequest;
 import com.example.dinder.R;
+import com.example.dinder.VolleySingleton;
 import com.example.dinder.adapters.model.Restaurant;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Adapter for the RecyclerView to display a list of liked restaurants.
@@ -27,12 +30,23 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.ViewHolder> 
 
     /**
      * List of {@link Restaurant} objects that represent the user's recent likes
+     *
+     *
      */
+    private Context context;
+
+
     private ArrayList<JSONObject> matches;
 
-    public MatchAdapter(ArrayList<JSONObject> matches) {
+    public MatchAdapter(ArrayList<JSONObject> matches, Context ctx) {
+        this.context = ctx;
         this.matches = matches;
     }
+
+    private void sendImageRequest(String imageUrl) {
+
+    }
+
 
     /**
      * Called when RecyclerView needs a new ViewHolder of the given type to represent an item.
@@ -64,6 +78,18 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.ViewHolder> 
             JSONObject location = restaurant.getJSONObject("location");
             holder.restaurantAddress.setText(location.getString("address1"));
             holder.starRating.setRating((float) restaurant.getDouble("rating"));
+
+            String url = restaurant.getString("image_url");
+
+
+            RequestQueue queue = VolleySingleton.getInstance(context.getApplicationContext()).getRequestQueue();
+            queue.add(new ImageRequest(
+                   url,
+                    response -> {
+                        holder.restaurantImage.setImageBitmap(response);
+                    }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,
+                    Throwable::printStackTrace
+            ));
         } catch (JSONException e) {
             Log.e("Error", e.toString());
 //            throw new RuntimeException(e);
