@@ -45,7 +45,7 @@ public class UserProfileActivity extends AppCompatActivity {
     /**
      * A "Save" button allowing the user to save any changes they make to their profile or preferences
      */
-    Button saveBtn;
+    Button saveBtn, logoutButton;
     /**
      * The user's name
      */
@@ -110,6 +110,11 @@ public class UserProfileActivity extends AppCompatActivity {
             response -> {
                 user = response;
                 updateRestrictions();
+                try {
+                    name.setText(user.getString("name"));
+                } catch (JSONException e) {
+                    Log.e("Error getting user's name", e.toString());
+                }
                 likeList = findViewById(R.id.likeList);
                 likeList.setLayoutManager(new LinearLayoutManager(this));
                 JSONArray userLikesIds;
@@ -125,7 +130,6 @@ public class UserProfileActivity extends AppCompatActivity {
                 for (int i = 0; i < userLikesIds.length(); i++) {
                     try {
                         String restaurantId = userLikesIds.getJSONObject(i).getString("name");
-                        // Assuming getRestaurantUrl(id) is a function that returns the endpoint to get a restaurant's details
                         String restUrl = "http://coms-309-055.class.las.iastate.edu:8080/restaurant/find/" + restaurantId;
                         Log.d("URL", restUrl);
 
@@ -266,6 +270,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         profilePic = findViewById(R.id.profilePicture);
         saveBtn = findViewById(R.id.saveBtn);
+        logoutButton = findViewById(R.id.logoutButton);
         name = findViewById(R.id.name);
         dietRestrictions = findViewById(R.id.dietRestrict);
 
@@ -284,6 +289,8 @@ public class UserProfileActivity extends AppCompatActivity {
                 throw new RuntimeException(e);
             }
         });
+
+        logoutButton.setOnClickListener(v -> startActivity(new Intent(UserProfileActivity.this, LoginActivity.class)));
 
         halalCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
             checkForPreferenceChanges();
