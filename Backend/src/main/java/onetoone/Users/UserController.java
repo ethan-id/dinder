@@ -1,5 +1,6 @@
 package onetoone.Users;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -220,15 +221,15 @@ public class UserController {
             return failure;
         }
     }
-    @PostMapping(path = "/admin/{username}")
-    String makeMeAdmin(@PathVariable String username) {
+    @PostMapping(path = "/admin/{username}/{value}")
+    String makeMeAdmin(@PathVariable String username, @PathVariable boolean value) {
         if (userRepository.findByUsername(username) == null) {
              return failure;
         }
         if (userRepository.findByUsername(username).isAdmin()) {
             return exists;
         }
-        userRepository.findByUsername(username).setAdmin(true);
+        userRepository.findByUsername(username).setAdmin(value);
         userRepository.save(userRepository.findByUsername(username));
         return success;
     }
