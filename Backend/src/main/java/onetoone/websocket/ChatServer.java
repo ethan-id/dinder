@@ -12,6 +12,7 @@ import onetoone.Requests.Request;
 import onetoone.Requests.RequestRepository;
 import onetoone.Restaurants.Restaurant;
 import onetoone.Restaurants.RestaurantRepository;
+import onetoone.Statistics.Statistic;
 import onetoone.Users.User;
 import onetoone.Users.UserRepository;
 import org.slf4j.Logger;
@@ -26,6 +27,8 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import onetoone.Statistics.StatisticRepository;
+import java.util.HashSet;
 
 
 /**
@@ -69,7 +72,6 @@ public class ChatServer {
     int like_count = 100000000;
     int numberOfLikes = 0;
     String restaurantMatch = "";
-    private static StatisticRepository statisticRepository;
 
     @Autowired
     public void setUserRepository(UserRepository repo) {
@@ -292,6 +294,7 @@ public class ChatServer {
             String[] newMessage = message.split("@");
             if (newMessage[0].equals("like")) {
                 Liked like = new Liked(newMessage[1]);
+                Statistic.totalLikes++;
                 like.setUser(Objects.requireNonNull(user));
                 Objects.requireNonNull(user).setNewLike(Objects.requireNonNull(like));
                 likeRepository.save(like);
@@ -333,6 +336,7 @@ public class ChatServer {
                         userRepository.findByUsername(username).addFavorite(favorite);
                         favoriteRepository.save(favorite);
                         userRepository.save(userRepository.findByUsername(username));
+                        Statistic.totalFavorites++;
                         match = false;
                     }
                 }

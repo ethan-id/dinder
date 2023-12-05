@@ -9,16 +9,16 @@ public class Statistic  {
     @GeneratedValue
     long id;
 
-    public int totalUsers;
-    public int totalLikes;
-    public int totalFavorites;
+    public static int totalUsers;
+    public static int totalLikes;
+    public static int totalFavorites;
 
 
 
-    Statistic(){
-        this.totalUsers = 0;
-        this.totalLikes = 0;
-        this.totalFavorites = 0;
+    public Statistic(){
+        totalUsers = 0;
+        totalLikes = 0;
+        totalFavorites = 0;
 
     }
 

@@ -228,7 +228,7 @@ public class UserController {
         int totalLikes = 0;
         int totalMatches = 0;
 
-        String jsonString = "{\"name\":" + +  , \"userCount\":" + userCount + "}";
+        String jsonString = "{\"name\":" + "\"userCount\":" + userCount + "}";
         ObjectMapper mapper = new ObjectMapper();
         try {
             JsonNode node = mapper.readTree(jsonString);

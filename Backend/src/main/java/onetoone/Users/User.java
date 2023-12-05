@@ -5,6 +5,7 @@ import onetoone.Favorites.Favorite;
 import onetoone.Likes.Liked;
 import onetoone.Requests.Request;
 import onetoone.Restaurants.Restaurant;
+import onetoone.Statistics.Statistic;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -77,9 +78,11 @@ public class User {
         this.friends = new HashSet<User>();
         this.friendsOf = new HashSet<User>();
         this.requests = new HashSet<Request>();
+        Statistic.totalUsers++;
     }
 
     public User() {
+        Statistic.totalUsers++;
     }
 
     // =============================== Getters and Setters for each field ================================== //
