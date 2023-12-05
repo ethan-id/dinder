@@ -19,4 +19,20 @@ public class StatisticController {
         statisticRepository.save(statistic);
         return "success";
     }
+    @GetMapping(path = "/stats/getTotalLikes")
+    public int getTotalLikes() {
+        return Statistic.totalLikes;
+    }
+    @GetMapping(path = "/stats/getTotalUsers")
+    public int getTotalUsers() {
+        return Statistic.totalUsers;
+    }
+    @GetMapping(path = "/stats/getTotalFavorites")
+    public int getTotalFavorites() {
+        return Statistic.totalFavorites;
+    }
+    @GetMapping(path = "/stats/getTotalSwipes")
+    public int getTotalSwipes() {
+        return Statistic.totalSwipes;
+    }
 }
