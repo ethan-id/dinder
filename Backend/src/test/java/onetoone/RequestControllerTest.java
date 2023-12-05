@@ -66,10 +66,12 @@ public class RequestControllerTest {
                 .andExpect(status().isOk());
 
     }
+   @Test
     public void testAcceptingRequests() throws Exception {
         controller.perform(post("/request/accept/156").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+    @Test
     public void testDeletingRequests() throws Exception {
         controller.perform(post("/request/accept/162").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
