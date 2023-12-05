@@ -82,12 +82,29 @@ public class UserControllerTesting {
     @Test
     @Transactional
     @Rollback
+    public void testModidfyingUser() throws Exception {
+        // Example JSON, adjust fields according to your User entity
+        String userJson = "{\"name\":\"test\", \"username\":\"testuser2\", \"passkey\":\"5555\"}";
+        int id = 1;
+        controller.perform(put("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson))
+                .andExpect(status().isOk());
+
+        controller.perform(get("/users/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username", is("testuser2")));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
     public void testRemovingUser() throws Exception {
-        // Assuming there's a user with ID 49 in your test environment
-        int userId = 49;
+        int userId = 1;
 
         controller.perform(delete("/users/{id}", userId))
-                .andExpect(status().isOk()); // Change to isNoContent() if you expect 204 No Content
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -126,7 +143,16 @@ public class UserControllerTesting {
                 .andExpect(status().isOk());
         controller.perform(get("/friend/Jessticals/find/MrEthan").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
 
+    @Test
+    @Transactional
+    @Rollback
+    public void testRemoveFriend() throws Exception {
+        String user = "BigE";
+        String friend = "Jessticals";
+        controller.perform(put("/friend/{username}/remove/{friendUsername}",user,friend).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -147,6 +173,26 @@ public class UserControllerTesting {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.plus", is(value)));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testMakingUserAdmin() throws Exception {
+        String username = "Jessticals";
+        int id = 3;
+        boolean value = true;
+
+        // Update the user's Dinder Plus status
+        controller.perform(post("/users/{username}/admin/{value}", username, value)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        // Fetch the user's details and verify the update
+        controller.perform(get("/users/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.admin", is(value)));
     }
 
 
