@@ -41,6 +41,7 @@ public class RestaurantController {
     String EliKey = "Bearer tBTnB2sqqEgwDw8eWPa3VoOhvXZAd-wCEQ6qKzocvrknlkmD4e-8wvQzDFWghKQKAWe1KGFyhL7j-6bb9JYjHpPJ9h2cApdhsSPdwMUZlOKHUjUhSaIL4RvR9sVCZXYx";
     String EthanKey = "Bearer WCsvt3PJkVizdHqlMBf8vnsfb0sA5z7LN0d8c8edwj8H1idNi0Zav0Qm4ZntAW5sv8TfdjLL7C30kLYLKQUxPAQmW-nNb2GDj_WRxq3AW4NFylBXSGJXPc0TGE1uZXYx";
     String LaliKey = "Bearer FhNQ_ij5Fs-nZRXlXrAbTDPVM38T3qNH1R3HkioxTm2u9j3Z07aKzQFDYO0_XRDFU11NlT2fTY-thzpb1C1TF_1nzFVx1qmjvLmsexGvOIVpr9bXy3XRcEv7mI1uZXYx";
+    String KeyNo5 = "Bearer U7N18hwm1r_RX7Yq5ySj5aoDgbQEfyjGSOeiVz95d8YiGkfxosJZUpZNTtFEndtgvwTzISHesehj_VcewbhjLUJGWI1YoaLll62z3YALqApY3mwk5z8wmqsZOrFuZXYx";
     @Autowired
     RestaurantRepository RestaurantRepository;
 
@@ -70,7 +71,7 @@ public class RestaurantController {
             Request request = new Request.Builder()
                     .url(url + "&offset=" + i)
                     .addHeader("accept", "application/json")
-                    .addHeader("Authorization", LaliKey)
+                    .addHeader("Authorization", KeyNo5)
                     .build();
             try {
                 Response response = client.newCall(request).execute();
@@ -102,7 +103,7 @@ public class RestaurantController {
         Request request = new Request.Builder()
                 .url("https://api.yelp.com/v3/businesses/" + code)
                 .addHeader("accept", "application/json")
-                .addHeader("Authorization",LaliKey)
+                .addHeader("Authorization",KeyNo5)
                 .build();
         try {
             Response response = client.newCall(request).execute();
@@ -136,7 +137,7 @@ public class RestaurantController {
         Request request = new Request.Builder()
                 .url("https://api.yelp.com/v3/businesses/" + code + "/reviews")
                 .addHeader("accept", "application/json")
-                .addHeader("Authorization", LaliKey)
+                .addHeader("Authorization", KeyNo5)
                 .build();
         try {
             Response response = client.newCall(request).execute();
@@ -175,7 +176,7 @@ public class RestaurantController {
             Request request = new Request.Builder()
                     .url(url + "&location=" + city + "&price=" + price + "&offset=" + i)
                     .addHeader("accept", "application/json")
-                    .addHeader("Authorization", LaliKey)
+                    .addHeader("Authorization", KeyNo5)
                     .build();
             try (Response response = client.newCall(request).execute()) {
                 if (response.isSuccessful()) {
