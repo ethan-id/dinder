@@ -335,7 +335,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         centerImage = findViewById(R.id.centerRestaurantImage);
         centerImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
         locationIcon = findViewById(R.id.locationIcon);
-        ratingIcon = findViewById(R.id.ratingIcon);
+//        ratingIcon = findViewById(R.id.ratingIcon);
         restaurantName = findViewById(R.id.restName);
         rating = findViewById(R.id.ratingBar);
         ratingCount = findViewById(R.id.ratingCount);

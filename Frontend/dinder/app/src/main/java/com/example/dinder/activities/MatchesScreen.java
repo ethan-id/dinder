@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -15,6 +17,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.dinder.R;
 import com.example.dinder.VolleySingleton;
 import com.example.dinder.activities.utils.NavigationUtils;
+import com.example.dinder.adapters.IncomingAdapter;
+import com.example.dinder.adapters.MatchAdapter;
 import com.example.dinder.websocket.WebSocketListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -38,9 +42,8 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
     ImageView ratingIcon;
     /** ArrayList holding JSONObjects, each representing a restaurant's data. */
     ArrayList<JSONObject> restaurants = new ArrayList<>();
-    /** JSONObject representing the currently selected or displayed restaurant. */
-    JSONObject currentRestaurant;
-
+    RecyclerView matchesRecyclerView;
+    private MatchAdapter matchAdapter;
     /**
      * Initiates an HTTP request to load an image from a URL and sets it to the central ImageView of the restaurant.
      *
@@ -78,19 +81,12 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
         Boolean plus = intent.getBooleanExtra("plus", false);
         ArrayList<String> codes = intent.getStringArrayListExtra("codes");
 
-        if (codes.size() > 0) {
-            try {
-                Log.d("code", codes.get(0));
-                getRestaurant(codes.get(0));
-            } catch (Exception e) {
-                Log.e("Error:", String.valueOf(e));
-            }
-        }
+        matchesRecyclerView = findViewById(R.id.matchesRecyclerView);
+        matchesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        getRestaurants(codes);
+        matchAdapter = new MatchAdapter(restaurants);
+        matchesRecyclerView.setAdapter(matchAdapter);
 
-        centerRestaurantImage = findViewById(R.id.centerRestaurantImage);
-        restName = findViewById(R.id.restName);
-        address = findViewById(R.id.address);
-        ratingIcon = findViewById(R.id.ratingIcon);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
         NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username, plus);
@@ -116,8 +112,6 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
     @Override
     public void onWebSocketMessage(String message) {
         // Handle WebSocket messages here
-        String restaurantCode = message.substring(message.indexOf("@"));
-        getRestaurant(restaurantCode);
     }
 
     /**
@@ -142,34 +136,21 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
         // Handle WebSocket errors
     }
 
-    /**
-     * Fetches the restaurant data from the server based on the given user ID.
-     * <p>
-     * This method sends a GET request to retrieve the restaurant's JSON data from the server using the provided code.
-     * Upon a successful response, the restaurant's data is stored in the 'restaurant' variable. If there's an error in
-     * the network request, the stack trace is printed.
-     * </p>
-     *
-     * @param code The unique identifier of the restaurant to fetch data for.
-     */
-    private void getRestaurant(String code) {
+    private void getRestaurants(ArrayList<String> codes) {
         RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
-        String url = "http://coms-309-055.class.las.iastate.edu:8080/restaurant/find/" + code;
-        queue.add(new JsonObjectRequest(
-            Request.Method.GET, url, null,
-            response -> {
-                Log.d("restaurant", response.toString());
-                currentRestaurant = response;
-                try {
-                    restName.setText(currentRestaurant.getString("name"));
-                    JSONObject location = currentRestaurant.getJSONObject("location");
-                    address.setText(location.getString("address1"));
-                    sendImageRequest(currentRestaurant.getString("image_url"), queue);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-            },
-            Throwable::printStackTrace
-        ));
+
+        for (String code : codes) {
+            String url = "http://coms-309-055.class.las.iastate.edu:8080/restaurant/find/" + code;
+            queue.add(new JsonObjectRequest(
+                    Request.Method.GET, url, null,
+                    response -> {
+                        Log.d("restaurant", response.toString());
+                        // Update the adapter's data and notify the adapter of the change
+                        restaurants.add(response);
+                        matchAdapter.notifyItemInserted(restaurants.size() - 1); // Notify that an item is inserted at the end of the list
+                    },
+                    Throwable::printStackTrace
+            ));
+        }
     }
 }
