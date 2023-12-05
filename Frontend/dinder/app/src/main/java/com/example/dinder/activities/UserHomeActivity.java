@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -65,10 +66,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     ImageView locationIcon;
     /**
-     * Star icon displayed next to the restaurnt's x out of 5 star rating
-     */
-    ImageView ratingIcon;
-    /**
      * The name of the restaurant displayed at the top of the screen
      */
     TextView restaurantName;
@@ -93,34 +90,6 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      */
     ImageButton favorite;
     ImageButton adminBtn;
-    /**
-     * A chip used to display price information about the restaurant such as "$", "$$", or "$$$"
-     */
-    Chip chip1;
-    /**
-     * A chip used to display a snippet of contextual information about the restaurant
-     */
-    Chip chip2;
-    /**
-     * A chip used to display a snippet of contextual information about the restaurant
-     */
-    Chip chip3;
-    /**
-     * A chip used to display a snippet of contextual information about the restaurant
-     */
-    Chip chip4;
-    /**
-     * A chip used to display a snippet of contextual information about the restaurant
-     */
-    Chip chip5;
-    /**
-     * A chip used to display a snippet of contextual information about the restaurant
-     */
-    Chip chip6;
-    /**
-     * A chip used to display a snippet of contextual information about the restaurant
-     */
-    Chip chip7;
     /**
      * Boolean representing if the UserHomeActivity has an active WebSocket connection with the server
      */
