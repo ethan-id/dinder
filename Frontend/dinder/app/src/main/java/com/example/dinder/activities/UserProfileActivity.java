@@ -262,10 +262,11 @@ public class UserProfileActivity extends AppCompatActivity {
         String id = sentIntent.getStringExtra("id");
         String username = sentIntent.getStringExtra("username");
         Boolean plus = sentIntent.getBooleanExtra("plus", false);
+        Boolean isAdmin = sentIntent.getBooleanExtra("isAdmin", false);
         ArrayList<String> codes = sentIntent.getStringArrayListExtra("codes");
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
-        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username, plus);
+        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username, plus, isAdmin);
         bottomNavigationView.setSelectedItemId(R.id.userprofile);
 
         profilePic = findViewById(R.id.profilePicture);

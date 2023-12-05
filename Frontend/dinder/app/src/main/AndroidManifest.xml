@@ -32,6 +32,9 @@
             android:name=".activities.OutOfLikesActivity"
             android:exported="true" />
         <activity
+            android:name=".activities.AdminHomeActivity"
+            android:exported="true" />
+        <activity
             android:name=".activities.RestaurantProfileActivity"
             android:exported="true" />
         <activity

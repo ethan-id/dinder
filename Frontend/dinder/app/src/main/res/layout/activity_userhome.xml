@@ -50,6 +50,18 @@
             app:layout_constraintStart_toEndOf="@+id/restLogo" />
 
         <ImageButton
+            android:id="@+id/adminBtn"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/rounded_icon_button"
+            android:contentDescription="@string/settings_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/settings" />
+
+        <ImageButton
             android:id="@+id/dislikeBtn"
             android:layout_width="65dp"
             android:layout_height="65dp"

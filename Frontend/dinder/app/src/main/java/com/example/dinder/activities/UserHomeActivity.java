@@ -92,6 +92,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
      * A button for the user to like/favorite the restaurant
      */
     ImageButton favorite;
+    ImageButton adminBtn;
     /**
      * A chip used to display price information about the restaurant such as "$", "$$", or "$$$"
      */
@@ -312,7 +313,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         String id = intent.getStringExtra("id");
         String username = intent.getStringExtra("username");
         Boolean plus = intent.getBooleanExtra("plus", false);
-        Log.d("plus", plus.toString());
+        Boolean isAdmin = intent.getBooleanExtra("isAdmin", false);
         ArrayList<String> receivedCodes = intent.getStringArrayListExtra("codes");
         if (receivedCodes != null) {
             matchCodes = receivedCodes;
@@ -341,6 +342,7 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
         dislike = findViewById(R.id.dislikeBtn);
         favorite = findViewById(R.id.heartBtn);
         logo = findViewById(R.id.restLogo);
+        adminBtn = findViewById(R.id.adminBtn);
         notificationContainer = findViewById(R.id.match_notif_layout);
 
         if (savedInstanceState != null) {
@@ -355,12 +357,22 @@ public class UserHomeActivity extends AppCompatActivity implements WebSocketList
             getRestaurants(queue);
         }
 
+        if (!isAdmin) adminBtn.setVisibility(View.GONE);
+
         bottomNavigationView = findViewById(R.id.bottom_navigator);
-        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, matchCodes, username, plus);
+        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, matchCodes, username, plus, isAdmin);
         bottomNavigationView.setSelectedItemId(R.id.home);
 
         dislike.setOnClickListener(v -> dislikeRestaurant());
         favorite.setOnClickListener(v -> likeRestaurant(plus));
+        adminBtn.setOnClickListener(v -> {
+            Intent adminScreen = new Intent(UserHomeActivity.this, AdminHomeActivity.class);
+            adminScreen.putExtra("id", id);
+            adminScreen.putExtra("username", username);
+            adminScreen.putExtra("plus", plus);
+            adminScreen.putExtra("isAdmin", isAdmin);
+            startActivity(adminScreen);
+        });
         centerImage.setOnClickListener(v -> {
             try {
                 Intent restaurant = new Intent(UserHomeActivity.this, RestaurantProfileActivity.class);

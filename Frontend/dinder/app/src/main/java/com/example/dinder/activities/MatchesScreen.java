@@ -62,6 +62,7 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
         String id = intent.getStringExtra("id");
         String username = intent.getStringExtra("username");
         Boolean plus = intent.getBooleanExtra("plus", false);
+        Boolean isAdmin = intent.getBooleanExtra("isAdmin", false);
         ArrayList<String> codes = intent.getStringArrayListExtra("codes");
 
         matchesRecyclerView = findViewById(R.id.matchesRecyclerView);
@@ -72,7 +73,7 @@ public class MatchesScreen extends AppCompatActivity implements WebSocketListene
 
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);
-        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username, plus);
+        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username, plus, isAdmin);
         bottomNavigationView.setSelectedItemId(R.id.match);
     }
 

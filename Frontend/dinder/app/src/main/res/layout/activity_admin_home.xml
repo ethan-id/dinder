@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Header for Admin Dashboard -->
+    <TextView
+        android:id="@+id/tvAdminDashboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/admin_dashboard"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tvAdminDashboard">
+
+        <!-- TextView for Total Likes -->
+        <TextView
+            android:id="@+id/tvTotalLikes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Likes: "
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- TextView for Total Users -->
+        <TextView
+            android:id="@+id/tvTotalUsers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Users: "
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- TextView for Total Favorites -->
+        <TextView
+            android:id="@+id/tvTotalFavorites"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Favorites: "
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- TextView for Average Swipes Before Match -->
+        <TextView
+            android:id="@+id/tvAvgSwipesBeforeMatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Average Swipes Before Match: "
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- TextView for Average Likes Per Match -->
+        <TextView
+            android:id="@+id/tvAvgLikesPerMatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Average Likes Per Match: "
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- TextView for Average Swipes Before Like -->
+        <TextView
+            android:id="@+id/tvAvgSwipesBeforeLike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Average Swipes Before Like: "
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- TextView for Average Likes Per User -->
+        <TextView
+            android:id="@+id/tvAvgLikesPerUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Average Likes Per User: "
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- TextView for Average Matches Per User -->
+        <TextView
+            android:id="@+id/tvAvgMatchesPerUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Average Matches Per User: "
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
+
+    </LinearLayout>
+
+    <!-- Bottom Navigation View -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:itemBackground="@color/maroon"
+        app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@drawable/selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_nav" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
