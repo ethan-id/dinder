@@ -137,6 +137,8 @@ public class UserControllerTesting {
     @Transactional
     @Rollback
     public void testFindingFriends() throws Exception {
+        controller.perform(get("/friend/BigE/find/MrEthan").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
         controller.perform(get("/friend/MrEthan/find/Jessticals").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         controller.perform(get("/friend/Jessticals/find/MrEthan").contentType(MediaType.APPLICATION_JSON))

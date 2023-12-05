@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserHomeActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.dinder.activities</a> &gt; <span class="el_source">UserHomeActivity.java</span></div><h1>UserHomeActivity.java</h1><pre class="source lang-java linenums">package com.example.dinder.activities;
+
+import static java.lang.Float.parseFloat;
+
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.example.dinder.R;
+import com.example.dinder.VolleySingleton;
+import com.example.dinder.activities.utils.NavigationUtils;
+import com.example.dinder.adapters.CategoriesAdapter;
+import com.example.dinder.websocket.WebSocketListener;
+import com.example.dinder.websocket.WebSocketManager;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.chip.Chip;
+
+import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * The Home Screen is considered the default location of the app. On this screen the user can swipe
+ * through restaurants, liking or disliking them. The user can also tap on any restaurant to take them
+ * to the restaurant profile where they can see more information about the restaurant.
+ */
+<span class="fc" id="L55">public class UserHomeActivity extends AppCompatActivity implements WebSocketListener {</span>
+    /**
+     * Large image displayed in the center of the screen used to show the restaurant's food
+     */
+    ImageView centerImage;
+    /**
+     * Logo displayed in the top left of the screen belonging to the restaurant
+     */
+    ImageView logo;
+    /**
+     * Icon displayed to provide context to the restaurant's address (displayed next to it)
+     */
+    ImageView locationIcon;
+    /**
+     * The name of the restaurant displayed at the top of the screen
+     */
+    TextView restaurantName;
+    /**
+     * X out of 5 star rating of the restaurant
+     */
+    RatingBar rating;
+    /**
+     * The number of rating/reviews the restaurant has received
+     */
+    TextView ratingCount;
+    /**
+     * The restaurant's address
+     */
+    TextView address;
+    /**
+     * A button for the user to dislike the restaurant
+     */
+    ImageButton dislike;
+    /**
+     * A button for the user to like/favorite the restaurant
+     */
+    ImageButton favorite;
+    ImageButton adminBtn;
+    /**
+     * Boolean representing if the UserHomeActivity has an active WebSocket connection with the server
+     */
+<span class="fc" id="L96">    static boolean connected = false;</span>
+
+    /**
+     * A GestureDetector used to recognize when the user swipes left or right on the restaurant
+     */
+    private GestureDetector gestureDetector;
+    /**
+     * A list of JSONObjects representing restaurants used to display restaurants to the user
+     */
+<span class="fc" id="L105">    ArrayList&lt;JSONObject&gt; restaurants = new ArrayList&lt;&gt;();</span>
+    /**
+     * The current restaurant being displayed to the user
+     */
+    JSONObject currentRestaurant;
+    int likeCount;
+    /**
+     * Dialog used to display loading symbol while the restaurant's are being fetched
+     */
+    private Dialog loadingDialog;
+    /**
+     * ArrayList of Strings representing the specific identifiers of restaurants that the user has matched with
+     * These are received through WebSocket messages sent from the backend and are used to send to the MatchesScreen
+     */
+<span class="fc" id="L119">    ArrayList&lt;String&gt; matchCodes = new ArrayList&lt;&gt;();</span>
+    /**
+     * LinearLayout containing a notification to be displayed when the user has a new match
+     */
+    LinearLayout notificationContainer;
+    BottomNavigationView bottomNavigationView;
+
+    /**
+     * Populates the user interface with information about a restaurant at a specified index
+     * from the `restaurants` list. This method fetches the restaurant data, sets the UI elements
+     * with the appropriate values, and handles any JSON exceptions that might arise. If there
+     * are no restaurants at the given index, the user is informed that there are no more restaurants.
+     *
+     * @param queue The request queue to which any necessary requests (e.g., image fetching) will be added.
+     * @param index The index of the restaurant in the `restaurants` list that should be displayed on the screen.
+     */
+    private void populateScreen(RequestQueue queue, int index) {
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">        if (index &lt; restaurants.size()) {</span>
+<span class="fc" id="L137">            currentRestaurant = restaurants.get(index);</span>
+            try {
+                // Populate screen with info about current restaurant
+<span class="fc" id="L140">                sendCenterImageRequest(currentRestaurant.getString(&quot;image_url&quot;), queue);</span>
+<span class="fc" id="L141">                runOnUiThread(() -&gt; {</span>
+                    try {
+<span class="fc" id="L143">                        restaurantName.setText(currentRestaurant.getString(&quot;name&quot;));</span>
+<span class="nc" id="L144">                    } catch (JSONException e) {</span>
+<span class="nc" id="L145">                        Log.e(&quot;Error&quot;, &quot;Error populating restaurant data&quot;);</span>
+<span class="fc" id="L146">                    }</span>
+                    try {
+<span class="fc" id="L148">                        JSONObject location = currentRestaurant.getJSONObject(&quot;location&quot;);</span>
+<span class="fc" id="L149">                        address.setText(location.getString(&quot;address1&quot;));</span>
+<span class="nc" id="L150">                    } catch (JSONException e) {</span>
+<span class="nc" id="L151">                        Log.e(&quot;Error&quot;, &quot;Error populating restaurant data&quot;);</span>
+<span class="fc" id="L152">                    }</span>
+                    try {
+<span class="fc" id="L154">                        rating.setRating(parseFloat(currentRestaurant.getString(&quot;rating&quot;)));</span>
+<span class="nc" id="L155">                    } catch (JSONException e) {</span>
+<span class="nc" id="L156">                        Log.e(&quot;Error&quot;, &quot;Error populating restaurant data&quot;);</span>
+<span class="fc" id="L157">                    }</span>
+                    try {
+<span class="fc" id="L159">                        ratingCount.setText(String.format(&quot;(%s)&quot;, currentRestaurant.getString(&quot;review_count&quot;)));</span>
+<span class="nc" id="L160">                    } catch (JSONException e) {</span>
+<span class="nc" id="L161">                        Log.e(&quot;Error&quot;, &quot;Error populating restaurant data&quot;);</span>
+<span class="fc" id="L162">                    }</span>
+<span class="fc" id="L163">                });</span>
+                try {
+<span class="fc" id="L165">                    JSONArray categoriesArray = currentRestaurant.getJSONArray(&quot;categories&quot;);</span>
+<span class="fc" id="L166">                    List&lt;String&gt; categories = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L167">                    categories.add(currentRestaurant.getString(&quot;price&quot;));</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">                    for (int i = 0; i &lt; categoriesArray.length(); i++) {</span>
+<span class="fc" id="L169">                        categories.add(categoriesArray.getJSONObject(i).getString(&quot;title&quot;));</span>
+                    }
+<span class="fc" id="L171">                    CategoriesAdapter adapter = new CategoriesAdapter(categories);</span>
+<span class="fc" id="L172">                    RecyclerView categoriesRecyclerView = findViewById(R.id.chipContainer);</span>
+<span class="fc" id="L173">                    categoriesRecyclerView.setAdapter(adapter);</span>
+<span class="nc" id="L174">                } catch (JSONException e) {</span>
+<span class="nc" id="L175">                    Log.e(&quot;Chip Error:&quot;, e.toString());</span>
+<span class="fc" id="L176">                }</span>
+<span class="nc" id="L177">            } catch (JSONException e) {</span>
+<span class="nc" id="L178">                throw new RuntimeException(e);</span>
+<span class="fc" id="L179">            }</span>
+        } else {
+            // Tell user there are no more restaurants :(
+        }
+<span class="fc" id="L183">    }</span>
+
+    @Override
+    protected void onResume() {
+<span class="fc" id="L187">        super.onResume();</span>
+        // When the activity resumes, make sure the correct item in the BottomNavigationView is selected
+<span class="fc" id="L189">        bottomNavigationView.setSelectedItemId(R.id.home); // Replace 'home' with the actual ID of your home icon in the BottomNavigationView</span>
+<span class="fc" id="L190">    }</span>
+
+    /**
+     * Fetches the list of restaurants from the server and populates the `restaurants` list.
+     * If the list is not empty, it triggers the `populateScreen` method to display the content.
+     *
+     * @param queue The request queue to which the JSON array request will be added.
+     */
+    private void getRestaurants(RequestQueue queue) {
+<span class="fc" id="L199">        showLoadingDialog();</span>
+
+<span class="fc" id="L201">        JsonArrayRequest request = new JsonArrayRequest(</span>
+            Request.Method.GET,
+            &quot;http://coms-309-055.class.las.iastate.edu:8080/restaurant/Ames/all&quot;,
+            null,
+            response -&gt; {
+<span class="fc" id="L206">                hideLoadingDialog();</span>
+<span class="fc" id="L207">                Log.d(&quot;Response&quot;, response.toString());</span>
+                JSONArray receivedRestaurants;
+                try {
+<span class="fc" id="L210">                    receivedRestaurants = response.getJSONObject(0).getJSONArray(&quot;businesses&quot;);</span>
+<span class="fc" id="L211">                    Log.d(&quot;rest&quot;, receivedRestaurants.toString());</span>
+<span class="nc" id="L212">                } catch (JSONException e) {</span>
+<span class="nc" id="L213">                    throw new RuntimeException(e);</span>
+<span class="fc" id="L214">                }</span>
+                // Handle the JSON array response
+<span class="fc bfc" id="L216" title="All 2 branches covered.">                for (int i = 0; i &lt; receivedRestaurants.length(); i++) {</span>
+                    try {
+<span class="fc" id="L218">                        JSONObject restaurantObject = receivedRestaurants.getJSONObject(i);</span>
+<span class="fc" id="L219">                        restaurants.add(restaurantObject);</span>
+<span class="nc" id="L220">                    } catch (JSONException e) {</span>
+<span class="nc" id="L221">                        e.printStackTrace();</span>
+<span class="fc" id="L222">                    }</span>
+                }
+
+<span class="pc bpc" id="L225" title="1 of 2 branches missed.">                if (!restaurants.isEmpty()) {</span>
+<span class="fc" id="L226">                    populateScreen(queue, 0);</span>
+                }
+<span class="fc" id="L228">            },</span>
+            error -&gt; {
+<span class="nc" id="L230">                Log.e(&quot;Error&quot;, String.valueOf(error));</span>
+<span class="nc" id="L231">                hideLoadingDialog();</span>
+<span class="nc" id="L232">                startActivity(new Intent(UserHomeActivity.this, ErrorScreen.class));</span>
+<span class="nc" id="L233">            }</span>
+        );
+
+<span class="fc" id="L236">        request.setRetryPolicy(new DefaultRetryPolicy(</span>
+            5000, 3,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
+
+<span class="fc" id="L241">        queue.add(request);</span>
+<span class="fc" id="L242">    }</span>
+
+    /**
+     * Sends a request to fetch the image to be displayed in the center of the screen on the home screen.
+     *
+     * @param imageUrl The URL of the image to be fetched.
+     * @param queue    The request queue to which the image request will be added.
+     */
+    private void sendCenterImageRequest(String imageUrl, RequestQueue queue) {
+<span class="fc" id="L251">        queue.add(new ImageRequest(</span>
+                imageUrl,
+                response -&gt; {
+<span class="fc" id="L254">                    runOnUiThread(() -&gt; centerImage.setImageBitmap(response));</span>
+<span class="fc" id="L255">                }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,</span>
+                Throwable::printStackTrace
+        ));
+<span class="fc" id="L258">    }</span>
+
+    /**
+     * Initializes the UserHomeActivity. This method:
+     * &lt;ul&gt;
+     *     &lt;li&gt;Sets the content view layout.&lt;/li&gt;
+     *     &lt;li&gt;Retrieves user ID and username from the intent.&lt;/li&gt;
+     *     &lt;li&gt;Establishes a WebSocket connection for real-time chat.&lt;/li&gt;
+     *     &lt;li&gt;Initializes UI components and sets their properties.&lt;/li&gt;
+     *     &lt;li&gt;Fetches restaurants and populates the UI.&lt;/li&gt;
+     *     &lt;li&gt;Handles swipe gestures for liking and disliking restaurants.&lt;/li&gt;
+     *     &lt;li&gt;Handles button click events for liking, disliking, and accessing the user profile.&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *                           previously being shut down, this Bundle contains the data it most recently
+     *                           supplied in {@link #onSaveInstanceState}. Otherwise, it is null.
+     */
+    @SuppressLint(&quot;ClickableViewAccessibility&quot;)
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L279">        super.onCreate(savedInstanceState);</span>
+
+<span class="fc" id="L281">        Intent intent = getIntent();</span>
+<span class="fc" id="L282">        String id = intent.getStringExtra(&quot;id&quot;);</span>
+<span class="fc" id="L283">        String username = intent.getStringExtra(&quot;username&quot;);</span>
+<span class="fc" id="L284">        Boolean plus = intent.getBooleanExtra(&quot;plus&quot;, false);</span>
+<span class="fc" id="L285">        Boolean isAdmin = intent.getBooleanExtra(&quot;isAdmin&quot;, false);</span>
+<span class="fc" id="L286">        ArrayList&lt;String&gt; receivedCodes = intent.getStringArrayListExtra(&quot;codes&quot;);</span>
+<span class="pc bpc" id="L287" title="1 of 2 branches missed.">        if (receivedCodes != null) {</span>
+<span class="nc" id="L288">            matchCodes = receivedCodes;</span>
+        }
+
+<span class="fc" id="L291">        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();</span>
+
+<span class="fc" id="L293">        setContentView(R.layout.activity_userhome);</span>
+<span class="fc" id="L294">        setupLoadingDialog();</span>
+
+<span class="fc" id="L296">        WebSocketManager.getInstance().setWebSocketListener(UserHomeActivity.this);</span>
+
+<span class="fc bfc" id="L298" title="All 2 branches covered.">        if (!connected) {</span>
+<span class="fc" id="L299">            WebSocketManager.getInstance().connectWebSocket(&quot;ws://coms-309-055.class.las.iastate.edu:8080/chat/&quot; + username);</span>
+<span class="fc" id="L300">            connected = true;</span>
+        }
+
+<span class="fc" id="L303">        centerImage = findViewById(R.id.centerRestaurantImage);</span>
+<span class="fc" id="L304">        centerImage.setScaleType(ImageView.ScaleType.CENTER_CROP);</span>
+<span class="fc" id="L305">        locationIcon = findViewById(R.id.locationIcon);</span>
+//        ratingIcon = findViewById(R.id.ratingIcon);
+<span class="fc" id="L307">        restaurantName = findViewById(R.id.restName);</span>
+<span class="fc" id="L308">        rating = findViewById(R.id.ratingBar);</span>
+<span class="fc" id="L309">        ratingCount = findViewById(R.id.ratingCount);</span>
+<span class="fc" id="L310">        address = findViewById(R.id.address);</span>
+<span class="fc" id="L311">        dislike = findViewById(R.id.dislikeBtn);</span>
+<span class="fc" id="L312">        favorite = findViewById(R.id.heartBtn);</span>
+<span class="fc" id="L313">        logo = findViewById(R.id.restLogo);</span>
+<span class="fc" id="L314">        adminBtn = findViewById(R.id.adminBtn);</span>
+<span class="fc" id="L315">        notificationContainer = findViewById(R.id.match_notif_layout);</span>
+
+<span class="pc bpc" id="L317" title="1 of 2 branches missed.">        if (savedInstanceState != null) {</span>
+            // Activity is being recreated, restore the state
+<span class="nc" id="L319">            int savedIndex = savedInstanceState.getInt(&quot;currentRestaurantIndex&quot;, -1);</span>
+<span class="nc bnc" id="L320" title="All 4 branches missed.">            if (savedIndex != -1 &amp;&amp; savedIndex &lt; restaurants.size()) {</span>
+                // Restore the view with the saved restaurant
+<span class="nc" id="L322">                populateScreen(queue, savedIndex);</span>
+            }
+<span class="nc" id="L324">        } else {</span>
+            // Normal activity setup
+<span class="fc" id="L326">            getRestaurants(queue);</span>
+        }
+
+<span class="fc bfc" id="L329" title="All 2 branches covered.">        if (!isAdmin) adminBtn.setVisibility(View.GONE);</span>
+
+<span class="fc" id="L331">        bottomNavigationView = findViewById(R.id.bottom_navigator);</span>
+<span class="fc" id="L332">        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, matchCodes, username, plus, isAdmin);</span>
+<span class="fc" id="L333">        bottomNavigationView.setSelectedItemId(R.id.home);</span>
+
+<span class="fc" id="L335">        dislike.setOnClickListener(v -&gt; dislikeRestaurant());</span>
+<span class="fc" id="L336">        favorite.setOnClickListener(v -&gt; likeRestaurant(plus));</span>
+<span class="fc" id="L337">        adminBtn.setOnClickListener(v -&gt; {</span>
+<span class="nc" id="L338">            Intent adminScreen = new Intent(UserHomeActivity.this, AdminHomeActivity.class);</span>
+<span class="nc" id="L339">            adminScreen.putExtra(&quot;id&quot;, id);</span>
+<span class="nc" id="L340">            adminScreen.putExtra(&quot;username&quot;, username);</span>
+<span class="nc" id="L341">            adminScreen.putExtra(&quot;plus&quot;, plus);</span>
+<span class="nc" id="L342">            adminScreen.putExtra(&quot;isAdmin&quot;, isAdmin);</span>
+<span class="nc" id="L343">            startActivity(adminScreen);</span>
+<span class="nc" id="L344">        });</span>
+<span class="fc" id="L345">        centerImage.setOnClickListener(v -&gt; {</span>
+            try {
+<span class="fc" id="L347">                Intent restaurant = new Intent(UserHomeActivity.this, RestaurantProfileActivity.class);</span>
+<span class="fc" id="L348">                restaurant.putExtra(&quot;id&quot;, id);</span>
+<span class="fc" id="L349">                restaurant.putExtra(&quot;username&quot;, username);</span>
+<span class="fc" id="L350">                restaurant.putExtra(&quot;plus&quot;, plus);</span>
+<span class="fc" id="L351">                restaurant.putExtra(&quot;code&quot;, currentRestaurant.getString(&quot;id&quot;));</span>
+<span class="fc" id="L352">                startActivity(restaurant);</span>
+<span class="nc" id="L353">            } catch (JSONException e) {</span>
+<span class="nc" id="L354">                throw new RuntimeException(e);</span>
+<span class="fc" id="L355">            }</span>
+<span class="fc" id="L356">        });</span>
+<span class="fc" id="L357">        centerImage.setOnTouchListener((v, event) -&gt; gestureDetector.onTouchEvent(event));</span>
+
+<span class="fc" id="L359">        gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {</span>
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                // This method will be called when a swipe gesture is detected
+<span class="fc" id="L363">                float diffX = e2.getX() - e1.getX();</span>
+<span class="fc" id="L364">                float diffY = e2.getY() - e1.getY();</span>
+
+<span class="pc bpc" id="L366" title="1 of 2 branches missed.">                if (Math.abs(diffX) &gt; Math.abs(diffY)) {</span>
+                    // Horizontal swipe detected
+<span class="pc bpc" id="L368" title="1 of 2 branches missed.">                    if (diffX &gt; 0) {</span>
+                        // Right swipe
+<span class="fc" id="L370">                        likeRestaurant(plus);</span>
+                    } else {
+                        // Left swipe
+<span class="nc" id="L373">                        dislikeRestaurant();</span>
+                    }
+<span class="fc" id="L375">                    return true;</span>
+                }
+<span class="nc" id="L377">                return super.onFling(e1, e2, velocityX, velocityY);</span>
+            }
+        });
+<span class="fc" id="L380">    }</span>
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+<span class="fc" id="L384">        super.onSaveInstanceState(outState);</span>
+
+        // Save the current restaurant index and any other relevant data
+<span class="fc" id="L387">        int currentRestaurantIndex = restaurants.indexOf(currentRestaurant);</span>
+<span class="fc" id="L388">        outState.putInt(&quot;currentRestaurantIndex&quot;, currentRestaurantIndex);</span>
+<span class="fc" id="L389">    }</span>
+
+    /**
+     * Sends a &quot;like&quot; action for the current restaurant through a WebSocket connection and
+     * prepares the next restaurant's information to be displayed.
+     * The method retrieves the unique identifier of the current restaurant, sends it as a &quot;like&quot; action
+     * through a WebSocket message, and logs this action. It then attempts to populate the screen with the
+     * next restaurant in the list.
+     * If the current restaurant's ID cannot be obtained due to a JSON parsing error, the method throws
+     * a RuntimeException encapsulating the JSONException.
+     *
+     * @throws RuntimeException if there is an error parsing the current restaurant's JSON object.
+     */
+    private void likeRestaurant(Boolean isPlus) {
+<span class="fc" id="L403">        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();</span>
+        try {
+<span class="fc" id="L405">            String code = currentRestaurant.getString(&quot;id&quot;);</span>
+<span class="fc" id="L406">            sendLikeThroughWebSocket(code);</span>
+<span class="fc" id="L407">            likeCount++;</span>
+<span class="pc bpc" id="L408" title="1 of 2 branches missed.">            if (!isPlus) {</span>
+<span class="pc bpc" id="L409" title="1 of 2 branches missed.">                if (likeCount &gt;= 10) {</span>
+<span class="nc" id="L410">                    Log.d(&quot;Likes&quot;, &quot;You're out of likes! :(&quot;);</span>
+<span class="nc" id="L411">                    startActivity(new Intent(UserHomeActivity.this, OutOfLikesActivity.class));</span>
+                }
+            }
+<span class="fc" id="L414">            Log.d(&quot;Like Count&quot;, String.valueOf(likeCount));</span>
+<span class="fc" id="L415">            Log.d(&quot;Like&quot;, &quot;like@&quot; + code);</span>
+<span class="fc" id="L416">            populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);</span>
+
+<span class="fc" id="L418">            Toast.makeText(this, &quot;Liked!&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L419">        } catch (JSONException e) {</span>
+<span class="nc" id="L420">            throw new RuntimeException(e);</span>
+<span class="fc" id="L421">        }</span>
+<span class="fc" id="L422">    }</span>
+
+
+    /**
+     * Sends a &quot;dislike&quot; action for the current restaurant through a WebSocket connection and
+     * prepares the next restaurant's information to be displayed.
+     * This method performs an operation similar to likeRestaurant() but for a &quot;dislike&quot; action.
+     * It retrieves the unique identifier of the current restaurant, sends a &quot;dislike&quot; message through
+     * the WebSocket, and logs this action. Subsequently, it moves to display the next restaurant's details.
+     * If the current restaurant's ID cannot be obtained due to a JSON parsing error, the method throws
+     * a RuntimeException encapsulating the JSONException.
+     *
+     * @throws RuntimeException if there is an error parsing the current restaurant's JSON object.
+     */
+    private void dislikeRestaurant() {
+<span class="fc" id="L437">        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();</span>
+        try {
+<span class="fc" id="L439">            String code = currentRestaurant.getString(&quot;id&quot;);</span>
+<span class="fc" id="L440">            sendDislikeThroughWebSocket(code);</span>
+<span class="fc" id="L441">            Log.d(&quot;Dislike&quot;, &quot;dislike@&quot; + code);</span>
+<span class="fc" id="L442">            populateScreen(queue, restaurants.indexOf(currentRestaurant) + 1);</span>
+<span class="fc" id="L443">            Toast.makeText(this, &quot;Disliked!&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L444">        } catch (JSONException e) {</span>
+<span class="nc" id="L445">            throw new RuntimeException(e);</span>
+<span class="fc" id="L446">        }</span>
+<span class="fc" id="L447">    }</span>
+
+    /**
+     * Sends a &quot;like&quot; action for a restaurant to the server via WebSocket.
+     * This method checks if the provided restaurant code is not null or empty and sends a &quot;like&quot; action
+     * prefixed to the restaurant code via WebSocket. This indicates that the user has liked a particular
+     * restaurant.
+     *
+     * @param code The unique identifier for the restaurant to be liked.
+     */
+    private void sendLikeThroughWebSocket(String code) {
+<span class="pc bpc" id="L458" title="2 of 4 branches missed.">        if (!Objects.equals(code, &quot;&quot;) &amp;&amp; code != null) WebSocketManager.getInstance().sendMessage(&quot;like@&quot; + code);</span>
+<span class="fc" id="L459">    }</span>
+
+
+    /**
+     * Sends a &quot;dislike&quot; action for a restaurant to the server via WebSocket.
+     * This method is similar to {@link #sendLikeThroughWebSocket(String)} but for sending a &quot;dislike&quot;
+     * action. If the provided restaurant code is valid (not null or empty), it prefixes the code with &quot;dislike@&quot;
+     * and sends it via WebSocket to indicate that the user has disliked the restaurant.
+     *
+     * @param code The unique identifier for the restaurant to be disliked.
+     */
+    private void sendDislikeThroughWebSocket(String code) {
+<span class="pc bpc" id="L471" title="2 of 4 branches missed.">        if (!Objects.equals(code, &quot;&quot;) &amp;&amp; code != null) WebSocketManager.getInstance().sendMessage(&quot;dislike@&quot; + code);</span>
+<span class="fc" id="L472">    }</span>
+
+    /**
+     * Shows a temporary notification with a fade-in animation, then fades out after a set time.
+     * This method starts an animation that fades in the notification container, makes it visible, and logs
+     * the animation start. After a delay of 3 seconds, it initiates a fade-out animation and hides the
+     * notification container once the animation ends. This provides a transient visual feedback to the user.
+     */
+    private void showNotification() {
+<span class="nc" id="L481">        Toast toast = Toast.makeText(getApplicationContext(), &quot;You Have A Match&quot;, Toast.LENGTH_SHORT);</span>
+<span class="nc" id="L482">        toast.setGravity(Gravity.CENTER, 0, 0); // Center both horizontally and vertically</span>
+<span class="nc" id="L483">        toast.show();</span>
+<span class="nc" id="L484">    }</span>
+
+    /**
+     * Set's the gestureDetector defined in onCreate to call it's onTouchEvent()
+     *
+     * @param event The touch screen event being processed.
+     * @return event The touch screen event being processed.
+     */
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // Be sure to call the superclass implementation
+<span class="nc bnc" id="L495" title="All 4 branches missed.">        return gestureDetector.onTouchEvent(event) || super.onTouchEvent(event);</span>
+    }
+
+    @Override
+    public void onWebSocketOpen(ServerHandshake handshakeData) {
+        // Show user notification that they have joined a group!
+<span class="fc" id="L501">        Log.d(&quot;WebSocketOpen&quot;, handshakeData.toString());</span>
+<span class="fc" id="L502">    }</span>
+
+    @Override
+    public void onWebSocketMessage(String message) {
+        // If the message is an invitation show notification on screen, telling user who invited them to a group
+<span class="pc bpc" id="L507" title="1 of 2 branches missed.">        if (message.contains(&quot;Match&quot;)) {</span>
+<span class="nc" id="L508">            runOnUiThread(this::showNotification);</span>
+<span class="nc" id="L509">            String code = message.split(&quot;@&quot;)[1];</span>
+<span class="nc" id="L510">            matchCodes.add(code);</span>
+<span class="nc" id="L511">            Log.d(&quot;Code&quot;, code);</span>
+        }
+<span class="pc bpc" id="L513" title="1 of 2 branches missed.">        if (message.contains(&quot;invited&quot;)) {</span>
+<span class="nc" id="L514">            runOnUiThread(() -&gt; Toast.makeText(this, &quot;You've received a group request!&quot;, Toast.LENGTH_LONG).show());</span>
+        }
+<span class="fc" id="L516">        Log.d(&quot;Message&quot;, message);</span>
+<span class="fc" id="L517">    }</span>
+
+    @Override
+    public void onWebSocketClose(int code, String reason, boolean remote) {
+        // Show message telling the user who left the group
+<span class="fc" id="L522">        Log.d(&quot;WebSocketClose&quot;, reason);</span>
+<span class="fc" id="L523">    }</span>
+
+    @Override
+    public void onWebSocketError(Exception ex) {
+        // Show notification to user informing them of the error
+<span class="nc" id="L528">        Log.e(&quot;WebSocketError&quot;, ex.toString());</span>
+<span class="nc" id="L529">    }</span>
+
+    /**
+     * Initializes and configures a non-cancellable loading dialog.
+     * This method sets up a new dialog intended to indicate that a loading process is ongoing. The dialog is
+     * made non-cancellable, meaning the user cannot dismiss it by pressing back or touching outside the dialog.
+     * This is often used to prevent user interaction while waiting for a background task to complete.
+     * The dialog uses a custom layout defined in `R.layout.loading` and has a transparent background.
+     */
+    private void setupLoadingDialog() {
+<span class="fc" id="L539">        loadingDialog = new Dialog(this);</span>
+<span class="fc" id="L540">        loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);</span>
+<span class="fc" id="L541">        loadingDialog.setContentView(R.layout.loading);</span>
+<span class="fc" id="L542">        Objects.requireNonNull(loadingDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));</span>
+<span class="fc" id="L543">        loadingDialog.setCancelable(false); // prevents users from cancelling the dialog</span>
+<span class="fc" id="L544">    }</span>
+
+    /**
+     * Displays a loading dialog on the screen if it is not already showing.
+     * This method checks the current state of the loadingDialog instance and
+     * ensures that the dialog is shown only if it is not already visible on the screen,
+     * avoiding multiple instances of the dialog being displayed over each other.
+     */
+    private void showLoadingDialog() {
+<span class="pc bpc" id="L553" title="2 of 4 branches missed.">        if (loadingDialog != null &amp;&amp; !loadingDialog.isShowing()) {</span>
+<span class="fc" id="L554">            loadingDialog.show();</span>
+        }
+<span class="fc" id="L556">    }</span>
+
+    /**
+     * Hides the loading dialog if it is currently displayed on the screen.
+     * This method checks the current state of the loadingDialog instance and
+     * dismisses it if it is visible. Additionally, it checks if the activity
+     * is still attached to the window before dismissing the dialog to prevent
+     * illegal state exceptions.
+     */
+    private void hideLoadingDialog() {
+<span class="pc bpc" id="L566" title="3 of 6 branches missed.">        if (loadingDialog != null &amp;&amp; loadingDialog.isShowing() &amp;&amp; isActivityAttached()) {</span>
+<span class="fc" id="L567">            loadingDialog.dismiss();</span>
+        }
+<span class="fc" id="L569">    }</span>
+
+    /**
+     * Checks if the activity is currently attached to the window.
+     * This is useful to ensure that we are not attempting to perform UI
+     * operations on a detached activity.
+     *
+     * @return true if the activity is attached to the window, false otherwise.
+     */
+    private boolean isActivityAttached() {
+<span class="pc bpc" id="L579" title="2 of 4 branches missed.">        return getWindow() != null &amp;&amp; getWindow().getDecorView().getWindowToken() != null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>Generated by the Android Gradle plugin 8.1.3</div></body></html>

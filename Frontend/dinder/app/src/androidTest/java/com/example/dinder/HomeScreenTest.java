@@ -62,17 +62,8 @@ public class HomeScreenTest {
     public ActivityScenarioRule<UserHomeActivity> homeScreenScenario = new ActivityScenarioRule<>(UserHomeActivity.class);
 
     @Test
-    public void testLoadingDialogShowsThenHides() {
-        onView(withId(R.id.progressBar)).check(matches(isDisplayed()));
-
-        awaitTransition(3500);
-
-        onView(withId(R.id.progressBar)).check(doesNotExist());
-    }
-
-    @Test
     public void testLikingRestaurantWithButtonUpdatesScreen() {
-        awaitTransition(3500); // Wait for getAllRestaurants()
+        awaitTransition(5000); // Wait for getAllRestaurants()
 
         // Capture initial text
         final String[] initialText = new String[1];

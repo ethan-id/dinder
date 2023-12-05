@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Restaurant.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.dinder.adapters.model</a> &gt; <span class="el_source">Restaurant.java</span></div><h1>Restaurant.java</h1><pre class="source lang-java linenums">package com.example.dinder.adapters.model;
+
+import org.json.JSONObject;
+
+import java.util.List;
+
+/**
+ * Represents a restaurant with various details such as name, categories, location, etc.
+ */
+public class Restaurant {
+    /**
+     * Unique Identifier for the Restaurant
+     */
+    private String id;
+    /**
+     * Restaurant's alias
+     */
+    private String alias;
+    /**
+     * Restaurant's name
+     */
+    private String name;
+    /**
+     * URL of an image used by the Restaurant
+     */
+    private String imageUrl;
+    /**
+     * Status describing whether the Restaurant is currently closed
+     */
+    private boolean isClosed;
+    /**
+     * URL to the Restaurant's Yelp page
+     */
+    private String url;
+    /**
+     * The count of reveiews the Restaurant has received
+     */
+    private int reviewCount;
+    /**
+     * The Restaurant's applicable categories
+     */
+    private List&lt;JSONObject&gt; categories;
+    /**
+     * The average rating the Restaurant has received
+     */
+    private double rating;
+    /**
+     * The latitudinal and longitudinal coordinates of the Restaurant's location
+     */
+    private JSONObject coordinates;
+    /**
+     * A List of Strings containing transactions
+     */
+    private List&lt;String&gt; transactions;
+    /**
+     * $, $$, $$$. Describes the approximate average cost of the Restaurant's menu items
+     */
+    private String price;
+    /**
+     * An Object containing specific location details about the Restaurant
+     */
+    private JSONObject location;
+    /**
+     * The Restaurant's phone number
+     */
+    private String phone;
+    /**
+     * A formatted version of the Restaurant's phone number to be used on the UI
+     */
+    private String displayPhone;
+    /**
+     * The distance the Restaurant is away from the User
+     */
+    private double distance;
+
+    /**
+     * Default constructor for creating an instance of Restaurant with no initial values.
+     */
+<span class="fc" id="L79">    public Restaurant() {}</span>
+
+    /**
+     * Constructs a Restaurant with a specified ID and name.
+     *
+     * @param id   The unique identifier for the restaurant.
+     * @param name The name of the restaurant.
+     */
+<span class="nc" id="L87">    public Restaurant(int id, String name) {</span>
+<span class="nc" id="L88">        this.id = String.valueOf(id);</span>
+<span class="nc" id="L89">        this.name = name;</span>
+<span class="nc" id="L90">    }</span>
+
+    /**
+     * Gets the unique identifier of the restaurant.
+     *
+     * @return The unique identifier of the restaurant.
+     */
+    public String getId() {
+<span class="nc" id="L98">        return id;</span>
+    }
+
+    /**
+     * Sets the unique identifier of the restaurant.
+     *
+     * @param id The unique identifier to set for the restaurant.
+     */
+    public void setId(String id) {
+<span class="nc" id="L107">        this.id = id;</span>
+<span class="nc" id="L108">    }</span>
+
+    // ...
+
+    /**
+     * Gets the alias of the restaurant.
+     *
+     * @return The alias of the restaurant.
+     */
+    public String getAlias() {
+<span class="nc" id="L118">        return alias;</span>
+    }
+
+    /**
+     * Sets the alias of the restaurant.
+     *
+     * @param alias The alias to set for the restaurant.
+     */
+    public void setAlias(String alias) {
+<span class="nc" id="L127">        this.alias = alias;</span>
+<span class="nc" id="L128">    }</span>
+
+    /**
+     * Gets the name of the restaurant.
+     *
+     * @return The name of the restaurant.
+     */
+    public String getName() {
+<span class="fc" id="L136">        return name;</span>
+    }
+
+    /**
+     * Sets the name of the restaurant.
+     *
+     * @param name The name to set for the restaurant.
+     */
+    public void setName(String name) {
+<span class="fc" id="L145">        this.name = name;</span>
+<span class="fc" id="L146">    }</span>
+
+    /**
+     * Gets the URL of the image representing the restaurant.
+     *
+     * @return The image URL of the restaurant.
+     */
+    public String getImageUrl() {
+<span class="nc" id="L154">        return imageUrl;</span>
+    }
+
+    /**
+     * Sets the URL of the image representing the restaurant.
+     *
+     * @param imageUrl The image URL to set for the restaurant.
+     */
+    public void setImageUrl(String imageUrl) {
+<span class="nc" id="L163">        this.imageUrl = imageUrl;</span>
+<span class="nc" id="L164">    }</span>
+
+    /**
+     * Checks if the restaurant is closed.
+     *
+     * @return true if the restaurant is closed, otherwise false.
+     */
+    public boolean isClosed() {
+<span class="nc" id="L172">        return isClosed;</span>
+    }
+
+    /**
+     * Sets the restaurant's closed status.
+     *
+     * @param closed The closed status to set for the restaurant.
+     */
+    public void setClosed(boolean closed) {
+<span class="nc" id="L181">        isClosed = closed;</span>
+<span class="nc" id="L182">    }</span>
+
+    /**
+     * Gets the URL of the restaurant's website.
+     *
+     * @return The URL of the restaurant.
+     */
+    public String getUrl() {
+<span class="nc" id="L190">        return url;</span>
+    }
+
+    /**
+     * Sets the URL of the restaurant's website.
+     *
+     * @param url The website URL to set for the restaurant.
+     */
+    public void setUrl(String url) {
+<span class="nc" id="L199">        this.url = url;</span>
+<span class="nc" id="L200">    }</span>
+
+    /**
+     * Gets the number of reviews for the restaurant.
+     *
+     * @return The number of reviews.
+     */
+    public int getReviewCount() {
+<span class="nc" id="L208">        return reviewCount;</span>
+    }
+
+    /**
+     * Sets the number of reviews for the restaurant.
+     *
+     * @param reviewCount The number of reviews to set.
+     */
+    public void setReviewCount(int reviewCount) {
+<span class="nc" id="L217">        this.reviewCount = reviewCount;</span>
+<span class="nc" id="L218">    }</span>
+
+    /**
+     * Gets the list of categories associated with the restaurant.
+     *
+     * @return The list of restaurant categories.
+     */
+    public List&lt;JSONObject&gt; getCategories() {
+<span class="nc" id="L226">        return categories;</span>
+    }
+
+    /**
+     * Sets the list of categories associated with the restaurant.
+     *
+     * @param categories The list of categories to set for the restaurant.
+     */
+    public void setCategories(List&lt;JSONObject&gt; categories) {
+<span class="nc" id="L235">        this.categories = categories;</span>
+<span class="nc" id="L236">    }</span>
+
+    /**
+     * Gets the rating of the restaurant.
+     *
+     * @return The rating of the restaurant.
+     */
+    public double getRating() {
+<span class="fc" id="L244">        return rating;</span>
+    }
+
+    /**
+     * Sets the rating of the restaurant.
+     *
+     * @param rating The rating to set for the restaurant.
+     */
+    public void setRating(double rating) {
+<span class="fc" id="L253">        this.rating = rating;</span>
+<span class="fc" id="L254">    }</span>
+
+    /**
+     * Gets the geographical coordinates of the restaurant.
+     *
+     * @return The coordinates of the restaurant.
+     */
+    public JSONObject getCoordinates() {
+<span class="nc" id="L262">        return coordinates;</span>
+    }
+
+    /**
+     * Sets the geographical coordinates of the restaurant.
+     *
+     * @param coordinates The coordinates to set for the restaurant.
+     */
+    public void setCoordinates(JSONObject coordinates) {
+<span class="nc" id="L271">        this.coordinates = coordinates;</span>
+<span class="nc" id="L272">    }</span>
+
+    /**
+     * Gets the list of transaction types the restaurant supports.
+     *
+     * @return The list of transaction types.
+     */
+    public List&lt;String&gt; getTransactions() {
+<span class="nc" id="L280">        return transactions;</span>
+    }
+
+    /**
+     * Sets the list of transaction types the restaurant supports.
+     *
+     * @param transactions The list of transaction types to set.
+     */
+    public void setTransactions(List&lt;String&gt; transactions) {
+<span class="nc" id="L289">        this.transactions = transactions;</span>
+<span class="nc" id="L290">    }</span>
+
+    /**
+     * Gets the price level of the restaurant.
+     *
+     * @return The price level of the restaurant.
+     */
+    public String getPrice() {
+<span class="nc" id="L298">        return price;</span>
+    }
+
+    /**
+     * Sets the price level of the restaurant.
+     *
+     * @param price The price level to set for the restaurant.
+     */
+    public void setPrice(String price) {
+<span class="nc" id="L307">        this.price = price;</span>
+<span class="nc" id="L308">    }</span>
+
+    /**
+     * Gets the location of the restaurant including address and geographical information.
+     *
+     * @return The location of the restaurant.
+     */
+    public JSONObject getLocation() {
+<span class="fc" id="L316">        return location;</span>
+    }
+
+    /**
+     * Sets the location of the restaurant.
+     *
+     * @param location The location to set for the restaurant.
+     */
+    public void setLocation(JSONObject location) {
+<span class="fc" id="L325">        this.location = location;</span>
+<span class="fc" id="L326">    }</span>
+
+    /**
+     * Gets the phone number of the restaurant.
+     *
+     * @return The phone number of the restaurant.
+     */
+    public String getPhone() {
+<span class="nc" id="L334">        return phone;</span>
+    }
+
+    /**
+     * Sets the phone number of the restaurant.
+     *
+     * @param phone The phone number to set for the restaurant.
+     */
+    public void setPhone(String phone) {
+<span class="nc" id="L343">        this.phone = phone;</span>
+<span class="nc" id="L344">    }</span>
+
+    /**
+     * Gets the display phone number of the restaurant.
+     *
+     * @return The display phone number of the restaurant.
+     */
+    public String getDisplayPhone() {
+<span class="nc" id="L352">        return displayPhone;</span>
+    }
+
+    /**
+     * Sets the display phone number of the restaurant.
+     *
+     * @param displayPhone The display phone number to set for the restaurant.
+     */
+    public void setDisplayPhone(String displayPhone) {
+<span class="nc" id="L361">        this.displayPhone = displayPhone;</span>
+<span class="nc" id="L362">    }</span>
+
+    /**
+     * Gets the distance of the restaurant from a reference point.
+     *
+     * @return The distance of the restaurant.
+     */
+    public double getDistance() {
+<span class="nc" id="L370">        return distance;</span>
+    }
+
+    /**
+     * Sets the distance of the restaurant from a reference point.
+     *
+     * @param distance The distance to set for the restaurant.
+     */
+    public void setDistance(double distance) {
+<span class="nc" id="L379">        this.distance = distance;</span>
+<span class="nc" id="L380">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>Generated by the Android Gradle plugin 8.1.3</div></body></html>

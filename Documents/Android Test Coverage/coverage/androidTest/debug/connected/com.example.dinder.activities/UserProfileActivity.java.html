@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserProfileActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.dinder.activities</a> &gt; <span class="el_source">UserProfileActivity.java</span></div><h1>UserProfileActivity.java</h1><pre class="source lang-java linenums">package com.example.dinder.activities;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.dinder.R;
+import com.example.dinder.VolleySingleton;
+import com.example.dinder.activities.utils.NavigationUtils;
+import com.example.dinder.adapters.RestaurantAdapter;
+import com.example.dinder.adapters.model.Restaurant;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * The User Profile screen, used to display the user's information and allow them
+ * to modify their dietary preferences and other settings affecting the rest of the
+ * app.
+ */
+<span class="fc" id="L40">public class UserProfileActivity extends AppCompatActivity {</span>
+    /**
+     * The User's profile picture
+     */
+    ImageView profilePic;
+    /**
+     * A &quot;Save&quot; button allowing the user to save any changes they make to their profile or preferences
+     */
+    Button saveBtn, logoutButton;
+    /**
+     * The user's name
+     */
+    TextView name;
+    /**
+     * A Header indicating the checkboxes beneath it represent the user's dietary restrictions
+     */
+    TextView dietRestrictions;
+    /**
+     * A checkbox for the user to select if they are vegetarian
+     */
+    CheckBox vegetarianCheck;
+    /**
+     * A checkbox for the user to select if they are vegan
+     */
+    CheckBox veganCheck;
+    /**
+     * A checkbox for the user to select if they are halal
+     */
+    CheckBox halalCheck;
+    /**
+     * A boolean value storing the value of the user's vegetarian status when they open the profile screen.
+     * This is used to enable or disable the save button if there are differences or not.
+     */
+    Boolean ogVegetarian;
+    /**
+     * A boolean value storing the value of the user's vegan status when they open the profile screen.
+     * This is used to enable or disable the save button if there are differences or not.
+     */
+    Boolean ogVegan;
+    /**
+     * A boolean value storing the value of the user's halal status when they open the profile screen.
+     * This is used to enable or disable the save button if there are differences or not.
+     */
+    Boolean ogHalal;
+    /**
+     * A JSONObject containing all the user's information
+     */
+    JSONObject user;
+    /**
+     * A RecyclerView to render the user's likes
+     */
+    RecyclerView likeList;
+
+    /**
+     * Fetches the user data from the server based on the given user ID.
+     * &lt;p&gt;
+     * This method sends a GET request to retrieve the user's JSON data from the server using the provided ID.
+     * Upon a successful response, the user's data is stored in the 'user' variable and the updateRestrictions()
+     * method is invoked to update the user's settings or restrictions accordingly. If there's an error in
+     * the network request, the stack trace is printed.
+     * &lt;/p&gt;
+     *
+     * @param id The unique identifier of the user to fetch data for.
+     */
+    private void getUser(String id) {
+<span class="fc" id="L105">        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();</span>
+<span class="fc" id="L106">        String url = &quot;http://coms-309-055.class.las.iastate.edu:8080/users/&quot; + id;</span>
+
+<span class="fc" id="L108">        queue.add(new JsonObjectRequest(</span>
+            Request.Method.GET, url, null,
+            response -&gt; {
+<span class="fc" id="L111">                user = response;</span>
+<span class="fc" id="L112">                updateRestrictions();</span>
+                try {
+<span class="fc" id="L114">                    name.setText(user.getString(&quot;name&quot;));</span>
+<span class="nc" id="L115">                } catch (JSONException e) {</span>
+<span class="nc" id="L116">                    Log.e(&quot;Error getting user's name&quot;, e.toString());</span>
+<span class="fc" id="L117">                }</span>
+<span class="fc" id="L118">                likeList = findViewById(R.id.likeList);</span>
+<span class="fc" id="L119">                likeList.setLayoutManager(new LinearLayoutManager(this));</span>
+                JSONArray userLikesIds;
+                try {
+<span class="fc" id="L122">                    userLikesIds = user.getJSONArray(&quot;likes&quot;);</span>
+<span class="nc" id="L123">                } catch (JSONException e) {</span>
+<span class="nc" id="L124">                    throw new RuntimeException(e);</span>
+<span class="fc" id="L125">                }</span>
+<span class="fc" id="L126">                List&lt;Restaurant&gt; restaurants = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L127">                RestaurantAdapter adapter = new RestaurantAdapter(restaurants);</span>
+<span class="fc" id="L128">                likeList.setAdapter(adapter);</span>
+
+<span class="fc bfc" id="L130" title="All 2 branches covered.">                for (int i = 0; i &lt; userLikesIds.length(); i++) {</span>
+                    try {
+<span class="fc" id="L132">                        String restaurantId = userLikesIds.getJSONObject(i).getString(&quot;name&quot;);</span>
+<span class="fc" id="L133">                        String restUrl = &quot;http://coms-309-055.class.las.iastate.edu:8080/restaurant/find/&quot; + restaurantId;</span>
+<span class="fc" id="L134">                        Log.d(&quot;URL&quot;, restUrl);</span>
+
+                        // Make a GET request using Volley (you can use other libraries too)
+<span class="fc" id="L137">                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, restUrl, null,</span>
+                                response2 -&gt; {
+<span class="fc" id="L139">                                    Log.d(&quot;Like Request&quot;, &quot;Response received: &quot; + response2.toString());</span>
+                                    // Convert the JSON response to a Restaurant object and add to the list
+                                    try {
+<span class="fc" id="L142">                                        Restaurant restaurant = new Restaurant();</span>
+<span class="fc" id="L143">                                        restaurant.setName(response2.getString(&quot;name&quot;));</span>
+<span class="fc" id="L144">                                        restaurant.setLocation(response2.getJSONObject(&quot;location&quot;));</span>
+<span class="fc" id="L145">                                        restaurant.setRating(Double.parseDouble(response2.getString(&quot;rating&quot;)));</span>
+<span class="fc" id="L146">                                        restaurants.add(restaurant);</span>
+<span class="nc" id="L147">                                    } catch (JSONException e) {</span>
+<span class="nc" id="L148">                                        throw new RuntimeException(e);</span>
+<span class="fc" id="L149">                                    }</span>
+
+                                    // If we've fetched all restaurants' details, update the adapter
+<span class="fc" id="L152">                                    adapter.notifyDataSetChanged();</span>
+<span class="fc" id="L153">                                },</span>
+                                error -&gt; {
+                                    // Handle the error
+<span class="nc" id="L156">                                    Log.e(&quot;Volley&quot;, &quot;Error fetching restaurant details from URL: &quot; + restUrl);</span>
+<span class="nc" id="L157">                                    Log.e(&quot;Volley&quot;, &quot;Error: &quot; + error);</span>
+<span class="nc" id="L158">                                }</span>
+                        );
+
+                        // Assuming requestQueue is your Volley RequestQueue object
+<span class="fc" id="L162">                        queue.add(jsonObjectRequest);</span>
+<span class="nc" id="L163">                    } catch (JSONException e) {</span>
+<span class="nc" id="L164">                        throw new RuntimeException(e);</span>
+<span class="fc" id="L165">                    }</span>
+                }
+<span class="fc" id="L167">            },</span>
+            Throwable::printStackTrace
+        ));
+<span class="fc" id="L170">    }</span>
+
+    /**
+     * Checks if any dietary preference checkboxes have been modified.
+     * &lt;p&gt;
+     * This method compares the current states of the dietary preference checkboxes (vegan, vegetarian, and halal)
+     * against their original states. If any checkbox state has changed, it enables the save button to allow
+     * the user to save the updated preferences.
+     * &lt;/p&gt;
+     */
+    private void checkForPreferenceChanges() {
+<span class="pc bpc" id="L181" title="3 of 6 branches missed.">        if (ogVegan != null &amp;&amp; ogVegetarian != null &amp;&amp; ogHalal != null) {</span>
+<span class="pc bpc" id="L182" title="3 of 6 branches missed.">            if (ogVegan != veganCheck.isChecked() || ogVegetarian != vegetarianCheck.isChecked() || ogHalal != halalCheck.isChecked()) {</span>
+<span class="fc" id="L183">                runOnUiThread(() -&gt; {</span>
+<span class="fc" id="L184">                    saveBtn.setEnabled(true);</span>
+<span class="fc" id="L185">                });</span>
+            }
+        }
+<span class="fc" id="L188">    }</span>
+
+    /**
+     * Updates the UI to reflect the user's dietary restrictions.
+     * &lt;p&gt;
+     * This method retrieves the user's dietary preferences (vegan, vegetarian, and halal) from the
+     * 'user' JSONObject. It then updates the respective checkboxes on the UI thread to reflect these
+     * preferences.
+     * &lt;/p&gt;
+     *
+     * @throws RuntimeException if there's an issue parsing the 'user' JSONObject.
+     */
+    private void updateRestrictions() {
+<span class="fc" id="L201">        runOnUiThread(() -&gt; {</span>
+            try {
+<span class="fc" id="L203">                ogVegetarian = user.getBoolean(&quot;vegitarian&quot;);</span>
+<span class="fc" id="L204">                ogHalal = user.getBoolean(&quot;halal&quot;);</span>
+<span class="fc" id="L205">                ogVegan = user.getBoolean(&quot;vegan&quot;);</span>
+<span class="fc" id="L206">                vegetarianCheck.setChecked(ogVegetarian);</span>
+<span class="fc" id="L207">                halalCheck.setChecked(ogHalal);</span>
+<span class="fc" id="L208">                veganCheck.setChecked(ogVegan);</span>
+<span class="nc" id="L209">            } catch (JSONException e) {</span>
+<span class="nc" id="L210">                throw new RuntimeException(e);</span>
+<span class="fc" id="L211">            }</span>
+<span class="fc" id="L212">        });</span>
+<span class="fc" id="L213">    }</span>
+
+    /**
+     * Saves the user's updated dietary preferences.
+     * &lt;p&gt;
+     * This method updates the 'user' JSONObject with the current values from the dietary preferences
+     * checkboxes (vegan, vegetarian, and halal). A PUT request is then made to the server to save these
+     * updated preferences.
+     * &lt;/p&gt;
+     *
+     * @throws JSONException if there's an issue accessing or updating the 'user' JSONObject.
+     */
+    private void saveUserPreferences() throws JSONException {
+<span class="fc" id="L226">        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();</span>
+<span class="fc" id="L227">        String url = &quot;http://coms-309-055.class.las.iastate.edu:8080/users/&quot; + user.getInt(&quot;id&quot;);</span>
+
+<span class="fc" id="L229">        user.put(&quot;vegitarian&quot;, vegetarianCheck.isChecked());</span>
+<span class="fc" id="L230">        user.put(&quot;vegan&quot;, veganCheck.isChecked());</span>
+<span class="fc" id="L231">        user.put(&quot;halal&quot;, halalCheck.isChecked());</span>
+
+<span class="fc" id="L233">        queue.add(new JsonObjectRequest(</span>
+                Request.Method.PUT, url, user,
+                response -&gt; {
+<span class="nc" id="L236">                    user = response;</span>
+<span class="nc" id="L237">                },</span>
+                Throwable::printStackTrace
+        ));
+<span class="fc" id="L240">    }</span>
+
+    /**
+     * Initializes the UserProfileActivity screen.
+     * &lt;p&gt;
+     * This method sets up the user profile screen where users can view and edit their
+     * personal details and dietary preferences. It fetches the user details based on
+     * the provided user ID, initializes UI components, and sets up event listeners
+     * for the buttons and checkboxes on the screen.
+     * &lt;/p&gt;
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously
+     *                           being shut down then this Bundle contains the data it
+     *                           most recently supplied in onSaveInstanceState.
+     *                           &lt;b&gt;Note:&lt;/b&gt; Otherwise it is null.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L258">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L259">        setContentView(R.layout.activity_userprofile);</span>
+
+<span class="fc" id="L261">        Intent sentIntent = getIntent();</span>
+<span class="fc" id="L262">        String id = sentIntent.getStringExtra(&quot;id&quot;);</span>
+<span class="fc" id="L263">        String username = sentIntent.getStringExtra(&quot;username&quot;);</span>
+<span class="fc" id="L264">        Boolean plus = sentIntent.getBooleanExtra(&quot;plus&quot;, false);</span>
+<span class="fc" id="L265">        Boolean isAdmin = sentIntent.getBooleanExtra(&quot;isAdmin&quot;, false);</span>
+<span class="fc" id="L266">        ArrayList&lt;String&gt; codes = sentIntent.getStringArrayListExtra(&quot;codes&quot;);</span>
+
+<span class="fc" id="L268">        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigator);</span>
+<span class="fc" id="L269">        NavigationUtils.setupBottomNavigation(bottomNavigationView, this, id, codes, username, plus, isAdmin);</span>
+<span class="fc" id="L270">        bottomNavigationView.setSelectedItemId(R.id.userprofile);</span>
+
+<span class="fc" id="L272">        profilePic = findViewById(R.id.profilePicture);</span>
+<span class="fc" id="L273">        saveBtn = findViewById(R.id.saveBtn);</span>
+<span class="fc" id="L274">        logoutButton = findViewById(R.id.logoutButton);</span>
+<span class="fc" id="L275">        name = findViewById(R.id.name);</span>
+<span class="fc" id="L276">        dietRestrictions = findViewById(R.id.dietRestrict);</span>
+
+<span class="fc" id="L278">        vegetarianCheck = findViewById(R.id.vegetarianCheck);</span>
+<span class="fc" id="L279">        veganCheck = findViewById(R.id.veganCheck);</span>
+<span class="fc" id="L280">        halalCheck = findViewById(R.id.halalCheck);</span>
+
+<span class="fc" id="L282">        getUser(id);</span>
+
+<span class="fc" id="L284">        saveBtn.setEnabled(false);</span>
+
+<span class="fc" id="L286">        saveBtn.setOnClickListener(v -&gt; {</span>
+            try {
+<span class="fc" id="L288">                saveUserPreferences();</span>
+<span class="nc" id="L289">            } catch (JSONException e) {</span>
+<span class="nc" id="L290">                throw new RuntimeException(e);</span>
+<span class="fc" id="L291">            }</span>
+<span class="fc" id="L292">        });</span>
+
+<span class="pc" id="L294">        logoutButton.setOnClickListener(v -&gt; startActivity(new Intent(UserProfileActivity.this, LoginActivity.class)));</span>
+
+<span class="fc" id="L296">        halalCheck.setOnCheckedChangeListener((buttonView, isChecked) -&gt; {</span>
+<span class="fc" id="L297">            checkForPreferenceChanges();</span>
+<span class="fc" id="L298">        });</span>
+
+<span class="fc" id="L300">        vegetarianCheck.setOnCheckedChangeListener((buttonView, isChecked) -&gt; {</span>
+<span class="fc" id="L301">            checkForPreferenceChanges();</span>
+<span class="fc" id="L302">        });</span>
+
+<span class="fc" id="L304">        veganCheck.setOnCheckedChangeListener((buttonView, isChecked) -&gt; {</span>
+<span class="fc" id="L305">            checkForPreferenceChanges();</span>
+<span class="fc" id="L306">        });</span>
+<span class="fc" id="L307">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>Generated by the Android Gradle plugin 8.1.3</div></body></html>

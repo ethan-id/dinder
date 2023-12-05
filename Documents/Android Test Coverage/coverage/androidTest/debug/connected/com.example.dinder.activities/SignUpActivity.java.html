@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SignUpActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.dinder.activities</a> &gt; <span class="el_source">SignUpActivity.java</span></div><h1>SignUpActivity.java</h1><pre class="source lang-java linenums">package com.example.dinder.activities;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.CheckBox;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
+import com.example.dinder.R;
+import com.example.dinder.VolleySingleton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+/**
+ * The Sign-Up screen; The user can enter their account information here and request to sign-up to Dinder
+ */
+<span class="fc" id="L31">public class SignUpActivity extends AppCompatActivity {</span>
+    /**
+     * Button used to send a POST request to sign-up the user
+     */
+    Button signUpBtn;
+    /**
+     * Button used to take the user back to the login screen
+     */
+    Button backBtn;
+    /**
+     * Text field where the user can enter their email
+     */
+    EditText email;
+    /**
+     * Text field where the user can enter their username
+     */
+    EditText username;
+    /**
+     * Text field where the user can enter their password
+     */
+    EditText password;
+    /**
+     * Text field where the user has to confirm their entered password
+     */
+    EditText confirmPassword;
+    /**
+     * Checkbox for the user to accept Dinder's terms of service
+     */
+    CheckBox terms;
+    /**
+     * Checkbox for the user to voluntarily accept Dinder's usage of their data
+     */
+    CheckBox data;
+    /**
+     * ImageView for the Dinder logo to be displayed
+     */
+    ImageView logo;
+
+    /**
+     * Constructs a JSONObject representing a user with the given parameters.
+     * &lt;p&gt;
+     * This method creates a JSONObject with fields for name, username, and password
+     * using the provided arguments. If any JSON errors occur during the object creation,
+     * they are caught and printed to the standard error stream.
+     * &lt;/p&gt;
+     *
+     * @param name     The name of the user.
+     * @param username The username for the user.
+     * @param password The password for the user.
+     * @return A {@link JSONObject} representing a user with the specified details.
+     */
+    private JSONObject makeUserJson(String name, String username, String password) {
+<span class="fc" id="L83">        JSONObject userJson = new JSONObject();</span>
+        try {
+<span class="fc" id="L85">            userJson.put(&quot;name&quot;, name);</span>
+<span class="fc" id="L86">            userJson.put(&quot;username&quot;, username);</span>
+<span class="fc" id="L87">            userJson.put(&quot;passkey&quot;, password);</span>
+<span class="nc" id="L88">        } catch (JSONException e) {</span>
+<span class="nc" id="L89">            e.printStackTrace();</span>
+<span class="fc" id="L90">        }</span>
+<span class="fc" id="L91">        return userJson;</span>
+    }
+
+    /**
+     * Sends a POST request to create a new user using the provided user information.
+     * &lt;p&gt;
+     * This method sends a POST request to a specified endpoint with the provided user information
+     * in JSON format. On successful request, it logs the server's response. If there's an error,
+     * the error details are printed to the standard error stream.
+     * &lt;/p&gt;
+     *
+     * @param queue    The {@link RequestQueue} to which the request will be added.
+     * @param userJson The {@link JSONObject} containing user details to be sent in the request body.
+     */
+    private void sendRequestToMakeUser(RequestQueue queue, JSONObject userJson) {
+        // Handle error
+<span class="fc" id="L107">        StringRequest postRequest = new StringRequest(Request.Method.POST, &quot;http://coms-309-055.class.las.iastate.edu:8080/users&quot;,</span>
+                (Response.Listener&lt;String&gt;) response -&gt; {
+                    // Handle response
+<span class="fc" id="L110">                    Log.d(&quot;Response&quot;, response);</span>
+<span class="fc" id="L111">                },</span>
+                (Response.ErrorListener) Throwable::printStackTrace
+<span class="fc" id="L113">        ) {</span>
+            @Override
+            public byte[] getBody() {
+<span class="fc" id="L116">                return userJson.toString().getBytes(StandardCharsets.UTF_8);</span>
+            }
+
+            @Override
+            public Map&lt;String, String&gt; getHeaders() {
+<span class="fc" id="L121">                Map&lt;String, String&gt; headers = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L122">                headers.put(&quot;Content-Type&quot;, &quot;application/json; charset=utf-8&quot;);</span>
+<span class="fc" id="L123">                return headers;</span>
+            }
+        };
+
+<span class="fc" id="L127">        queue.add(postRequest);</span>
+<span class="fc" id="L128">    }</span>
+
+    /**
+     * Initializes the SignUpActivity screen, setting up UI components and user interaction.
+     * &lt;p&gt;
+     * This method sets the content view for the activity, initializes all necessary UI elements,
+     * and sets up their corresponding behaviors. It makes use of the Volley library to handle
+     * network requests. When the &quot;Sign Up&quot; button is clicked, it checks if the terms checkbox is
+     * ticked and if the passwords entered match. If these conditions are met, a new user is created
+     * by sending a POST request with the user's details. After successful registration, the user is
+     * navigated back to the login screen. Additionally, there's a &quot;Back&quot; button which simply navigates
+     * the user back to the login screen.
+     * &lt;/p&gt;
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L144">        super.onCreate(savedInstanceState);</span>
+
+<span class="fc" id="L146">        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();</span>
+
+<span class="fc" id="L148">        setContentView(R.layout.activity_signup);</span>
+
+<span class="fc" id="L150">        signUpBtn = findViewById(R.id.signUpBtn);</span>
+<span class="fc" id="L151">        backBtn = findViewById(R.id.backToLoginBtn);</span>
+<span class="fc" id="L152">        email = findViewById(R.id.editTextEmail);</span>
+<span class="fc" id="L153">        terms = findViewById(R.id.termsCheckbox);</span>
+<span class="fc" id="L154">        data = findViewById(R.id.dataConsentCheckbox);</span>
+<span class="fc" id="L155">        username = findViewById(R.id.editTextUsername);</span>
+<span class="fc" id="L156">        confirmPassword = findViewById(R.id.editTextConfirmPassword);</span>
+<span class="fc" id="L157">        password = findViewById(R.id.editTextPassword);</span>
+<span class="fc" id="L158">        logo = findViewById(R.id.appLogo);</span>
+<span class="fc" id="L159">        logo.setImageResource(R.drawable.temporary_logo);</span>
+
+<span class="fc" id="L161">        signUpBtn.setOnClickListener(v -&gt; {</span>
+<span class="pc bpc" id="L162" title="2 of 4 branches missed.">            if(terms.isChecked() &amp;&amp; Objects.equals(password.getText().toString(), confirmPassword.getText().toString())) {</span>
+                // send post request to create user, then send request to login user based on response.
+<span class="fc" id="L164">                JSONObject user = makeUserJson(email.getText().toString(), username.getText().toString(), password.getText().toString());</span>
+<span class="fc" id="L165">                sendRequestToMakeUser(queue, user);</span>
+<span class="fc" id="L166">                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));</span>
+            }
+<span class="fc" id="L168">        });</span>
+
+<span class="fc" id="L170">        backBtn.setOnClickListener(v -&gt; {</span>
+<span class="nc" id="L171">            startActivity(new Intent(SignUpActivity.this, LoginActivity.class));</span>
+<span class="nc" id="L172">        });</span>
+<span class="fc" id="L173">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>Generated by the Android Gradle plugin 8.1.3</div></body></html>

@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RestaurantProfileActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.dinder.activities</a> &gt; <span class="el_source">RestaurantProfileActivity.java</span></div><h1>RestaurantProfileActivity.java</h1><pre class="source lang-java linenums">package com.example.dinder.activities;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.dinder.R;
+import com.example.dinder.VolleySingleton;
+import com.example.dinder.adapters.ReviewAdapter;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+/**
+ * The Restaurant Profile screen, used to display a specific Restaurant's information
+ */
+<span class="fc" id="L41">public class RestaurantProfileActivity extends AppCompatActivity {</span>
+    /**
+     * The logo of the restaurant
+     */
+    ImageView logo;
+    /**
+     * A button allowing the user to return to the home screen
+     */
+    ImageButton backBtn;
+    /**
+     * The restaurant's name
+     */
+    TextView name;
+    /**
+     * The restaurant's address
+     */
+    TextView address;
+    /**
+     * The number of reviews the restaurant has received
+     */
+    TextView revCount;
+    /**
+     * The number of likes the restaurant has received
+     */
+    TextView phone;
+    /**
+     * Restaurant's star rating out of 5
+     */
+    TextView rating;
+    /**
+     * A JSONObject containing all the restaurant's information
+     */
+    JSONObject restaurant;
+    /**
+     * List of reviews of the restaurant as JSON Objects
+     */
+<span class="fc" id="L77">    ArrayList&lt;JSONObject&gt; reviews = new ArrayList&lt;&gt;();</span>
+
+    private RecyclerView reviewRecyclerView;
+    private RecyclerView.Adapter reviewAdapter;
+    private RecyclerView.LayoutManager reviewLayoutManager;
+
+    /**
+     * Fetches the restaurant data from the server based on the given user ID.
+     * &lt;p&gt;
+     * This method sends a GET request to retrieve the restaurant's JSON data from the server using the provided code.
+     * Upon a successful response, the restaurant's data is stored in the 'restaurant' variable. If there's an error in
+     * the network request, the stack trace is printed.
+     * &lt;/p&gt;
+     *
+     * @param code The unique identifier of the restaurant to fetch data for.
+     */
+    private void getRestaurant(String code) {
+<span class="fc" id="L94">        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();</span>
+<span class="fc" id="L95">        String url = &quot;http://coms-309-055.class.las.iastate.edu:8080/restaurant/find/&quot; + code;</span>
+
+<span class="fc" id="L97">        queue.add(new JsonObjectRequest(</span>
+            Request.Method.GET, url, null,
+            response -&gt; {
+<span class="fc" id="L100">                restaurant = response;</span>
+<span class="fc" id="L101">                populateRestaurantProfile();</span>
+<span class="fc" id="L102">                Log.d(&quot;restaurant&quot;, restaurant.toString());</span>
+<span class="fc" id="L103">            },</span>
+            Throwable::printStackTrace
+        ));
+<span class="fc" id="L106">    }</span>
+
+    /**
+     * Fetches and processes restaurant reviews from a remote server.
+     *
+     * This method makes a GET request to a specified URL to retrieve restaurant reviews.
+     * Each review is expected to be in JSON format. The method adds all received reviews to
+     * a local collection, `reviews`. In case of a JSON parsing error, it throws a runtime exception.
+     *
+     * @param code The unique code or identifier for the restaurant whose reviews are to be fetched.
+     *             This code is appended to the URL endpoint to specify the restaurant.
+     * @throws RuntimeException if there is a JSONException while parsing the response.
+     */
+    private void getRestaurantReviews(String code) {
+<span class="fc" id="L120">        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).getRequestQueue();</span>
+<span class="fc" id="L121">        String url = &quot;http://coms-309-055.class.las.iastate.edu:8080/restaurant/reviews/&quot; + code;</span>
+
+<span class="fc" id="L123">        queue.add(new JsonObjectRequest(</span>
+                Request.Method.GET, url, null,
+                response -&gt; {
+                    JSONArray rev;
+                    try {
+<span class="fc" id="L128">                        rev = response.getJSONArray(&quot;reviews&quot;);</span>
+<span class="nc" id="L129">                    } catch (JSONException e) {</span>
+<span class="nc" id="L130">                        throw new RuntimeException(e);</span>
+<span class="fc" id="L131">                    }</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">                    for (int i = 0; i &lt; rev.length(); i++) {</span>
+                        try {
+<span class="fc" id="L134">                            reviews.add(rev.getJSONObject(i));</span>
+<span class="nc" id="L135">                        } catch (JSONException e) {</span>
+<span class="nc" id="L136">                            throw new RuntimeException(e);</span>
+<span class="fc" id="L137">                        }</span>
+                    }
+
+                    // Specify an adapter and populate reviews list
+<span class="fc" id="L141">                    reviewAdapter = new ReviewAdapter(reviews);</span>
+<span class="fc" id="L142">                    Log.d(&quot;reviews&quot;, reviews.toString());</span>
+<span class="fc" id="L143">                    reviewRecyclerView.setAdapter(reviewAdapter);</span>
+<span class="fc" id="L144">                },</span>
+                Throwable::printStackTrace
+        ));
+<span class="fc" id="L147">    }</span>
+
+    /**
+     * Populates the restaurant profile UI components with data from a JSON object representing a restaurant.
+     * This method must be called on the UI thread because it updates UI components.
+     *
+     * The restaurant profile includes the restaurant's name, rating, address, phone number, and review count.
+     * It assumes that the JSON object `restaurant` has been previously set with the necessary information.
+     *
+     * If there is an issue with JSON parsing, the method throws a RuntimeException encapsulating the JSONException.
+     */
+    private void populateRestaurantProfile() {
+<span class="fc" id="L159">        runOnUiThread(() -&gt; {</span>
+            try {
+<span class="fc" id="L161">                name.setText(restaurant.getString(&quot;name&quot;));</span>
+<span class="fc" id="L162">                rating.setText(restaurant.getString(&quot;rating&quot;));</span>
+<span class="fc" id="L163">                JSONObject location = restaurant.getJSONObject(&quot;location&quot;);</span>
+<span class="fc" id="L164">                address.setText(location.getString(&quot;address1&quot;));</span>
+<span class="fc" id="L165">                phone.setText(restaurant.getString(&quot;display_phone&quot;));</span>
+<span class="fc" id="L166">                revCount.setText(String.format(&quot;(%s)&quot;, restaurant.getString(&quot;review_count&quot;)));</span>
+
+<span class="fc" id="L168">                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()</span>
+<span class="fc" id="L169">                        .findFragmentById(R.id.map);</span>
+<span class="fc" id="L170">                mapFragment.getMapAsync(new OnMapReadyCallback() {</span>
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        // Add markers here
+                        try {
+<span class="fc" id="L175">                            JSONObject coords = restaurant.getJSONObject(&quot;coordinates&quot;);</span>
+<span class="fc" id="L176">                            LatLng restaurantLocation = new LatLng(coords.getDouble(&quot;latitude&quot;), coords.getDouble(&quot;longitude&quot;));</span>
+<span class="fc" id="L177">                            googleMap.addMarker(new MarkerOptions().position(restaurantLocation).title(restaurant.getString(&quot;name&quot;)));</span>
+<span class="fc" id="L178">                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(restaurantLocation, 20)); // 15 here is the zoom level</span>
+<span class="nc" id="L179">                        } catch (JSONException e) {</span>
+<span class="nc" id="L180">                            Log.e(&quot;Maps Error&quot;, e.toString());</span>
+<span class="fc" id="L181">                        }</span>
+<span class="fc" id="L182">                    }</span>
+                });
+<span class="nc" id="L184">            } catch (JSONException e) {</span>
+<span class="nc" id="L185">                throw new RuntimeException(e);</span>
+<span class="fc" id="L186">            }</span>
+<span class="fc" id="L187">        });</span>
+<span class="fc" id="L188">    }</span>
+
+    /**
+     * Initializes the Restaurant Profile screen.
+     * &lt;p&gt;
+     * This method sets up the restaurant profile screen where users can view details about a specific
+     * restaurant.
+     * &lt;/p&gt;
+     * @param savedInstanceState If the activity is being re-initialized after previously
+     *                           being shut down then this Bundle contains the data it
+     *                           most recently supplied in onSaveInstanceState.
+     *                           &lt;b&gt;Note:&lt;/b&gt; Otherwise it is null.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L203">        super.onCreate(savedInstanceState);</span>
+
+<span class="fc" id="L205">        setContentView(R.layout.activity_restaurantprofile);</span>
+
+<span class="fc" id="L207">        logo = findViewById(R.id.restaurantLogo);</span>
+<span class="fc" id="L208">        backBtn = findViewById(R.id.backBtn);</span>
+<span class="fc" id="L209">        name = findViewById(R.id.restaurantName);</span>
+<span class="fc" id="L210">        address = findViewById(R.id.restaurantAddress);</span>
+<span class="fc" id="L211">        phone = findViewById(R.id.phone);</span>
+<span class="fc" id="L212">        rating = findViewById(R.id.restRating);</span>
+<span class="fc" id="L213">        revCount = findViewById(R.id.reviewCount);</span>
+
+<span class="fc" id="L215">        Intent sentIntent = getIntent();</span>
+<span class="fc" id="L216">        String code = sentIntent.getStringExtra(&quot;code&quot;);</span>
+<span class="fc" id="L217">        String username = sentIntent.getStringExtra(&quot;username&quot;);</span>
+<span class="fc" id="L218">        String id = sentIntent.getStringExtra(&quot;id&quot;);</span>
+<span class="fc" id="L219">        Boolean plus = sentIntent.getBooleanExtra(&quot;plus&quot;, false);</span>
+
+<span class="fc" id="L221">        getRestaurant(code);</span>
+<span class="fc" id="L222">        getRestaurantReviews(code);</span>
+
+<span class="fc" id="L224">        reviewRecyclerView = findViewById(R.id.reviewList);</span>
+
+        // Use this setting to improve performance
+<span class="fc" id="L227">        reviewRecyclerView.setHasFixedSize(true);</span>
+
+        // Use a linear layout manager
+<span class="fc" id="L230">        reviewLayoutManager = new LinearLayoutManager(this);</span>
+<span class="fc" id="L231">        reviewRecyclerView.setLayoutManager(reviewLayoutManager);</span>
+
+<span class="fc" id="L233">        backBtn.setOnClickListener(v -&gt; {</span>
+<span class="fc" id="L234">            Intent homeScreen = new Intent(RestaurantProfileActivity.this, UserHomeActivity.class);</span>
+<span class="fc" id="L235">            homeScreen.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);</span>
+<span class="fc" id="L236">            homeScreen.putExtra(&quot;id&quot;, id);</span>
+<span class="fc" id="L237">            homeScreen.putExtra(&quot;username&quot;, username);</span>
+<span class="fc" id="L238">            homeScreen.putExtra(&quot;plus&quot;, plus);</span>
+<span class="fc" id="L239">            homeScreen.putExtra(&quot;connected&quot;, true);</span>
+<span class="fc" id="L240">            startActivity(homeScreen);</span>
+<span class="fc" id="L241">        });</span>
+<span class="fc" id="L242">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>Generated by the Android Gradle plugin 8.1.3</div></body></html>

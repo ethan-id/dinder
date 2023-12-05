@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -71,6 +72,14 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
                 throw new RuntimeException(e);
             }
         });
+        holder.close.setOnClickListener(v -> {
+            incomingRequests.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, incomingRequests.size());
+            if (callback != null) {
+                callback.onListChanged(); // Notify the activity that the list has changed
+            }
+        });
     }
 
     public void acceptFriendRequest(int requestId, int position, String type) {
@@ -87,11 +96,19 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
                     if (callback != null) {
                         callback.onListChanged(); // Notify the activity that the list has changed
                     }
+                    Toast.makeText(context, "Added Friend", Toast.LENGTH_SHORT).show();
                 }, Throwable::printStackTrace));
         }
 
         if (type.equals("group")) {
             WebSocketManager.getInstance().sendMessage("accept@" + requestId);
+            incomingRequests.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, incomingRequests.size());
+            if (callback != null) {
+                callback.onListChanged(); // Notify the activity that the list has changed
+            }
+            Toast.makeText(context, "Joined Group", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -119,6 +136,7 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
          * ImageView used to hold the friend's profile picture/icon
          */
         ImageView friendImage;
+        ImageView close;
 
         /**
          * A Button for sending an invite to the friend to join the user's group
@@ -134,6 +152,8 @@ public class IncomingAdapter extends RecyclerView.Adapter<IncomingAdapter.Friend
             friendName = itemView.findViewById(R.id.friendName);
             friendImage = itemView.findViewById(R.id.friendImage);
             invite = itemView.findViewById(R.id.inviteBtn);
+            close = itemView.findViewById(R.id.removeFriendIcon);
+
         }
 
         public String getType() {

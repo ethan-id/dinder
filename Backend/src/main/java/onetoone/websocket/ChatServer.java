@@ -287,6 +287,7 @@ public class ChatServer {
                 Statistic.totalSwipes++;
             }
             else if (newMessage[0].equals("like")) {
+                numberOfLikes = 0;
                 Liked like = new Liked(newMessage[1]);
                 Statistic.totalLikes++;
                 Statistic.totalSwipes++;
@@ -315,6 +316,7 @@ public class ChatServer {
                     else {
                         LikeMap.add(like);
                     }
+                    numberOfLikes = 0;
                 }
                 else {
                     LikeMap.add(like);
